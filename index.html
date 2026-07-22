@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Firestore Data Entry Test</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f4f8;
+    color: #1e293b;
+    padding: 16px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+    color: #005EA6;
+  }
+  p.sub { color: #64748b; font-size: 0.85rem; margin-bottom: 20px; }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+  .card h2 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #0f172a;
+  }
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 4px;
+    margin-top: 10px;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+  }
+  input:focus, select:focus {
+    border-color: #005EA6;
+    box-shadow: 0 0 0 3px rgba(0,94,166,0.12);
+  }
+  button {
+    margin-top: 16px;
+    width: 100%;
+    padding: 12px;
+    background: #005EA6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button:hover { background: #004A85; }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .status {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border-radius: 6px;
+    display: none;
+  }
+  .status.ok { background: #dcfce7; color: #166534; display: block; }
+  .status.err { background: #fee2e2; color: #b91c1c; display: block; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 6px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  th { color: #64748b; font-size: 0.75rem; text-transform: uppercase; }
+  td button {
+    width: auto;
+    margin: 0;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+  .del-btn { background: #ef4444; }
+  .del-btn:hover { background: #dc2626; }
+  .edit-btn { background: #f59e0b; margin-right: 4px; }
+  .edit-btn:hover { background: #d97706; }
+  .empty { color: #94a3b8; font-size: 0.85rem; padding: 12px 0; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>🔧 Firestore Data Entry Test</h1>
+<p class="sub">Project: project-jun-2f357 &nbsp;|&nbsp; Collection: <code>test_entries</code></p>
+
+<div class="card">
+  <h2>➕ Naya Entry Add Garnu</h2>
+  <label>Naam</label>
+  <input type="text" id="fName" placeholder="e.g. Ram Sharma" />
+
+  <label>Phone</label>
+  <input type="text" id="fPhone" placeholder="e.g. 98XXXXXXXX" />
+
+  <label>Item / Note</label>
+  <input type="text" id="fNote" placeholder="e.g. Pulsar N160 enquiry" />
+
+  <label>Status</label>
+  <select id="fStatus">
+    <option value="pending">Pending</option>
+    <option value="done">Done</option>
+    <option value="cancelled">Cancelled</option>
+  </select>
+
+  <button id="submitBtn">Save Entry</button>
+  <div class="status" id="statusMsg"></div>
+</div>
+
+<div class="card">
+  <h2>📋 Sabai Entries (Live)</h2>
+  <table>
+    <thead>
+      <tr><th>Naam</th><th>Phone</th><th>Note</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody id="entryList">
+      <tr><td colspan="5" class="empty">Loading...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, updateDoc, deleteDoc, doc,
+    onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB_ep2-cHy4xIA5yoxkC2jPfiDWG4bW7lU",
+    authDomain: "project-jun-2f357.firebaseapp.com",
+    projectId: "project-jun-2f357",
+    storageBucket: "project-jun-2f357.firebasestorage.app",
+    messagingSenderId: "276638637528",
+    appId: "1:276638637528:web:62d034cfc13f8d6d51e6ad",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const COLLECTION = "test_entries";
+
+  const fName = document.getElementById("fName");
+  const fPhone = document.getElementById("fPhone");
+  const fNote = document.getElementById("fNote");
+  const fStatus = document.getElementById("fStatus");
+  const submitBtn = document.getElementById("submitBtn");
+  const statusMsg = document.getElementById("statusMsg");
+  const entryList = document.getElementById("entryList");
+
+  let editingId = null;
+
+  function showStatus(msg, ok = true) {
+    statusMsg.textContent = msg;
+    statusMsg.className = "status " + (ok ? "ok" : "err");
+    setTimeout(() => { statusMsg.className = "status"; }, 3000);
+  }
+
+  function resetForm() {
+    fName.value = ""; fPhone.value = ""; fNote.value = ""; fStatus.value = "pending";
+    editingId = null;
+    submitBtn.textContent = "Save Entry";
+  }
+
+  submitBtn.addEventListener("click", async () => {
+    if (!fName.value.trim()) { showStatus("Naam required cha.", false); return; }
+    submitBtn.disabled = true;
+    const data = {
+      name: fName.value.trim(),
+      phone: fPhone.value.trim(),
+      note: fNote.value.trim(),
+      status: fStatus.value,
+      updatedAt: serverTimestamp(),
+    };
+    try {
+      if (editingId) {
+        await updateDoc(doc(db, COLLECTION, editingId), data);
+        showStatus("✔ Entry updated!");
+      } else {
+        data.createdAt = serverTimestamp();
+        await addDoc(collection(db, COLLECTION), data);
+        showStatus("✔ Entry saved!");
+      }
+      resetForm();
+    } catch (err) {
+      showStatus("✘ Error: " + err.message, false);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  window.editEntry = (id, name, phone, note, status) => {
+    fName.value = name; fPhone.value = phone; fNote.value = note; fStatus.value = status;
+    editingId = id;
+    submitBtn.textContent = "Update Entry";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  window.deleteEntry = async (id) => {
+    if (!confirm("Yo entry delete garne?")) return;
+    try {
+      await deleteDoc(doc(db, COLLECTION, id));
+      showStatus("✔ Entry deleted!");
+    } catch (err) {
+      showStatus("✘ Error: " + err.message, false);
+    }
+  };
+
+  onSnapshot(collection(db, COLLECTION), (snap) => {
+    if (snap.empty) {
+      entryList.innerHTML = `<tr><td colspan="5" class="empty">Kunai entry chaina.</td></tr>`;
+      return;
+    }
+    entryList.innerHTML = "";
+    snap.forEach((d) => {
+      const x = d.data();
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${x.name || ""}</td>
+        <td>${x.phone || ""}</td>
+        <td>${x.note || ""}</td>
+        <td>${x.status || ""}</td>
+        <td style="white-space:nowrap;">
+          <button class="edit-btn" onclick="editEntry('${d.id}','${(x.name||"").replace(/'/g,"\\'")}','${(x.phone||"").replace(/'/g,"\\'")}','${(x.note||"").replace(/'/g,"\\'")}','${x.status||"pending"}')">Edit</button>
+          <button class="del-btn" onclick="deleteEntry('${d.id}')">Delete</button>
+        </td>`;
+      entryList.appendChild(tr);
+    });
+  }, (err) => {
+    entryList.innerHTML = `<tr><td colspan="5" class="empty">Error: ${err.message}</td></tr>`;
+  });
+</script>
+</body>
+</html>
