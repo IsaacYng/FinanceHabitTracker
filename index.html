@@ -3,182 +3,326 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mero Paisa Habit Tracker - Firebase Sync</title>
+<title>MeroPaisa - Finance Habit Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+:root{--navy:#0F172A;--emerald:#059669;--emerald2:#10B981;--slate:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--card:#FFFFFF;--red:#DC2626;--amber:#D97706}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,Arial,sans-serif;background:#fef9ec;color:#1a1a1a;padding:12px;padding-bottom:50px}
-.wrap{max-width:660px;margin:0 auto}
-header{background:#0f5132;color:#fff;padding:18px;border-radius:16px;margin-bottom:12px}
-header h1{font-size:22px}
-header p{font-size:13px;opacity:.92;margin-top:6px;line-height:1.5}
-.badge{display:inline-block;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800;margin-top:10px}
-.badge.ok{background:#c8f7d4;color:#0a4d1f}
-.badge.warn{background:#ffe8a3;color:#5a3d00}
-.badge.err{background:#ffc9c9;color:#7a0000}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.card{background:#fff;border:1px solid #eee;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.card h3{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.5px}
-.big{font-size:22px;font-weight:800;margin-top:6px}
-.green{color:#0a7a42}.red{color:#d32f2f}
-.full{grid-column:1/-1}
-label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}
-input,select{width:100%;padding:12px;border:1.5px solid #ddd;border-radius:10px;font-size:15px}
-.toggle{display:flex;gap:8px}
-.toggle button{flex:1;padding:12px;border-radius:10px;border:2px solid #ddd;background:#f8f8f8;font-weight:800;cursor:pointer}
-.toggle button.active{border-color:#0f5132;background:#0f5132;color:#fff}
+body{font-family:'Inter',system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--navy);line-height:1.5}
+a{color:var(--emerald)}
+/* LOGIN */
+#loginScreen{min-height:100vh;display:flex}
+.login-left{flex:1;background:linear-gradient(160deg,#0F172A 0%,#064E3B 100%);color:#fff;padding:40px 36px;display:flex;flex-direction:column;justify-content:space-between}
+.login-left h1{font-size:28px;letter-spacing:-.5px}
+.login-left h1 span{color:#34D399}
+.login-left .hero{margin-top:30px}
+.login-left .hero h2{font-size:34px;line-height:1.15;letter-spacing:-1px}
+.login-left .hero p{color:#CBD5E1;margin-top:12px;font-size:15px;line-height:1.6}
+.feature{margin-top:26px;display:flex;flex-direction:column;gap:14px}
+.feature div{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:14px;border-radius:14px}
+.feature b{font-size:14px}
+.feature span{font-size:13px;color:#CBD5E1}
+.tick{width:26px;height:26px;min-width:26px;background:#10B981;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff}
+.login-right{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background:#fff}
+.login-card{width:100%;max-width:420px}
+.login-card .logo{width:52px;height:52px;background:var(--navy);color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}
+.login-card h2{font-size:26px;margin-top:16px;letter-spacing:-.5px}
+.login-card p.sub{color:var(--slate);font-size:14px;margin-top:6px}
+.tabs{display:flex;background:#F1F5F9;padding:4px;border-radius:12px;margin:20px 0}
+.tabs button{flex:1;padding:10px;border:0;background:transparent;border-radius:9px;font-weight:700;cursor:pointer;color:var(--slate)}
+.tabs button.active{background:#fff;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+label{font-size:13px;font-weight:600;display:block;margin:14px 0 6px}
+input,select{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;outline:none;background:#fff}
+input:focus,select:focus{border-color:var(--emerald)}
+.pw-wrap{position:relative}
+.pw-wrap button{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--slate);font-size:13px;font-weight:700;cursor:pointer}
+.btn{width:100%;padding:14px;border:0;border-radius:12px;background:var(--navy);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:16px}
+.btn-green{background:var(--emerald)}
+.btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
+.divider{display:flex;align-items:center;gap:12px;color:var(--slate);font-size:12px;margin:18px 0}
+.divider:before,.divider:after{content:"";flex:1;height:1px;background:var(--line)}
+.err{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;padding:12px;border-radius:12px;font-size:13px;display:none}
+.ok{background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;padding:12px;border-radius:12px;font-size:13px;display:none}
+.small-note{font-size:12px;color:var(--slate);margin-top:12px;text-align:center;line-height:1.6}
+/* APP */
+#appScreen{display:none}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1140px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:38px;height:38px;background:var(--navy);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900}
+.brand b{font-size:18px;letter-spacing:-.3px}
+.brand span{font-size:12px;color:var(--slate);display:block;line-height:1}
+.userbox{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;background:#E0F2FE;color:#0369A1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.logout{padding:8px 14px;border:1.5px solid var(--line);background:#fff;border-radius:999px;cursor:pointer;font-weight:600;font-size:13px}
+.dot{width:8px;height:8px;border-radius:50%;background:#22C55E;display:inline-block}
+.dot.red{background:#EF4444}
+.dot.amber{background:#F59E0B}
+.wrap{max-width:1140px;margin:0 auto;padding:20px}
+.welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.welcome h1{font-size:28px;letter-spacing:-.6px}
+.welcome p{color:var(--slate);font-size:14px;margin-top:4px}
+.pill{padding:6px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:600}
+.hero{background:linear-gradient(135deg,#0F172A 0%,#065F46 100%);color:#fff;border-radius:20px;padding:24px;display:grid;grid-template-columns:1.2fr .8fr;gap:20px}
+.hero h3{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:#A7F3D0}
+.hero .bal{font-size:42px;font-weight:900;letter-spacing:-1.5px;margin-top:8px}
+.hero .sub{color:#CBD5E1;font-size:13px;margin-top:6px}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hstat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:14px}
+.hstat span{font-size:12px;color:#CBD5E1}
+.hstat b{font-size:19px;display:block;margin-top:4px}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-top:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card h3{font-size:13px;letter-spacing:.6px;text-transform:uppercase;color:var(--slate)}
+.toggle{display:flex;gap:8px;margin-top:12px}
+.toggle button{flex:1;padding:12px;border-radius:11px;border:1.5px solid var(--line);background:#F8FAFC;font-weight:700;cursor:pointer}
+.toggle button.active{border-color:var(--navy);background:var(--navy);color:#fff}
 .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.quick button{padding:8px 14px;border-radius:999px;border:1px solid #ddd;background:#fff;cursor:pointer;font-weight:700}
-.btn{width:100%;padding:14px;border:0;border-radius:12px;background:#0f5132;color:#fff;font-size:16px;font-weight:800;cursor:pointer;margin-top:12px}
-.btn2{background:#fff;color:#0f5132;border:2px solid #0f5132}
-.btnSmall{padding:10px 12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-weight:700;cursor:pointer;font-size:13px}
-.bar{height:12px;background:#eee;border-radius:999px;overflow:hidden;margin-top:8px}
-.bar>div{height:100%;background:#0f5132}
-.bar.redbar>div{background:#d32f2f}
-.habit{display:flex;gap:10px;align-items:flex-start;background:#f8fbf8;border:1px solid #e5eee5;padding:12px;border-radius:12px;margin-top:8px}
-.habit input{width:22px;height:22px;margin-top:2px}
-.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f0}
-.del{background:#fff0f0;color:#d32f2f;border:1px solid #ffd6d6;padding:6px 10px;border-radius:8px;cursor:pointer}
-.filter{display:flex;gap:8px;margin:10px 0}
-.filter button{padding:8px 14px;border-radius:999px;border:1px solid #ddd;background:#fff;cursor:pointer}
-.filter button.active{background:#111;color:#fff}
-.catrow{margin-top:10px}
-.catrow .top{display:flex;justify-content:space-between;font-size:13px;font-weight:700}
-.monthbar{display:flex;gap:6px;align-items:flex-end;height:90px;margin-top:12px}
+.quick button{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:600}
+.btn-primary{width:100%;padding:14px;border:0;border-radius:12px;background:var(--emerald);color:#fff;font-weight:700;cursor:pointer;margin-top:14px;font-size:15px}
+.btn-secondary{width:100%;padding:12px;border-radius:12px;background:#fff;color:var(--navy);border:1.5px solid var(--line);font-weight:700;cursor:pointer;margin-top:10px}
+.bar{height:10px;background:#F1F5F9;border-radius:999px;overflow:hidden;margin-top:8px}
+.bar>div{height:100%;background:var(--emerald)}
+.bar.red>div{background:var(--red)}
+.habit{display:flex;gap:12px;align-items:flex-start;background:#F8FAFC;border:1px solid #E2E8F0;padding:13px;border-radius:13px;margin-top:10px}
+.habit input{width:20px;height:20px;margin-top:2px;accent-color:var(--emerald)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #F1F5F9}
+.row:last-child{border:0}
+.del{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+.filter{display:flex;gap:8px;margin:12px 0}
+.filter button{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:13px}
+.filter button.active{background:var(--navy);color:#fff}
+.catrow{margin-top:12px}
+.catrow .top{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+.monthbar{display:flex;gap:8px;align-items:flex-end;height:100px;margin-top:12px}
 .monthbar .col{flex:1;text-align:center}
-.monthbar .bars{display:flex;gap:3px;justify-content:center;align-items:flex-end;height:70px}
-.monthbar .b1{width:10px;background:#0a7a42;border-radius:4px 4px 0 0}
-.monthbar .b2{width:10px;background:#d32f2f;border-radius:4px 4px 0 0}
-small{color:#666;font-size:12px;line-height:1.5}
-.tip{background:#fff8d6;border:1px solid #ffe58a;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;margin-top:12px}
-.errBox{background:#fff0f0;border:1px solid #ffb3b3;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;margin-top:10px;display:none}
-.okBox{background:#e9ffed;border:1px solid #9be7a8;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;margin-top:10px;display:none}
-pre{background:#111;color:#d6ffdf;padding:12px;border-radius:10px;font-size:12px;overflow:auto;margin-top:8px;white-space:pre-wrap}
+.monthbar .bars{display:flex;gap:3px;justify-content:center;align-items:flex-end;height:76px}
+.monthbar .b1{width:11px;background:#059669;border-radius:4px 4px 0 0}
+.monthbar .b2{width:11px;background:#DC2626;border-radius:4px 4px 0 0}
+.syncBox{background:#ECFDF5;border:1px solid #A7F3D0;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;margin-top:10px}
+.syncBox.err{background:#FEF2F2;border-color:#FECACA}
 .flex2{display:flex;gap:8px}
 .flex2>*{flex:1}
+.badge2{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0}
+.setup{font-size:13px;line-height:1.7;background:#FFFBEB;border:1px solid #FDE68A;padding:14px;border-radius:14px;margin-top:14px}
+pre{background:#0F172A;color:#D1FAE5;padding:12px;border-radius:10px;font-size:12px;overflow:auto;margin-top:8px;white-space:pre-wrap}
+@media(max-width:900px){
+ .login-left{display:none}
+ .hero{grid-template-columns:1fr}
+ .grid2{grid-template-columns:1fr}
+ .welcome h1{font-size:22px}
+ .hero .bal{font-size:34px}
+ .topbar-inner{padding:12px}
+ .wrap{padding:14px}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-<h1>MERO PAISA HABIT TRACKER</h1>
-<p>Paisa track garne bhaneko paisa bachaaune pahilo step ho. Aaja dekhi harek kharcha lekhnuhos.</p>
-<div id="statusBadge" class="badge warn">Firebase check gardai...</div>
-<div style="font-size:12px;margin-top:8px;opacity:.9" id="statusDetail">Firebase connect hundai cha...</div>
-</header>
 
-<div class="card">
-<h3>FIREBASE SYNC - YO NAYA HO</h3>
-<p style="font-size:13px;line-height:1.6;margin-top:6px">Pahila data device ma matra basthyo. Ahile harek save Firebase ma pani jancha. Yedi Firebase le rokeko cha bhane tala error nai dekhincha.</p>
-<div class="flex2" style="margin-top:10px">
-<button class="btnSmall" onclick="pushAllToFirebase()">Firebase ma Sync Garne</button>
-<button class="btnSmall" onclick="loadFromFirebase()">Firebase bata Load Garne</button>
-</div>
-<div class="flex2" style="margin-top:8px">
-<button class="btnSmall" onclick="testFirebase()">Firebase Test Garne</button>
-<button class="btnSmall" onclick="copyRules()">Rules Copy Garne</button>
-</div>
-<div id="okBox" class="okBox"></div>
-<div id="errBox" class="errBox"></div>
-<small id="lastSync" style="display:block;margin-top:8px">Last Sync: Kahile pani bhayena</small>
-</div>
-
-<div class="grid" style="margin-top:12px">
-<div class="card"><h3>Total Kamai</h3><div class="big green" id="totalIncome">Rs. 0</div><small id="incomeCount">0 transaction</small></div>
-<div class="card"><h3>Total Kharcha</h3><div class="big red" id="totalExpense">Rs. 0</div><small id="expenseCount">0 transaction</small></div>
-<div class="card full"><h3>Baki Balance</h3><div class="big" id="balance">Rs. 0</div><div class="bar"><div id="savingBar" style="width:0%"></div></div><small id="savingText">Saving Rate: 0%</small></div>
-</div>
-
-<div class="card">
-<h3>MONTH FILTER</h3>
-<select id="monthFilter" onchange="renderAll()">
-<option value="all">Sabai Mahina</option>
-<option value="this">Yo Mahina</option>
-<option value="7">Last 7 Din</option>
-</select>
-<label>Yo Mahina Ko Budget (Rs.)</label>
-<input id="budgetInput" type="number" placeholder="Ex: 20000">
-<button class="btn btn2" onclick="saveBudget()">Budget Save Garne</button>
-<div class="bar redbar" style="margin-top:12px"><div id="budgetBar" style="width:0%"></div></div>
-<small id="budgetText">Budget set garnuhos</small>
-</div>
-
-<div class="card" style="margin-top:12px">
-<h3>NAYA TRANSACTION THAPNE</h3>
-<div class="toggle">
-<button id="btnExpense" class="active" onclick="setType('expense')">KHARCHA</button>
-<button id="btnIncome" onclick="setType('income')">KAMAI</button>
-</div>
-<label>Amount (Rs.)</label>
-<input id="amount" type="number" placeholder="Ex: 500">
-<div class="quick">
-<button onclick="setAmount(100)">100</button>
-<button onclick="setAmount(500)">500</button>
-<button onclick="setAmount(1000)">1000</button>
-<button onclick="setAmount(5000)">5000</button>
-</div>
-<label>Category</label>
-<select id="category"></select>
-<label>Date</label>
-<input id="dateInput" type="date">
-<label>Note - K ma kharcha bhayo?</label>
-<input id="note" type="text" placeholder="Ex: Khaja, Petrol, Salary">
-<button class="btn" onclick="addTransaction()">Save Garne - Device + Firebase</button>
-<small id="saveMsg"></small>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-left">
+    <div>
+      <h1>MeroPaisa <span>.</span></h1>
+      <div class="hero">
+        <h2>Paisa kaha gayo?<br>Abba thaha huncha.</h2>
+        <p>Jati kamaye pani saki halcha bhane problem kamai ma hoina, track nagarnu ma ho. MeroPaisa le harek rupaiya, harek habit track garcha.</p>
+      </div>
+      <div class="feature">
+        <div><div class="tick">✓</div><div><b>Real-time Dashboard</b><br><span>Kamai, Kharcha, Balance ra Saving Rate ekai thau ma</span></div></div>
+        <div><div class="tick">✓</div><div><b>Finance Habit Tracker</b><br><span>Daily 5 habit + streak, paisa bachaaune bani bascha</span></div></div>
+        <div><div class="tick">✓</div><div><b>Firebase Sync</b><br><span>Phone change bhaye pani data harauudaina, sabai device ma sync</span></div></div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#94A3B8">MeroPaisa • finance.yonghangishak.com.np • Secure with Firebase</p>
+  </div>
+  <div class="login-right">
+    <div class="login-card">
+      <div class="logo">Rs.</div>
+      <h2 id="authTitle">Welcome back</h2>
+      <p class="sub" id="authSub">Login garera tapaiko finance dashboard kholnus.</p>
+      <div class="tabs">
+        <button id="tabLogin" class="active" onclick="switchTab('login')">Login</button>
+        <button id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+      <div id="authErr" class="err"></div>
+      <div id="authOk" class="ok"></div>
+      <div id="nameField" style="display:none">
+        <label>Full Name</label>
+        <input id="authName" type="text" placeholder="Ex: Yonghang Isaac">
+      </div>
+      <label>Email Address</label>
+      <input id="authEmail" type="email" placeholder="you@example.com">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input id="authPass" type="password" placeholder="Min 6 characters">
+        <button type="button" onclick="togglePw()">Show</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <label style="margin:0;font-size:13px;font-weight:500"><input type="checkbox" id="rememberMe" checked style="width:auto"> Remember me</label>
+        <a href="#" onclick="forgotPass(event)" style="font-size:13px;font-weight:600">Forgot password?</a>
+      </div>
+      <button class="btn" id="authBtn" onclick="handleAuth()">Login</button>
+      <div class="divider">OR CONTINUE WITH</div>
+      <button class="btn btn-outline" onclick="handleGoogle()">G - Continue with Google</button>
+      <button class="btn btn-outline" onclick="handleGuest()">Continue as Guest - Bina Login</button>
+      <p class="small-note">Guest ma data phone ma matra bascha. Login garepachi Firebase ma sync huncha.<br>Sign Up garda Firebase &gt; Authentication &gt; Email/Password ON hunu parcha.</p>
+    </div>
+  </div>
 </div>
 
-<div class="card" style="margin-top:12px">
-<h3>AAJA KO FINANCE HABIT</h3>
-<small>Aaja ko score le bholiko habit banauncha.</small>
-<div id="habitList"></div>
-<div style="margin-top:12px"><b id="habitScore">Aaja ko Habit Score: 0 / 5</b><br><small id="streakText">Streak: 0 din</small></div>
-</div>
+<!-- APP SCREEN -->
+<div id="appScreen">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">Rs.</div>
+        <div><b>MeroPaisa</b><span>Finance Habit Tracker</span></div>
+      </div>
+      <div class="userbox">
+        <span class="pill"><span class="dot" id="syncDot"></span> <span id="syncText">Checking...</span></span>
+        <div class="avatar" id="userAvatar">U</div>
+        <div style="line-height:1.2"><b id="userName" style="font-size:13px">User</b><br><span id="userEmail" style="font-size:12px;color:#64748B">-</span></div>
+        <button class="logout" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
 
-<div class="card" style="margin-top:12px">
-<h3>KAHA DHERAI GAYO?</h3>
-<small id="topCatText">Ahile samma kharcha chaina</small>
-<div id="catList"></div>
-</div>
+  <div class="wrap">
+    <div class="welcome">
+      <div><h1 id="welcomeTitle">Namaste, Welcome back</h1><p id="welcomeDate">Aaja ko finance check garnus - sano track le thulo saving banauncha.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="pill" id="monthPill">Yo Mahina</span>
+        <span class="pill" id="streakPill">Streak: 0 din</span>
+      </div>
+    </div>
 
-<div class="card" style="margin-top:12px">
-<h3>LAST 6 MAHINA - KAMAI VS KHARCHA</h3>
-<small>Hariyo = Kamai, Rato = Kharcha</small>
-<div class="monthbar" id="monthChart"></div>
-</div>
+    <div class="hero">
+      <div>
+        <h3>Total Balance</h3>
+        <div class="bal" id="balance">Rs. 0</div>
+        <div class="sub" id="savingText">Saving Rate: 0% • Budget track bhairaheko cha</div>
+        <div class="bar" style="background:rgba(255,255,255,.2);margin-top:14px"><div id="savingBar" style="width:0%;background:#34D399"></div></div>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+          <button class="logout" style="background:#fff;color:#0F172A;border:0;font-weight:700" onclick="document.getElementById('amount').focus()">+ Naya Transaction</button>
+          <button class="logout" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="pushAllToFirebase()">Sync to Firebase</button>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><span>Total Kamai</span><b style="color:#34D399" id="totalIncome">Rs. 0</b><span id="incomeCount">0 transaction</span></div>
+        <div class="hstat"><span>Total Kharcha</span><b style="color:#FCA5A5" id="totalExpense">Rs. 0</b><span id="expenseCount">0 transaction</span></div>
+        <div class="hstat"><span>Habit Score</span><b id="habitScoreTop">0 / 5</b><span>Aaja ko habit</span></div>
+        <div class="hstat"><span>Budget Used</span><b id="budgetTop">-</b><span id="budgetTextTop">Budget set garnuhos</span></div>
+      </div>
+    </div>
 
-<div class="card" style="margin-top:12px">
-<h3>TRANSACTION HISTORY</h3>
-<input id="searchInput" type="text" placeholder="Search - Ex: Khaja" oninput="renderAll()">
-<div class="filter">
-<button id="fAll" class="active" onclick="setFilter('all')">Sabai</button>
-<button id="fInc" onclick="setFilter('income')">Kamai</button>
-<button id="fExp" onclick="setFilter('expense')">Kharcha</button>
-</div>
-<div id="history"></div>
-</div>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button class="logout" style="background:#0F172A;color:#fff" onclick="testFirebase()">Firebase Test Garne</button>
+      <button class="logout" onclick="loadFromFirebase()">Firebase bata Load</button>
+      <button class="logout" onclick="copyRules()">Rules Copy</button>
+      <span class="pill" id="lastSync">Last Sync: -</span>
+    </div>
+    <div id="okBox" class="syncBox" style="display:none"></div>
+    <div id="errBox" class="syncBox err" style="display:none"></div>
 
-<div class="tip" id="rulesBox">
-<b>Firebase ma Save Nabhaye - 2 Minute ko Fix:</b><br><br>
-<b>Step 1:</b> Firebase Console &gt; Tapaiko project <b>financehabit-13683</b> kholnus<br>
-<b>Step 2:</b> Baye side ma <b>Build &gt; Realtime Database</b> &gt; <b>Rules</b> tab<br>
-<b>Step 3:</b> Tala ko rules copy garera paste garnus, ani <b>Publish</b> thichnus:<br>
-<pre id="rulesText">{
+    <div class="grid2">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card">
+          <h3>Naya Transaction</h3>
+          <div class="toggle">
+            <button id="btnExpense" class="active" onclick="setType('expense')">Kharcha</button>
+            <button id="btnIncome" onclick="setType('income')">Kamai</button>
+          </div>
+          <label>Amount (Rs.)</label>
+          <input id="amount" type="number" placeholder="Ex: 500">
+          <div class="quick">
+            <button onclick="setAmount(100)">100</button>
+            <button onclick="setAmount(500)">500</button>
+            <button onclick="setAmount(1000)">1000</button>
+            <button onclick="setAmount(5000)">5000</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div><label>Category</label><select id="category"></select></div>
+            <div><label>Date</label><input id="dateInput" type="date"></div>
+          </div>
+          <label>Note - K ma kharcha bhayo?</label>
+          <input id="note" type="text" placeholder="Ex: Khaja, Petrol, Salary">
+          <button class="btn-primary" onclick="addTransaction()">Save Garne - Device + Firebase</button>
+          <small id="saveMsg" style="display:block;margin-top:8px;color:#64748B"></small>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3>Transaction History</h3>
+            <select id="monthFilter" onchange="renderAll()" style="width:auto;padding:8px 10px">
+              <option value="all">Sabai Mahina</option>
+              <option value="this">Yo Mahina</option>
+              <option value="7">Last 7 Din</option>
+            </select>
+          </div>
+          <input id="searchInput" type="text" placeholder="Search - Ex: Khaja" oninput="renderAll()" style="margin-top:12px">
+          <div class="filter">
+            <button id="fAll" class="active" onclick="setFilter('all')">Sabai</button>
+            <button id="fInc" onclick="setFilter('income')">Kamai</button>
+            <button id="fExp" onclick="setFilter('expense')">Kharcha</button>
+          </div>
+          <div id="history"></div>
+        </div>
+
+        <div class="card">
+          <h3>Last 6 Mahina - Kamai vs Kharcha</h3>
+          <small>Hariyo = Kamai, Rato = Kharcha</small>
+          <div class="monthbar" id="monthChart"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card">
+          <h3>Monthly Budget</h3>
+          <label>Yo Mahina Ko Budget (Rs.)</label>
+          <input id="budgetInput" type="number" placeholder="Ex: 20000">
+          <button class="btn-secondary" onclick="saveBudget()">Budget Save Garne</button>
+          <div class="bar red" style="margin-top:12px"><div id="budgetBar" style="width:0%"></div></div>
+          <small id="budgetText" style="display:block;margin-top:8px">Budget set garnuhos</small>
+        </div>
+
+        <div class="card">
+          <h3>Aaja Ko Finance Habit</h3>
+          <small>Aaja ko score le bholiko habit banauncha.</small>
+          <div id="habitList"></div>
+          <div style="margin-top:12px"><b id="habitScore">Aaja ko Habit Score: 0 / 5</b><br><small id="streakText">Streak: 0 din</small></div>
+        </div>
+
+        <div class="card">
+          <h3>Kaha Dherai Gayo?</h3>
+          <small id="topCatText">Ahile samma kharcha chaina</small>
+          <div id="catList"></div>
+        </div>
+
+        <div class="setup">
+          <b>Firebase Setup - 1 Choti Matra:</b><br>
+          1. Firebase Console &gt; <b>Authentication</b> &gt; <b>Email/Password</b> ON, <b>Google</b> ON, <b>Anonymous</b> ON<br>
+          2. <b>Realtime Database</b> &gt; <b>Rules</b> &gt; Tala ko rules Publish:<br>
+          <pre id="rulesText">{
   "rules": {
     ".read": true,
     ".write": true
   }
 }</pre>
-<b>Step 4:</b> Baye side <b>Build &gt; Authentication</b> &gt; <b>Sign-in method</b> &gt; <b>Anonymous</b> lai <b>Enable</b> garnus.<br>
-<b>Step 5:</b> Yo app ma <b>Firebase Test Garne</b> thichnus. Green aaye pachi sabai sync huncha.
-<br><br>
-<small>Note: Yo rules personal app ko lagi ho. Public app banaune bhaye pachhi auth wala rules rakhnu parcha.</small>
-</div>
-<p style="text-align:center;margin-top:14px"><small>Mero Paisa Habit Tracker - finance.yonghangishak.com.np - Firebase + Local Dual Save</small></p>
+          <small>Firestore hoina! Realtime Database ho. Firestore ma yo rules halda error aauchha.</small><br>
+          <small>Data path: <b>users / [tapailo UID] / transactions</b> - harek user ko data alag bascha.</small>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;color:#94A3B8;font-size:12px">MeroPaisa • finance.yonghangishak.com.np • Secure with Firebase Auth</p>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signInAnonymously, signOut, sendPasswordResetEmail, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDXxnTFnLX3HGfIARahE-kulg_ZF-n_nEA",
@@ -190,59 +334,54 @@ const firebaseConfig = {
   appId: "1:681883146838:web:462477121df17a1d9939f7",
   measurementId: "G-9DF0LBGY4M"
 };
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+window._fb = {db, ref, set, get, remove, auth};
+window._authFns = {createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signInAnonymously, signOut, sendPasswordResetEmail, updateProfile, googleProvider};
 
-let fbApp=null, fbDb=null, fbAuth=null, fbUser=null, fbReady=false;
+function showOk(msg){ const el=document.getElementById('okBox'); el.style.display='block'; el.innerHTML=msg; document.getElementById('errBox').style.display='none'; }
+function showErr(msg){ const el=document.getElementById('errBox'); el.style.display='block'; el.innerHTML=msg; document.getElementById('okBox').style.display='none'; }
+function showAuthErr(msg){ const el=document.getElementById('authErr'); el.style.display='block'; el.textContent=msg; document.getElementById('authOk').style.display='none'; }
+function showAuthOk(msg){ const el=document.getElementById('authOk'); el.style.display='block'; el.textContent=msg; document.getElementById('authErr').style.display='none'; }
+window.showOk=showOk; window.showErr=showErr; window.showAuthErr=showAuthErr; window.showAuthOk=showAuthOk;
 
-function setBadge(state, text, detail){
-  const b=document.getElementById('statusBadge');
-  const d=document.getElementById('statusDetail');
-  b.className='badge '+state;
-  b.textContent=text;
-  if(d) d.textContent=detail||'';
-}
-function showOk(msg){
-  const el=document.getElementById('okBox'); el.style.display='block'; el.innerHTML=msg;
-  document.getElementById('errBox').style.display='none';
-}
-function showErr(msg){
-  const el=document.getElementById('errBox'); el.style.display='block'; el.innerHTML=msg;
-  document.getElementById('okBox').style.display='none';
-}
-
-try{
-  fbApp=initializeApp(firebaseConfig);
-  fbDb=getDatabase(fbApp);
-  fbAuth=getAuth(fbApp);
-  window._fb={db:fbDb, ref, set, get, remove};
-  setBadge('warn','Firebase Connect Hundai Cha...','Anonymous login try gardai...');
-  onAuthStateChanged(fbAuth, async (user)=>{
-    if(user){
-      fbUser=user; fbReady=true;
-      setBadge('ok','Firebase Connected - UID: '+user.uid.slice(0,8)+'...','Abba harek save Firebase ma pani jancha.');
-      // Auto load once on first connect if Firebase has data
-      try{ await window.loadFromFirebase(true); }catch(e){}
-    } else {
-      try{
-        await signInAnonymously(fbAuth);
-      }catch(e){
-        fbReady=false;
-        setBadge('err','Firebase Login Fail - Anonymous OFF cha','Firebase Console > Authentication > Anonymous Enable garnus. Error: '+e.code+' - '+e.message);
-        showErr('<b>Login Fail:</b> '+e.code+'<br>'+e.message+'<br><br><b>Fix:</b> Firebase Console &gt; Authentication &gt; Sign-in method &gt; Anonymous &gt; Enable &gt; Save garnus. Ani page refresh garnus.');
-      }
-    }
-  });
-}catch(e){
-  setBadge('err','Firebase Init Fail','Config / Internet check garnus: '+e.message);
-  showErr('Init Error: '+e.message);
-}
-
-window._fbStatus = ()=>({ready:fbReady, uid: fbUser?fbUser.uid:null});
-window.showOk=showOk; window.showErr=showErr; window.setBadge=setBadge;
+onAuthStateChanged(auth, (user)=>{
+  if(user && !user.isAnonymous){
+    window.currentUser = user;
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('appScreen').style.display='block';
+    const name = user.displayName || user.email.split('@')[0];
+    document.getElementById('userName').textContent = name;
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('welcomeTitle').textContent = 'Namaste, ' + name;
+    document.getElementById('syncText').textContent = 'Firebase Connected';
+    document.getElementById('syncDot').className='dot';
+    // Load user data
+    if(window.loadUserData) window.loadUserData();
+  } else if(user && user.isAnonymous){
+    // Anonymous guest - treat as guest, keep login visible but allow guest mode
+    window.currentUser = null;
+    document.getElementById('loginScreen').style.display='flex';
+    document.getElementById('appScreen').style.display='none';
+  } else {
+    window.currentUser = null;
+    document.getElementById('loginScreen').style.display='flex';
+    document.getElementById('appScreen').style.display='none';
+  }
+});
 </script>
 
 <script>
+let curTab='login';
 let curType='expense';
 let curFilter='all';
+let isGuest=false;
+let guestId = localStorage.getItem('mp_guest_id') || ('guest_'+Date.now());
+localStorage.setItem('mp_guest_id', guestId);
+
 const expenseCats=['Khana','Yatra / Transport','Khaja / Chiya','Shopping','Mobile / Recharge','Ghar / Bill','Swasthya','Arko'];
 const incomeCats=['Salary','Business','Freelance','Arko'];
 const habits=[
@@ -253,147 +392,224 @@ const habits=[
  {id:'h5', title:'Rati budget check gare', desc:'Rati sutnu agadi budget here'}
 ];
 function todayStr(){ return new Date().toISOString().slice(0,10); }
-function getTx(){ try{ return JSON.parse(localStorage.getItem('mp_transactions')||'[]'); }catch(e){ return []; } }
-function saveTxLocal(arr){ localStorage.setItem('mp_transactions', JSON.stringify(arr)); }
-function getHabits(){ try{ return JSON.parse(localStorage.getItem('mp_habits')||'{}'); }catch(e){ return {}; } }
-function saveHabitsLocal(o){ localStorage.setItem('mp_habits', JSON.stringify(o)); }
-function getBudget(){ return Number(localStorage.getItem('mp_budget')||0); }
+function storageKey(suffix){ if(window.currentUser) return 'mp_'+window.currentUser.uid+'_'+suffix; return 'mp_'+guestId+'_'+suffix; }
+function getTx(){ try{ return JSON.parse(localStorage.getItem(storageKey('transactions'))||'[]'); }catch(e){ return []; } }
+function saveTxLocal(arr){ localStorage.setItem(storageKey('transactions'), JSON.stringify(arr)); }
+function getHabits(){ try{ return JSON.parse(localStorage.getItem(storageKey('habits'))||'{}'); }catch(e){ return {}; } }
+function saveHabitsLocal(o){ localStorage.setItem(storageKey('habits'), JSON.stringify(o)); }
+function getBudget(){ return Number(localStorage.getItem(storageKey('budget'))||0); }
+function getUserPath(){ if(window.currentUser) return 'users/'+window.currentUser.uid; return 'users/'+guestId; }
+
+function switchTab(t){
+  curTab=t;
+  document.getElementById('tabLogin').className = t==='login'?'active':'';
+  document.getElementById('tabSignup').className = t==='signup'?'active':'';
+  document.getElementById('nameField').style.display = t==='signup'?'block':'none';
+  document.getElementById('authTitle').textContent = t==='login'?'Welcome back':'Create your account';
+  document.getElementById('authSub').textContent = t==='login'?'Login garera tapaiko finance dashboard kholnus.':'Naya account banaunus - 30 second ma ready huncha.';
+  document.getElementById('authBtn').textContent = t==='login'?'Login':'Create Account';
+  document.getElementById('authErr').style.display='none';
+  document.getElementById('authOk').style.display='none';
+}
+function togglePw(){ const el=document.getElementById('authPass'); el.type = el.type==='password'?'text':'password'; }
+async function handleAuth(){
+  const email=document.getElementById('authEmail').value.trim();
+  const pass=document.getElementById('authPass').value;
+  const name=document.getElementById('authName').value.trim();
+  if(!email || !pass){ showAuthErr('Email ra Password duitai halnuhos.'); return; }
+  if(pass.length<6){ showAuthErr('Password kamti ma 6 character hunu parcha.'); return; }
+  const btn=document.getElementById('authBtn'); btn.textContent='Please wait...'; btn.disabled=true;
+  try{
+    const {auth} = window._fb;
+    const fns = window._authFns;
+    if(curTab==='signup'){
+      if(!name){ showAuthErr('Name halnuhos.'); btn.textContent='Create Account'; btn.disabled=false; return; }
+      const cred = await fns.createUserWithEmailAndPassword(auth, email, pass);
+      await fns.updateProfile(cred.user, {displayName: name});
+      showAuthOk('Account banayo! Dashboard kholdai...');
+    } else {
+      await fns.signInWithEmailAndPassword(auth, email, pass);
+      showAuthOk('Login bhayo! Dashboard kholdai...');
+    }
+    isGuest=false;
+  }catch(e){
+    let msg=e.message;
+    if(e.code==='auth/email-already-in-use') msg='Yo email le account banisakyo. Login garnus.';
+    if(e.code==='auth/invalid-credential' || e.code==='auth/wrong-password') msg='Email / Password milena. Feri try garnus.';
+    if(e.code==='auth/user-not-found') msg='Yo email le account chaina. Sign Up garnus.';
+    if(e.code==='auth/operation-not-allowed') msg='Firebase Console > Authentication > Email/Password ON garnus, ani feri try garnus.';
+    if(e.code==='auth/network-request-failed') msg='Internet check garnus.';
+    showAuthErr(msg);
+  }
+  btn.textContent = curTab==='login'?'Login':'Create Account'; btn.disabled=false;
+}
+async function handleGoogle(){
+  try{
+    const {auth} = window._fb; const fns=window._authFns;
+    await fns.signInWithPopup(auth, fns.googleProvider);
+    isGuest=false;
+  }catch(e){
+    let msg=e.message;
+    if(e.code==='auth/operation-not-allowed') msg='Firebase Console > Authentication > Google ON garnus.';
+    if(e.code==='auth/popup-closed-by-user') msg='Popup banda bhayo. Feri try garnus.';
+    showAuthErr(msg);
+  }
+}
+async function handleGuest(){
+  isGuest=true;
+  window.currentUser=null;
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+  document.getElementById('userName').textContent='Guest User';
+  document.getElementById('userEmail').textContent='Guest Mode - Phone ma matra';
+  document.getElementById('userAvatar').textContent='G';
+  document.getElementById('welcomeTitle').textContent='Namaste, Guest';
+  document.getElementById('syncText').textContent='Guest Mode - Local Only';
+  document.getElementById('syncDot').className='dot amber';
+  renderAll();
+}
+async function handleLogout(){
+  isGuest=false;
+  try{ if(window._fb && window.currentUser) await window._authFns.signOut(window._fb.auth); }catch(e){}
+  window.currentUser=null;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('authEmail').value='';
+  document.getElementById('authPass').value='';
+}
+async function forgotPass(e){
+  e.preventDefault();
+  const email=document.getElementById('authEmail').value.trim();
+  if(!email){ showAuthErr('Pahila Email halnuhos, ani Forgot password thichnus.'); return; }
+  try{ await window._authFns.sendPasswordResetEmail(window._fb.auth, email); showAuthOk('Password reset link '+email+' ma pathaiyo. Email check garnus.'); }
+  catch(err){ showAuthErr(err.message); }
+}
+window.loadUserData = async function(){
+  try{
+    const {db, ref, get} = window._fb;
+    const base = getUserPath();
+    const snap = await get(ref(db, base+'/transactions'));
+    if(snap.exists()){
+      const arr = Object.values(snap.val()).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      saveTxLocal(arr);
+    }
+    const hSnap = await get(ref(db, base+'/habits')); if(hSnap.exists()) saveHabitsLocal(hSnap.val());
+    const bSnap = await get(ref(db, base+'/settings/budget')); if(bSnap.exists()) localStorage.setItem(storageKey('budget'), bSnap.val());
+    // Migrate old app/ data if user has old data and new is empty
+    if(getTx().length===0){
+      try{
+        const oldSnap = await get(ref(db, 'app/transactions'));
+        if(oldSnap.exists()){
+          const oldArr = Object.values(oldSnap.val());
+          if(oldArr.length>0){ saveTxLocal(oldArr); showOk('Purano data ('+oldArr.length+' transaction) naya account ma sariyo. <b>Sync to Firebase</b> thichnus.'); }
+        }
+      }catch(e){}
+    }
+  }catch(e){ console.log('loadUserData', e); }
+  renderAll();
+};
 
 function setType(t){ curType=t; document.getElementById('btnExpense').className=t==='expense'?'active':''; document.getElementById('btnIncome').className=t==='income'?'active':''; fillCats(); }
 function setAmount(v){ document.getElementById('amount').value=v; }
 function setFilter(f){ curFilter=f; document.getElementById('fAll').className=f==='all'?'active':''; document.getElementById('fInc').className=f==='income'?'active':''; document.getElementById('fExp').className=f==='expense'?'active':''; renderAll(); }
 function fillCats(){ const sel=document.getElementById('category'); const list=curType==='income'?incomeCats:expenseCats; sel.innerHTML=list.map(c=>'<option>'+c+'</option>').join(''); }
-
 async function saveToFirebaseOne(path, value){
-  if(!window._fb) throw new Error('Firebase load bhayena - Internet / Config check garnus');
-  const {db, ref, set} = window._fb;
-  await set(ref(db, path), value);
+  if(!window._fb) throw new Error('Firebase load bhayena');
+  if(isGuest) throw new Error('Guest mode ma Firebase sync hudaina. Login garnus.');
+  const {db, ref, set} = window._fb; await set(ref(db, path), value);
 }
 async function saveBudget(){
   const v=Number(document.getElementById('budgetInput').value||0);
-  localStorage.setItem('mp_budget', v);
-  document.getElementById('saveMsg').textContent='Budget local ma save bhayo, Firebase ma pathaudai...';
-  try{
-    await saveToFirebaseOne('app/settings/budget', v);
-    document.getElementById('saveMsg').textContent='Budget save bhayo! Device + Firebase dubai ma.';
-    showOk('Budget Firebase ma pani save bhayo - Rs. '+v);
-    document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
-  }catch(e){
-    document.getElementById('saveMsg').textContent='Budget device ma save bhayo, Firebase ma fail: '+e.code+' / '+e.message;
-    showErr('<b>Firebase Save Fail:</b> '+(e.code||'')+'<br>'+e.message+'<br><br><b>Fix:</b> Rules ma ".read": true, ".write": true rakhera Publish garnus, ra Anonymous Auth ON garnus. Tala ko Rules box hernus.');
-  }
+  localStorage.setItem(storageKey('budget'), v);
+  if(!isGuest && window.currentUser){
+    try{ await saveToFirebaseOne(getUserPath()+'/settings/budget', v); showOk('Budget Firebase ma pani save bhayo - Rs. '+v); document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString(); }
+    catch(e){ showErr('Budget Local ma save bhayo, Firebase fail: '+e.message); }
+  } else { showOk('Budget Guest Mode ma Local ma save bhayo.'); }
   renderAll();
 }
 async function addTransaction(){
   const amt=Number(document.getElementById('amount').value||0);
   if(!amt){ alert('Pahila Amount halnuhos'); return; }
-  const tx={ id: String(Date.now()), type: curType, amount: amt, category: document.getElementById('category').value, date: document.getElementById('dateInput').value || todayStr(), note: document.getElementById('note').value || document.getElementById('category').value, createdAt: Date.now() };
+  const tx={ id: String(Date.now()), type: curType, amount: amt, category: document.getElementById('category').value, date: document.getElementById('dateInput').value || todayStr(), note: document.getElementById('note').value || document.getElementById('category').value, createdAt: Date.now(), uid: window.currentUser?window.currentUser.uid:guestId };
   const arr=getTx(); arr.unshift(tx); saveTxLocal(arr);
   document.getElementById('amount').value=''; document.getElementById('note').value='';
-  document.getElementById('saveMsg').textContent='Device ma save bhayo, Firebase ma pathaudai...';
-  try{
-    await saveToFirebaseOne('app/transactions/'+tx.id, tx);
-    document.getElementById('saveMsg').textContent='Save bhayo! '+amt+' Rs. '+tx.category+' - Device + Firebase dubai ma.';
-    showOk('Transaction Firebase ma pani save bhayo.<br>Path: app/transactions/'+tx.id);
-    document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
-  }catch(e){
-    document.getElementById('saveMsg').textContent='Device ma save bhayo, Firebase ma fail bhayo: '+(e.code||e.message);
-    showErr('<b>Firebase Save Fail - Yo nai tapaiko problem ho:</b><br>Code: '+(e.code||'unknown')+'<br>Msg: '+e.message+'<br><br><b>Fix:</b><br>1. Firebase Console &gt; Realtime Database &gt; Rules &gt; ".read": true, ".write": true rakhera Publish garnus<br>2. Authentication &gt; Anonymous Enable garnus<br>3. Ani <b>Firebase Test Garne</b> thichnus');
+  if(!isGuest && window.currentUser){
+    try{
+      await saveToFirebaseOne(getUserPath()+'/transactions/'+tx.id, tx);
+      document.getElementById('saveMsg').textContent='Save bhayo! '+amt+' Rs. '+tx.category+' - Device + Firebase dubai ma.';
+      showOk('Transaction Firebase ma pani save bhayo. Path: '+getUserPath()+'/transactions/'+tx.id);
+      document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
+    }catch(e){
+      document.getElementById('saveMsg').textContent='Device ma save bhayo, Firebase fail: '+(e.code||e.message);
+      showErr('<b>Firebase Save Fail:</b> '+(e.code||'')+'<br>'+e.message+'<br>Rules Publish bhayo? Firebase Console > Realtime Database > Rules check garnus.');
+    }
+  } else {
+    document.getElementById('saveMsg').textContent='Guest Mode: Device ma save bhayo. Firebase ma save garna Login garnus.';
   }
   renderAll();
 }
 async function delTx(id){
   if(!confirm('Yo transaction delete garne?')) return;
   const arr=getTx().filter(x=>String(x.id)!==String(id)); saveTxLocal(arr);
-  try{
-    if(window._fb){ const {db, ref, remove}=window._fb; await remove(ref(db,'app/transactions/'+id)); }
-  }catch(e){ console.log(e); }
+  if(!isGuest && window.currentUser){ try{ const {db, ref, remove}=window._fb; await remove(ref(db, getUserPath()+'/transactions/'+id)); }catch(e){} }
   renderAll();
 }
 async function toggleHabit(id, checked){
   const h=getHabits(); const d=todayStr(); if(!h[d]) h[d]={}; h[d][id]=checked; saveHabitsLocal(h);
-  try{ await saveToFirebaseOne('app/habits', h); }catch(e){ console.log('habit firebase fail',e); }
+  if(!isGuest && window.currentUser){ try{ await saveToFirebaseOne(getUserPath()+'/habits', h); }catch(e){} }
   renderAll();
 }
 async function pushAllToFirebase(){
+  if(isGuest || !window.currentUser){ showErr('Guest Mode ma Firebase sync hudaina. Pahila Login garnus.'); return; }
   const tx=getTx(); const h=getHabits(); const b=getBudget();
   showOk('Sync gardai... '+tx.length+' transaction pathaudai...');
   try{
-    const obj={};
-    tx.forEach(t=>{ obj[String(t.id)]=t; });
-    if(!window._fb) throw new Error('Firebase ready chaina');
-    const {db, ref, set}=window._fb;
-    await set(ref(db,'app/transactions'), obj);
-    await set(ref(db,'app/habits'), h);
-    await set(ref(db,'app/settings/budget'), b);
-    showOk('<b>Sync Success!</b> '+tx.length+' transaction + habits + budget sabai Firebase ma pugyo.<br>Firebase Console &gt; Realtime Database &gt; Data ma gayera <b>app/transactions</b> hernus, dekhincha.');
+    const obj={}; tx.forEach(t=>{ obj[String(t.id)]=t; });
+    const {db, ref, set}=window._fb; const base=getUserPath();
+    await set(ref(db, base+'/transactions'), obj);
+    await set(ref(db, base+'/habits'), h);
+    await set(ref(db, base+'/settings/budget'), b);
+    showOk('<b>Sync Success!</b> '+tx.length+' transaction + habits + budget sabai Firebase ma pugyo.<br>Path: '+base+'/transactions');
     document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
-  }catch(e){
-    showErr('<b>Sync Fail:</b> '+(e.code||'')+'<br>'+e.message+'<br><br>Rules fix nagaresamma Firebase le rokcha. Tala ko Rules box ma bhako rules Publish garnus.');
-  }
+  }catch(e){ showErr('<b>Sync Fail:</b> '+(e.code||'')+'<br>'+e.message); }
 }
-async function loadFromFirebase(silent){
+async function loadFromFirebase(){
+  if(isGuest || !window.currentUser){ showErr('Guest Mode ma Firebase load hudaina. Login garnus.'); return; }
   try{
-    if(!window._fb) throw new Error('Firebase ready chaina');
-    const {db, ref, get}=window._fb;
-    const snap=await get(ref(db,'app/transactions'));
+    const {db, ref, get}=window._fb; const base=getUserPath();
+    const snap=await get(ref(db, base+'/transactions'));
     if(snap.exists()){
-      const data=snap.val();
-      const arr=Object.values(data).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-      // Only overwrite if Firebase has more or local is empty - avoid deleting local new data
-      const local=getTx();
-      if(arr.length>=local.length || local.length===0){
-        saveTxLocal(arr);
-        if(!silent) showOk('Firebase bata '+arr.length+' transaction load bhayo.');
-      } else {
-        if(!silent) showOk('Firebase ma '+arr.length+' cha, device ma '+local.length+' cha. Device ko naya data bachaiyo. Firebase ma pathauna <b>Firebase ma Sync Garne</b> thichnus.');
-      }
-      const hSnap=await get(ref(db,'app/habits'));
-      if(hSnap.exists()) saveHabitsLocal(hSnap.val());
-      const bSnap=await get(ref(db,'app/settings/budget'));
-      if(bSnap.exists()) localStorage.setItem('mp_budget', bSnap.val());
+      const arr=Object.values(snap.val()).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      saveTxLocal(arr); showOk('Firebase bata '+arr.length+' transaction load bhayo.');
+      const hSnap=await get(ref(db, base+'/habits')); if(hSnap.exists()) saveHabitsLocal(hSnap.val());
+      const bSnap=await get(ref(db, base+'/settings/budget')); if(bSnap.exists()) localStorage.setItem(storageKey('budget'), bSnap.val());
       document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
       renderAll();
-      return true;
-    } else {
-      if(!silent) showOk('Firebase ma ahile data chaina (empty). Device ma bhako data Firebase ma pathauna <b>Firebase ma Sync Garne</b> thichnus.');
-      return false;
-    }
-  }catch(e){
-    if(!silent) showErr('<b>Load Fail:</b> '+(e.code||'')+'<br>'+e.message+'<br>Rules / Auth check garnus.');
-    return false;
-  }
+    } else { showOk('Firebase ma ahile data chaina. Device ko data pathauna Sync thichnus.'); }
+  }catch(e){ showErr('<b>Load Fail:</b> '+(e.code||'')+'<br>'+e.message); }
 }
 async function testFirebase(){
-  showOk('Test gardai... Firebase ma test data lekhdai...');
+  if(isGuest || !window.currentUser){ showErr('Guest Mode ma Test hudaina. Login garnus, ani Test garnus.'); return; }
+  showOk('Test gardai...');
   try{
     const testId='test_'+Date.now();
-    await saveToFirebaseOne('app/_test/'+testId, {time: new Date().toISOString(), ok:true});
-    // Read back
+    await saveToFirebaseOne(getUserPath()+'/_test/'+testId, {time: new Date().toISOString(), ok:true});
     const {db, ref, get}=window._fb;
-    const snap=await get(ref(db,'app/_test/'+testId));
+    const snap=await get(ref(db, getUserPath()+'/_test/'+testId));
     if(snap.exists()){
-      showOk('<b>Firebase TEST PASS!</b> Lekhna ra padhna dubai milyo. Abba sabai data Firebase ma jancha.<br>Test ID: '+testId);
-      document.getElementById('statusBadge').className='badge ok';
-      document.getElementById('statusBadge').textContent='Firebase Connected - Test Pass';
-    } else {
-      showErr('Test fail - Data lekheko jasto lagyo tara read garna sakiyena.');
-    }
+      showOk('<b>Firebase TEST PASS!</b> Lekhna ra padhna dubai milyo. Path: '+getUserPath()+'/_test');
+      document.getElementById('syncText').textContent='Firebase Connected - Test Pass';
+      document.getElementById('syncDot').className='dot';
+    } else showErr('Test fail - Read garna sakiyena.');
   }catch(e){
-    showErr('<b>Firebase TEST FAIL - Yo nai reason ho:</b><br>Code: '+(e.code||'unknown')+'<br>Msg: '+e.message+'<br><br><b>Abba garnus:</b><br>1. Realtime Database &gt; Rules ma ".read": true, ".write": true Publish garnus<br>2. Authentication &gt; Anonymous Enable garnus<br>3. Page refresh garera feri Test garnus');
-    document.getElementById('statusBadge').className='badge err';
-    document.getElementById('statusBadge').textContent='Firebase Fail - Rules / Auth Herne';
+    showErr('<b>TEST FAIL:</b> '+(e.code||'')+'<br>'+e.message+'<br>Rules Publish bhayo? Auth ON cha?');
+    document.getElementById('syncText').textContent='Firebase Fail';
+    document.getElementById('syncDot').className='dot red';
   }
 }
-function copyRules(){
-  const txt=document.getElementById('rulesText').innerText;
-  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>alert('Rules copy bhayo! Firebase ma paste garnus')); }
-  else { prompt('Yo rules copy garnus', txt); }
-}
+function copyRules(){ const txt=document.getElementById('rulesText').innerText; if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>alert('Rules copy bhayo!')); } else { prompt('Copy garnus', txt); } }
 function filteredTx(){
-  let arr=getTx();
-  const mf=document.getElementById('monthFilter').value;
-  const now=new Date();
+  let arr=getTx(); const mf=document.getElementById('monthFilter').value; const now=new Date();
   if(mf==='this'){ arr=arr.filter(x=>{ const d=new Date(x.date); return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); }); }
   if(mf==='7'){ const seven=new Date(); seven.setDate(now.getDate()-7); arr=arr.filter(x=> new Date(x.date)>=seven); }
   if(curFilter!=='all') arr=arr.filter(x=>x.type===curFilter);
@@ -404,19 +620,15 @@ function filteredTx(){
 function renderHabits(){
   const h=getHabits(); const today=h[todayStr()]||{}; let done=0;
   document.getElementById('habitList').innerHTML=habits.map(hb=>{
-    const c=today[hb.id]?'checked':'';
-    if(today[hb.id]) done++;
-    return '<div class="habit"><input type="checkbox" '+c+' onchange="toggleHabit(\''+hb.id+'\', this.checked)"><div><b>'+hb.title+'</b><br><span>'+hb.desc+'</span></div></div>';
+    const c=today[hb.id]?'checked':''; if(today[hb.id]) done++;
+    return '<div class="habit"><input type="checkbox" '+c+' onchange="toggleHabit(\''+hb.id+'\', this.checked)"><div><b>'+hb.title+'</b><br><span style="font-size:12px;color:#64748B">'+hb.desc+'</span></div></div>';
   }).join('');
   document.getElementById('habitScore').textContent='Aaja ko Habit Score: '+done+' / 5';
+  document.getElementById('habitScoreTop').textContent=done+' / 5';
   let streak=0; let d=new Date();
-  for(let i=0;i<30;i++){
-    const ds=d.toISOString().slice(0,10);
-    const day=h[ds]||{}; const cnt=Object.values(day).filter(Boolean).length;
-    if(cnt>=3) streak++; else if(i>0) break;
-    d.setDate(d.getDate()-1);
-  }
-  document.getElementById('streakText').textContent='Streak: '+streak+' din (3+ habit gareko din)';
+  for(let i=0;i<30;i++){ const ds=d.toISOString().slice(0,10); const day=h[ds]||{}; const cnt=Object.values(day).filter(Boolean).length; if(cnt>=3) streak++; else if(i>0) break; d.setDate(d.getDate()-1); }
+  document.getElementById('streakText').textContent='Streak: '+streak+' din';
+  document.getElementById('streakPill').textContent='Streak: '+streak+' din';
 }
 function renderAll(){
   const arr=filteredTx();
@@ -429,52 +641,27 @@ function renderAll(){
   document.getElementById('expenseCount').textContent=arr.filter(x=>x.type==='expense').length+' transaction';
   const rate=inc>0?Math.max(0,Math.round((inc-exp)/inc*100)):0;
   document.getElementById('savingBar').style.width=rate+'%';
-  document.getElementById('savingText').textContent='Saving Rate: '+rate+'%';
-  const budget=getBudget();
-  document.getElementById('budgetInput').value=budget||'';
-  if(budget>0){
-    const pct=Math.min(100,Math.round(exp/budget*100));
-    document.getElementById('budgetBar').style.width=pct+'%';
-    document.getElementById('budgetText').textContent='Budget ko '+pct+'% sakiyo - Kharcha Rs. '+exp.toLocaleString()+' / Budget Rs. '+budget.toLocaleString()+(pct>80?' - Bistarai hai!':'');
-  } else {
-    document.getElementById('budgetBar').style.width='0%';
-    document.getElementById('budgetText').textContent='Budget set garnuhos';
-  }
-  const cats={};
-  arr.filter(x=>x.type==='expense').forEach(x=>{ cats[x.category]=(cats[x.category]||0)+Number(x.amount); });
+  document.getElementById('savingText').textContent='Saving Rate: '+rate+'% • Budget track bhairaheko cha';
+  const budget=getBudget(); document.getElementById('budgetInput').value=budget||'';
+  if(budget>0){ const pct=Math.min(100,Math.round(exp/budget*100)); document.getElementById('budgetBar').style.width=pct+'%'; document.getElementById('budgetText').textContent='Budget ko '+pct+'% sakiyo - Rs. '+exp.toLocaleString()+' / Rs. '+budget.toLocaleString()+(pct>80?' - Bistarai hai!':''); document.getElementById('budgetTop').textContent=pct+'%'; document.getElementById('budgetTextTop').textContent='Rs. '+exp.toLocaleString()+' / '+budget.toLocaleString(); }
+  else { document.getElementById('budgetBar').style.width='0%'; document.getElementById('budgetText').textContent='Budget set garnuhos'; document.getElementById('budgetTop').textContent='-'; document.getElementById('budgetTextTop').textContent='Budget set garnuhos'; }
+  const cats={}; arr.filter(x=>x.type==='expense').forEach(x=>{ cats[x.category]=(cats[x.category]||0)+Number(x.amount); });
   const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
   if(entries.length){
-    const max=entries[0][1];
     document.getElementById('topCatText').textContent='Timi sabai bhanda dherai '+entries[0][0]+' ma kharcha garchhau - Rs. '+entries[0][1].toLocaleString();
-    document.getElementById('catList').innerHTML=entries.map(([k,v])=>{
-      const pct=exp?Math.round(v/exp*100):0;
-      return '<div class="catrow"><div class="top"><span>'+k+'</span><span>Rs. '+v.toLocaleString()+' - '+pct+'%</span></div><div class="bar"><div style="width:'+pct+'%"></div></div></div>';
-    }).join('');
-  } else {
-    document.getElementById('topCatText').textContent='Ahile samma kharcha chaina';
-    document.getElementById('catList').innerHTML='';
-  }
-  if(arr.length===0){
-    document.getElementById('history').innerHTML='<p style="padding:12px 0"><small>Ahile samma kehi chaina, mathi bata thapnuhos hai!</small></p>';
-  } else {
-    document.getElementById('history').innerHTML=arr.slice(0,50).map(x=>{
-      const sign=x.type==='income'?'+':'-';
-      const col=x.type==='income'?'green':'red';
-      return '<div class="row"><div><b>'+x.category+'</b><br><small>'+x.note+' - '+x.date+'</small></div><div style="text-align:right"><b class="'+col+'">'+sign+' Rs. '+Number(x.amount).toLocaleString()+'</b><br><button class="del" onclick="delTx(\''+x.id+'\')">Delete</button></div></div>';
-    }).join('');
-  }
+    document.getElementById('catList').innerHTML=entries.map(([k,v])=>{ const pct=exp?Math.round(v/exp*100):0; return '<div class="catrow"><div class="top"><span>'+k+'</span><span>Rs. '+v.toLocaleString()+' - '+pct+'%</span></div><div class="bar"><div style="width:'+pct+'%"></div></div></div>'; }).join('');
+  } else { document.getElementById('topCatText').textContent='Ahile samma kharcha chaina'; document.getElementById('catList').innerHTML=''; }
+  if(arr.length===0){ document.getElementById('history').innerHTML='<p style="padding:12px 0;color:#64748B;font-size:13px">Ahile samma kehi chaina, mathi bata thapnuhos hai!</p>'; }
+  else { document.getElementById('history').innerHTML=arr.slice(0,50).map(x=>{ const sign=x.type==='income'?'+':'-'; const col=x.type==='income'?'#059669':'#DC2626'; return '<div class="row"><div><b>'+x.category+'</b><br><small style="color:#64748B">'+x.note+' - '+x.date+'</small></div><div style="text-align:right"><b style="color:'+col+'">'+sign+' Rs. '+Number(x.amount).toLocaleString()+'</b><br><button class="del" onclick="delTx(\''+x.id+'\')">Delete</button></div></div>'; }).join(''); }
   const all=getTx(); let html='';
-  for(let i=5;i>=0;i--){
-    const d=new Date(); d.setMonth(d.getMonth()-i);
-    const y=d.getFullYear(), m=d.getMonth();
+  for(let i=5;i>=0;i--){ const d=new Date(); d.setMonth(d.getMonth()-i); const y=d.getFullYear(), m=d.getMonth();
     const mi=all.filter(x=>{ const dd=new Date(x.date); return dd.getFullYear()===y && dd.getMonth()===m && x.type==='income'; }).reduce((s,x)=>s+Number(x.amount),0);
     const me=all.filter(x=>{ const dd=new Date(x.date); return dd.getFullYear()===y && dd.getMonth()===m && x.type==='expense'; }).reduce((s,x)=>s+Number(x.amount),0);
-    const mx=Math.max(mi,me,1);
-    const h1=Math.max(4,Math.round(mi/mx*65)); const h2=Math.max(4,Math.round(me/mx*65));
-    const label=d.toLocaleString('en',{month:'short'});
-    html+='<div class="col"><div class="bars"><div class="b1" style="height:'+h1+'px"></div><div class="b2" style="height:'+h2+'px"></div></div><small>'+label+'</small></div>';
-  }
+    const mx=Math.max(mi,me,1); const h1=Math.max(4,Math.round(mi/mx*76)); const h2=Math.max(4,Math.round(me/mx*76)); const label=d.toLocaleString('en',{month:'short'});
+    html+='<div class="col"><div class="bars"><div class="b1" style="height:'+h1+'px"></div><div class="b2" style="height:'+h2+'px"></div></div><small style="color:#64748B">'+label+'</small></div>'; }
   document.getElementById('monthChart').innerHTML=html;
+  document.getElementById('welcomeDate').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'}) + ' - Aaja ko finance check garnus.';
+  document.getElementById('monthPill').textContent = 'Filter: ' + (document.getElementById('monthFilter').value==='this'?'Yo Mahina':document.getElementById('monthFilter').value==='7'?'Last 7 Din':'Sabai Mahina');
   renderHabits();
 }
 document.getElementById('dateInput').value=todayStr();
