@@ -3,39 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mero Paisa Habit Tracker</title>
+<title>Mero Paisa Habit Tracker - Firebase Sync</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,Arial,sans-serif;background:#fef9ec;color:#1a1a1a;padding:12px;padding-bottom:40px}
-.wrap{max-width:640px;margin:0 auto}
+body{font-family:system-ui,-apple-system,Arial,sans-serif;background:#fef9ec;color:#1a1a1a;padding:12px;padding-bottom:50px}
+.wrap{max-width:660px;margin:0 auto}
 header{background:#0f5132;color:#fff;padding:18px;border-radius:16px;margin-bottom:12px}
-header h1{font-size:22px;letter-spacing:.5px}
-header p{font-size:13px;opacity:.9;margin-top:6px;line-height:1.5}
-.badge{display:inline-block;background:#ffc107;color:#111;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;margin-top:10px}
+header h1{font-size:22px}
+header p{font-size:13px;opacity:.92;margin-top:6px;line-height:1.5}
+.badge{display:inline-block;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800;margin-top:10px}
+.badge.ok{background:#c8f7d4;color:#0a4d1f}
+.badge.warn{background:#ffe8a3;color:#5a3d00}
+.badge.err{background:#ffc9c9;color:#7a0000}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .card{background:#fff;border:1px solid #eee;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .card h3{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:.5px}
-.card .big{font-size:22px;font-weight:800;margin-top:6px}
-.green{color:#0a7a42}.red{color:#d32f2f}.dark{color:#111}
+.big{font-size:22px;font-weight:800;margin-top:6px}
+.green{color:#0a7a42}.red{color:#d32f2f}
 .full{grid-column:1/-1}
 label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}
-input,select,textarea{width:100%;padding:12px;border:1.5px solid #ddd;border-radius:10px;font-size:15px;background:#fff}
+input,select{width:100%;padding:12px;border:1.5px solid #ddd;border-radius:10px;font-size:15px}
 .toggle{display:flex;gap:8px}
 .toggle button{flex:1;padding:12px;border-radius:10px;border:2px solid #ddd;background:#f8f8f8;font-weight:800;cursor:pointer}
 .toggle button.active{border-color:#0f5132;background:#0f5132;color:#fff}
 .quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .quick button{padding:8px 14px;border-radius:999px;border:1px solid #ddd;background:#fff;cursor:pointer;font-weight:700}
-.btn{width:100%;padding:14px;border:0;border-radius:12px;background:#0f5132;color:#fff;font-size:16px;font-weight:800;cursor:pointer;margin-top:14px}
+.btn{width:100%;padding:14px;border:0;border-radius:12px;background:#0f5132;color:#fff;font-size:16px;font-weight:800;cursor:pointer;margin-top:12px}
 .btn2{background:#fff;color:#0f5132;border:2px solid #0f5132}
+.btnSmall{padding:10px 12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-weight:700;cursor:pointer;font-size:13px}
 .bar{height:12px;background:#eee;border-radius:999px;overflow:hidden;margin-top:8px}
-.bar > div{height:100%;background:#0f5132}
-.bar.redbar > div{background:#d32f2f}
+.bar>div{height:100%;background:#0f5132}
+.bar.redbar>div{background:#d32f2f}
 .habit{display:flex;gap:10px;align-items:flex-start;background:#f8fbf8;border:1px solid #e5eee5;padding:12px;border-radius:12px;margin-top:8px}
 .habit input{width:22px;height:22px;margin-top:2px}
-.habit b{font-size:14px}
-.habit span{font-size:12px;color:#666}
 .row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f0}
-.row:last-child{border:0}
 .del{background:#fff0f0;color:#d32f2f;border:1px solid #ffd6d6;padding:6px 10px;border-radius:8px;cursor:pointer}
 .filter{display:flex;gap:8px;margin:10px 0}
 .filter button{padding:8px 14px;border-radius:999px;border:1px solid #ddd;background:#fff;cursor:pointer}
@@ -49,6 +50,11 @@ input,select,textarea{width:100%;padding:12px;border:1.5px solid #ddd;border-rad
 .monthbar .b2{width:10px;background:#d32f2f;border-radius:4px 4px 0 0}
 small{color:#666;font-size:12px;line-height:1.5}
 .tip{background:#fff8d6;border:1px solid #ffe58a;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;margin-top:12px}
+.errBox{background:#fff0f0;border:1px solid #ffb3b3;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;margin-top:10px;display:none}
+.okBox{background:#e9ffed;border:1px solid #9be7a8;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;margin-top:10px;display:none}
+pre{background:#111;color:#d6ffdf;padding:12px;border-radius:10px;font-size:12px;overflow:auto;margin-top:8px;white-space:pre-wrap}
+.flex2{display:flex;gap:8px}
+.flex2>*{flex:1}
 </style>
 </head>
 <body>
@@ -56,13 +62,30 @@ small{color:#666;font-size:12px;line-height:1.5}
 <header>
 <h1>MERO PAISA HABIT TRACKER</h1>
 <p>Paisa track garne bhaneko paisa bachaaune pahilo step ho. Aaja dekhi harek kharcha lekhnuhos.</p>
-<div class="badge" id="statusBadge">Local Mode - Phone ma save huncha</div>
+<div id="statusBadge" class="badge warn">Firebase check gardai...</div>
+<div style="font-size:12px;margin-top:8px;opacity:.9" id="statusDetail">Firebase connect hundai cha...</div>
 </header>
 
-<div class="grid">
+<div class="card">
+<h3>FIREBASE SYNC - YO NAYA HO</h3>
+<p style="font-size:13px;line-height:1.6;margin-top:6px">Pahila data device ma matra basthyo. Ahile harek save Firebase ma pani jancha. Yedi Firebase le rokeko cha bhane tala error nai dekhincha.</p>
+<div class="flex2" style="margin-top:10px">
+<button class="btnSmall" onclick="pushAllToFirebase()">Firebase ma Sync Garne</button>
+<button class="btnSmall" onclick="loadFromFirebase()">Firebase bata Load Garne</button>
+</div>
+<div class="flex2" style="margin-top:8px">
+<button class="btnSmall" onclick="testFirebase()">Firebase Test Garne</button>
+<button class="btnSmall" onclick="copyRules()">Rules Copy Garne</button>
+</div>
+<div id="okBox" class="okBox"></div>
+<div id="errBox" class="errBox"></div>
+<small id="lastSync" style="display:block;margin-top:8px">Last Sync: Kahile pani bhayena</small>
+</div>
+
+<div class="grid" style="margin-top:12px">
 <div class="card"><h3>Total Kamai</h3><div class="big green" id="totalIncome">Rs. 0</div><small id="incomeCount">0 transaction</small></div>
 <div class="card"><h3>Total Kharcha</h3><div class="big red" id="totalExpense">Rs. 0</div><small id="expenseCount">0 transaction</small></div>
-<div class="card full"><h3>Baki Balance</h3><div class="big dark" id="balance">Rs. 0</div><div class="bar"><div id="savingBar" style="width:0%"></div></div><small id="savingText">Saving Rate: 0%</small></div>
+<div class="card full"><h3>Baki Balance</h3><div class="big" id="balance">Rs. 0</div><div class="bar"><div id="savingBar" style="width:0%"></div></div><small id="savingText">Saving Rate: 0%</small></div>
 </div>
 
 <div class="card">
@@ -99,13 +122,13 @@ small{color:#666;font-size:12px;line-height:1.5}
 <input id="dateInput" type="date">
 <label>Note - K ma kharcha bhayo?</label>
 <input id="note" type="text" placeholder="Ex: Khaja, Petrol, Salary">
-<button class="btn" onclick="addTransaction()">Save Garne</button>
+<button class="btn" onclick="addTransaction()">Save Garne - Device + Firebase</button>
 <small id="saveMsg"></small>
 </div>
 
 <div class="card" style="margin-top:12px">
 <h3>AAJA KO FINANCE HABIT</h3>
-<small>Aaja ko score le bholiko habit banauncha. Check garnuhos.</small>
+<small>Aaja ko score le bholiko habit banauncha.</small>
 <div id="habitList"></div>
 <div style="margin-top:12px"><b id="habitScore">Aaja ko Habit Score: 0 / 5</b><br><small id="streakText">Streak: 0 din</small></div>
 </div>
@@ -133,16 +156,30 @@ small{color:#666;font-size:12px;line-height:1.5}
 <div id="history"></div>
 </div>
 
-<div class="tip">
-<b>Firebase kasari jodne?</b><br>
-Yo file ma tapaiko Firebase (financehabit-13683) config haleko cha. Yedi Firebase Rules ma read/write true chaina bhane Local Mode ma chalne cha, tara data harauudaina. Firebase Console &gt; Realtime Database &gt; Rules ma { ".read": true, ".write": true } rakhnuhos.
+<div class="tip" id="rulesBox">
+<b>Firebase ma Save Nabhaye - 2 Minute ko Fix:</b><br><br>
+<b>Step 1:</b> Firebase Console &gt; Tapaiko project <b>financehabit-13683</b> kholnus<br>
+<b>Step 2:</b> Baye side ma <b>Build &gt; Realtime Database</b> &gt; <b>Rules</b> tab<br>
+<b>Step 3:</b> Tala ko rules copy garera paste garnus, ani <b>Publish</b> thichnus:<br>
+<pre id="rulesText">{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}</pre>
+<b>Step 4:</b> Baye side <b>Build &gt; Authentication</b> &gt; <b>Sign-in method</b> &gt; <b>Anonymous</b> lai <b>Enable</b> garnus.<br>
+<b>Step 5:</b> Yo app ma <b>Firebase Test Garne</b> thichnus. Green aaye pachi sabai sync huncha.
+<br><br>
+<small>Note: Yo rules personal app ko lagi ho. Public app banaune bhaye pachhi auth wala rules rakhnu parcha.</small>
 </div>
-<p style="text-align:center;margin-top:14px"><small>Mero Paisa Habit Tracker - finance.yonghangishak.com.np</small></p>
+<p style="text-align:center;margin-top:14px"><small>Mero Paisa Habit Tracker - finance.yonghangishak.com.np - Firebase + Local Dual Save</small></p>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, onValue, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDXxnTFnLX3HGfIARahE-kulg_ZF-n_nEA",
   authDomain: "financehabit-13683.firebaseapp.com",
@@ -153,23 +190,54 @@ const firebaseConfig = {
   appId: "1:681883146838:web:462477121df17a1d9939f7",
   measurementId: "G-9DF0LBGY4M"
 };
+
+let fbApp=null, fbDb=null, fbAuth=null, fbUser=null, fbReady=false;
+
+function setBadge(state, text, detail){
+  const b=document.getElementById('statusBadge');
+  const d=document.getElementById('statusDetail');
+  b.className='badge '+state;
+  b.textContent=text;
+  if(d) d.textContent=detail||'';
+}
+function showOk(msg){
+  const el=document.getElementById('okBox'); el.style.display='block'; el.innerHTML=msg;
+  document.getElementById('errBox').style.display='none';
+}
+function showErr(msg){
+  const el=document.getElementById('errBox'); el.style.display='block'; el.innerHTML=msg;
+  document.getElementById('okBox').style.display='none';
+}
+
 try{
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  window._fb = {db, ref, set, onValue, push};
-  const badge = document.getElementById('statusBadge');
-  if(badge){ badge.textContent = 'Firebase Connected - Sabai device ma sync huncha'; badge.style.background='#c8f7d4'; }
-  // Try to listen - if permission fails, stay in local mode silently
-  try{
-    onValue(ref(db,'app/transactions'), (snap)=>{
-      if(snap.exists()){
-        const data = snap.val();
-        const arr = Object.values(data);
-        if(arr.length>0){ localStorage.setItem('mp_transactions', JSON.stringify(arr)); renderAll(); }
+  fbApp=initializeApp(firebaseConfig);
+  fbDb=getDatabase(fbApp);
+  fbAuth=getAuth(fbApp);
+  window._fb={db:fbDb, ref, set, get, remove};
+  setBadge('warn','Firebase Connect Hundai Cha...','Anonymous login try gardai...');
+  onAuthStateChanged(fbAuth, async (user)=>{
+    if(user){
+      fbUser=user; fbReady=true;
+      setBadge('ok','Firebase Connected - UID: '+user.uid.slice(0,8)+'...','Abba harek save Firebase ma pani jancha.');
+      // Auto load once on first connect if Firebase has data
+      try{ await window.loadFromFirebase(true); }catch(e){}
+    } else {
+      try{
+        await signInAnonymously(fbAuth);
+      }catch(e){
+        fbReady=false;
+        setBadge('err','Firebase Login Fail - Anonymous OFF cha','Firebase Console > Authentication > Anonymous Enable garnus. Error: '+e.code+' - '+e.message);
+        showErr('<b>Login Fail:</b> '+e.code+'<br>'+e.message+'<br><br><b>Fix:</b> Firebase Console &gt; Authentication &gt; Sign-in method &gt; Anonymous &gt; Enable &gt; Save garnus. Ani page refresh garnus.');
       }
-    });
-  }catch(e){}
-}catch(e){ console.log('Firebase fallback to local', e); }
+    }
+  });
+}catch(e){
+  setBadge('err','Firebase Init Fail','Config / Internet check garnus: '+e.message);
+  showErr('Init Error: '+e.message);
+}
+
+window._fbStatus = ()=>({ready:fbReady, uid: fbUser?fbUser.uid:null});
+window.showOk=showOk; window.showErr=showErr; window.setBadge=setBadge;
 </script>
 
 <script>
@@ -186,164 +254,228 @@ const habits=[
 ];
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function getTx(){ try{ return JSON.parse(localStorage.getItem('mp_transactions')||'[]'); }catch(e){ return []; } }
-function saveTx(arr){ localStorage.setItem('mp_transactions', JSON.stringify(arr)); }
+function saveTxLocal(arr){ localStorage.setItem('mp_transactions', JSON.stringify(arr)); }
 function getHabits(){ try{ return JSON.parse(localStorage.getItem('mp_habits')||'{}'); }catch(e){ return {}; } }
-function saveHabits(o){ localStorage.setItem('mp_habits', JSON.stringify(o)); }
+function saveHabitsLocal(o){ localStorage.setItem('mp_habits', JSON.stringify(o)); }
 function getBudget(){ return Number(localStorage.getItem('mp_budget')||0); }
-function setType(t){
- curType=t;
- document.getElementById('btnExpense').className = t==='expense'?'active':'';
- document.getElementById('btnIncome').className = t==='income'?'active':'';
- fillCats();
-}
+
+function setType(t){ curType=t; document.getElementById('btnExpense').className=t==='expense'?'active':''; document.getElementById('btnIncome').className=t==='income'?'active':''; fillCats(); }
 function setAmount(v){ document.getElementById('amount').value=v; }
-function setFilter(f){
- curFilter=f;
- document.getElementById('fAll').className = f==='all'?'active':'';
- document.getElementById('fInc').className = f==='income'?'active':'';
- document.getElementById('fExp').className = f==='expense'?'active':'';
- renderAll();
+function setFilter(f){ curFilter=f; document.getElementById('fAll').className=f==='all'?'active':''; document.getElementById('fInc').className=f==='income'?'active':''; document.getElementById('fExp').className=f==='expense'?'active':''; renderAll(); }
+function fillCats(){ const sel=document.getElementById('category'); const list=curType==='income'?incomeCats:expenseCats; sel.innerHTML=list.map(c=>'<option>'+c+'</option>').join(''); }
+
+async function saveToFirebaseOne(path, value){
+  if(!window._fb) throw new Error('Firebase load bhayena - Internet / Config check garnus');
+  const {db, ref, set} = window._fb;
+  await set(ref(db, path), value);
 }
-function fillCats(){
- const sel=document.getElementById('category');
- const list = curType==='income'?incomeCats:expenseCats;
- sel.innerHTML = list.map(c=>'<option>'+c+'</option>').join('');
-}
-function saveBudget(){
- const v=Number(document.getElementById('budgetInput').value||0);
- localStorage.setItem('mp_budget', v);
- document.getElementById('saveMsg').textContent='Budget save bhayo!';
- renderAll();
-}
-function addTransaction(){
- const amt=Number(document.getElementById('amount').value||0);
- if(!amt){ alert('Pahila Amount halnuhos'); return; }
- const tx={
-  id: Date.now(),
-  type: curType,
-  amount: amt,
-  category: document.getElementById('category').value,
-  date: document.getElementById('dateInput').value || todayStr(),
-  note: document.getElementById('note').value || document.getElementById('category').value
- };
- const arr=getTx(); arr.unshift(tx); saveTx(arr);
- // Try Firebase sync
- try{
-  if(window._fb){
-    const {db, ref, push, set} = window._fb;
-    set(ref(db,'app/transactions/'+tx.id), tx);
+async function saveBudget(){
+  const v=Number(document.getElementById('budgetInput').value||0);
+  localStorage.setItem('mp_budget', v);
+  document.getElementById('saveMsg').textContent='Budget local ma save bhayo, Firebase ma pathaudai...';
+  try{
+    await saveToFirebaseOne('app/settings/budget', v);
+    document.getElementById('saveMsg').textContent='Budget save bhayo! Device + Firebase dubai ma.';
+    showOk('Budget Firebase ma pani save bhayo - Rs. '+v);
+    document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
+  }catch(e){
+    document.getElementById('saveMsg').textContent='Budget device ma save bhayo, Firebase ma fail: '+e.code+' / '+e.message;
+    showErr('<b>Firebase Save Fail:</b> '+(e.code||'')+'<br>'+e.message+'<br><br><b>Fix:</b> Rules ma ".read": true, ".write": true rakhera Publish garnus, ra Anonymous Auth ON garnus. Tala ko Rules box hernus.');
   }
- }catch(e){}
- document.getElementById('amount').value='';
- document.getElementById('note').value='';
- document.getElementById('saveMsg').textContent='Save bhayo! '+amt+' Rs. '+tx.category+' ma.';
- renderAll();
+  renderAll();
 }
-function delTx(id){
- if(!confirm('Yo transaction delete garne?')) return;
- const arr=getTx().filter(x=>String(x.id)!==String(id));
- saveTx(arr); renderAll();
+async function addTransaction(){
+  const amt=Number(document.getElementById('amount').value||0);
+  if(!amt){ alert('Pahila Amount halnuhos'); return; }
+  const tx={ id: String(Date.now()), type: curType, amount: amt, category: document.getElementById('category').value, date: document.getElementById('dateInput').value || todayStr(), note: document.getElementById('note').value || document.getElementById('category').value, createdAt: Date.now() };
+  const arr=getTx(); arr.unshift(tx); saveTxLocal(arr);
+  document.getElementById('amount').value=''; document.getElementById('note').value='';
+  document.getElementById('saveMsg').textContent='Device ma save bhayo, Firebase ma pathaudai...';
+  try{
+    await saveToFirebaseOne('app/transactions/'+tx.id, tx);
+    document.getElementById('saveMsg').textContent='Save bhayo! '+amt+' Rs. '+tx.category+' - Device + Firebase dubai ma.';
+    showOk('Transaction Firebase ma pani save bhayo.<br>Path: app/transactions/'+tx.id);
+    document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
+  }catch(e){
+    document.getElementById('saveMsg').textContent='Device ma save bhayo, Firebase ma fail bhayo: '+(e.code||e.message);
+    showErr('<b>Firebase Save Fail - Yo nai tapaiko problem ho:</b><br>Code: '+(e.code||'unknown')+'<br>Msg: '+e.message+'<br><br><b>Fix:</b><br>1. Firebase Console &gt; Realtime Database &gt; Rules &gt; ".read": true, ".write": true rakhera Publish garnus<br>2. Authentication &gt; Anonymous Enable garnus<br>3. Ani <b>Firebase Test Garne</b> thichnus');
+  }
+  renderAll();
 }
-function toggleHabit(id, checked){
- const h=getHabits(); const d=todayStr();
- if(!h[d]) h[d]={};
- h[d][id]=checked; saveHabits(h); renderAll();
+async function delTx(id){
+  if(!confirm('Yo transaction delete garne?')) return;
+  const arr=getTx().filter(x=>String(x.id)!==String(id)); saveTxLocal(arr);
+  try{
+    if(window._fb){ const {db, ref, remove}=window._fb; await remove(ref(db,'app/transactions/'+id)); }
+  }catch(e){ console.log(e); }
+  renderAll();
 }
-function renderHabits(){
- const h=getHabits(); const today=h[todayStr()]||{};
- let done=0;
- document.getElementById('habitList').innerHTML = habits.map(hb=>{
-  const c = today[hb.id] ? 'checked' : '';
-  if(today[hb.id]) done++;
-  return '<div class="habit"><input type="checkbox" '+c+' onchange="toggleHabit(\''+hb.id+'\', this.checked)"><div><b>'+hb.title+'</b><br><span>'+hb.desc+'</span></div></div>';
- }).join('');
- document.getElementById('habitScore').textContent='Aaja ko Habit Score: '+done+' / 5';
- // streak
- let streak=0; let d=new Date();
- for(let i=0;i<30;i++){
-  const ds=d.toISOString().slice(0,10);
-  const day=h[ds]||{};
-  const cnt=Object.values(day).filter(Boolean).length;
-  if(cnt>=3) streak++; else if(i>0) break; else if(cnt<3 && i===0){ /* today not yet */ }
-  d.setDate(d.getDate()-1);
- }
- document.getElementById('streakText').textContent='Streak: '+streak+' din (3+ habit gareko din)';
+async function toggleHabit(id, checked){
+  const h=getHabits(); const d=todayStr(); if(!h[d]) h[d]={}; h[d][id]=checked; saveHabitsLocal(h);
+  try{ await saveToFirebaseOne('app/habits', h); }catch(e){ console.log('habit firebase fail',e); }
+  renderAll();
+}
+async function pushAllToFirebase(){
+  const tx=getTx(); const h=getHabits(); const b=getBudget();
+  showOk('Sync gardai... '+tx.length+' transaction pathaudai...');
+  try{
+    const obj={};
+    tx.forEach(t=>{ obj[String(t.id)]=t; });
+    if(!window._fb) throw new Error('Firebase ready chaina');
+    const {db, ref, set}=window._fb;
+    await set(ref(db,'app/transactions'), obj);
+    await set(ref(db,'app/habits'), h);
+    await set(ref(db,'app/settings/budget'), b);
+    showOk('<b>Sync Success!</b> '+tx.length+' transaction + habits + budget sabai Firebase ma pugyo.<br>Firebase Console &gt; Realtime Database &gt; Data ma gayera <b>app/transactions</b> hernus, dekhincha.');
+    document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
+  }catch(e){
+    showErr('<b>Sync Fail:</b> '+(e.code||'')+'<br>'+e.message+'<br><br>Rules fix nagaresamma Firebase le rokcha. Tala ko Rules box ma bhako rules Publish garnus.');
+  }
+}
+async function loadFromFirebase(silent){
+  try{
+    if(!window._fb) throw new Error('Firebase ready chaina');
+    const {db, ref, get}=window._fb;
+    const snap=await get(ref(db,'app/transactions'));
+    if(snap.exists()){
+      const data=snap.val();
+      const arr=Object.values(data).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      // Only overwrite if Firebase has more or local is empty - avoid deleting local new data
+      const local=getTx();
+      if(arr.length>=local.length || local.length===0){
+        saveTxLocal(arr);
+        if(!silent) showOk('Firebase bata '+arr.length+' transaction load bhayo.');
+      } else {
+        if(!silent) showOk('Firebase ma '+arr.length+' cha, device ma '+local.length+' cha. Device ko naya data bachaiyo. Firebase ma pathauna <b>Firebase ma Sync Garne</b> thichnus.');
+      }
+      const hSnap=await get(ref(db,'app/habits'));
+      if(hSnap.exists()) saveHabitsLocal(hSnap.val());
+      const bSnap=await get(ref(db,'app/settings/budget'));
+      if(bSnap.exists()) localStorage.setItem('mp_budget', bSnap.val());
+      document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString();
+      renderAll();
+      return true;
+    } else {
+      if(!silent) showOk('Firebase ma ahile data chaina (empty). Device ma bhako data Firebase ma pathauna <b>Firebase ma Sync Garne</b> thichnus.');
+      return false;
+    }
+  }catch(e){
+    if(!silent) showErr('<b>Load Fail:</b> '+(e.code||'')+'<br>'+e.message+'<br>Rules / Auth check garnus.');
+    return false;
+  }
+}
+async function testFirebase(){
+  showOk('Test gardai... Firebase ma test data lekhdai...');
+  try{
+    const testId='test_'+Date.now();
+    await saveToFirebaseOne('app/_test/'+testId, {time: new Date().toISOString(), ok:true});
+    // Read back
+    const {db, ref, get}=window._fb;
+    const snap=await get(ref(db,'app/_test/'+testId));
+    if(snap.exists()){
+      showOk('<b>Firebase TEST PASS!</b> Lekhna ra padhna dubai milyo. Abba sabai data Firebase ma jancha.<br>Test ID: '+testId);
+      document.getElementById('statusBadge').className='badge ok';
+      document.getElementById('statusBadge').textContent='Firebase Connected - Test Pass';
+    } else {
+      showErr('Test fail - Data lekheko jasto lagyo tara read garna sakiyena.');
+    }
+  }catch(e){
+    showErr('<b>Firebase TEST FAIL - Yo nai reason ho:</b><br>Code: '+(e.code||'unknown')+'<br>Msg: '+e.message+'<br><br><b>Abba garnus:</b><br>1. Realtime Database &gt; Rules ma ".read": true, ".write": true Publish garnus<br>2. Authentication &gt; Anonymous Enable garnus<br>3. Page refresh garera feri Test garnus');
+    document.getElementById('statusBadge').className='badge err';
+    document.getElementById('statusBadge').textContent='Firebase Fail - Rules / Auth Herne';
+  }
+}
+function copyRules(){
+  const txt=document.getElementById('rulesText').innerText;
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>alert('Rules copy bhayo! Firebase ma paste garnus')); }
+  else { prompt('Yo rules copy garnus', txt); }
 }
 function filteredTx(){
- let arr=getTx();
- const mf=document.getElementById('monthFilter').value;
- const now=new Date();
- if(mf==='this'){ arr=arr.filter(x=>{ const d=new Date(x.date); return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); }); }
- if(mf==='7'){ const seven=new Date(); seven.setDate(now.getDate()-7); arr=arr.filter(x=> new Date(x.date)>=seven); }
- if(curFilter!=='all') arr=arr.filter(x=>x.type===curFilter);
- const q=(document.getElementById('searchInput').value||'').toLowerCase();
- if(q) arr=arr.filter(x=> (x.note+' '+x.category).toLowerCase().includes(q));
- return arr;
+  let arr=getTx();
+  const mf=document.getElementById('monthFilter').value;
+  const now=new Date();
+  if(mf==='this'){ arr=arr.filter(x=>{ const d=new Date(x.date); return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); }); }
+  if(mf==='7'){ const seven=new Date(); seven.setDate(now.getDate()-7); arr=arr.filter(x=> new Date(x.date)>=seven); }
+  if(curFilter!=='all') arr=arr.filter(x=>x.type===curFilter);
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  if(q) arr=arr.filter(x=> (x.note+' '+x.category).toLowerCase().includes(q));
+  return arr;
+}
+function renderHabits(){
+  const h=getHabits(); const today=h[todayStr()]||{}; let done=0;
+  document.getElementById('habitList').innerHTML=habits.map(hb=>{
+    const c=today[hb.id]?'checked':'';
+    if(today[hb.id]) done++;
+    return '<div class="habit"><input type="checkbox" '+c+' onchange="toggleHabit(\''+hb.id+'\', this.checked)"><div><b>'+hb.title+'</b><br><span>'+hb.desc+'</span></div></div>';
+  }).join('');
+  document.getElementById('habitScore').textContent='Aaja ko Habit Score: '+done+' / 5';
+  let streak=0; let d=new Date();
+  for(let i=0;i<30;i++){
+    const ds=d.toISOString().slice(0,10);
+    const day=h[ds]||{}; const cnt=Object.values(day).filter(Boolean).length;
+    if(cnt>=3) streak++; else if(i>0) break;
+    d.setDate(d.getDate()-1);
+  }
+  document.getElementById('streakText').textContent='Streak: '+streak+' din (3+ habit gareko din)';
 }
 function renderAll(){
- const arr=filteredTx();
- const inc=arr.filter(x=>x.type==='income').reduce((s,x)=>s+Number(x.amount),0);
- const exp=arr.filter(x=>x.type==='expense').reduce((s,x)=>s+Number(x.amount),0);
- document.getElementById('totalIncome').textContent='Rs. '+inc.toLocaleString();
- document.getElementById('totalExpense').textContent='Rs. '+exp.toLocaleString();
- document.getElementById('balance').textContent='Rs. '+(inc-exp).toLocaleString();
- document.getElementById('incomeCount').textContent=arr.filter(x=>x.type==='income').length+' transaction';
- document.getElementById('expenseCount').textContent=arr.filter(x=>x.type==='expense').length+' transaction';
- const rate = inc>0 ? Math.max(0, Math.round((inc-exp)/inc*100)) : 0;
- document.getElementById('savingBar').style.width=rate+'%';
- document.getElementById('savingText').textContent='Saving Rate: '+rate+'%';
- // budget
- const budget=getBudget();
- document.getElementById('budgetInput').value = budget||'';
- if(budget>0){
-  const pct=Math.min(100, Math.round(exp/budget*100));
-  document.getElementById('budgetBar').style.width=pct+'%';
-  document.getElementById('budgetText').textContent='Budget ko '+pct+'% sakiyo - Kharcha Rs. '+exp.toLocaleString()+' / Budget Rs. '+budget.toLocaleString() + (pct>80?' - Bistarai hai, budget sakina lagyo!':'');
- } else {
-  document.getElementById('budgetBar').style.width='0%';
-  document.getElementById('budgetText').textContent='Budget set garnuhos';
- }
- // categories
- const cats={};
- arr.filter(x=>x.type==='expense').forEach(x=>{ cats[x.category]=(cats[x.category]||0)+Number(x.amount); });
- const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
- if(entries.length){
-  const max=entries[0][1];
-  document.getElementById('topCatText').textContent='Timi sabai bhanda dherai '+entries[0][0]+' ma kharcha garchhau - Rs. '+entries[0][1].toLocaleString();
-  document.getElementById('catList').innerHTML=entries.map(([k,v])=>{
-   const pct=exp?Math.round(v/exp*100):0;
-   return '<div class="catrow"><div class="top"><span>'+k+'</span><span>Rs. '+v.toLocaleString()+' - '+pct+'%</span></div><div class="bar"><div style="width:'+pct+'%"></div></div></div>';
-  }).join('');
- } else {
-  document.getElementById('topCatText').textContent='Ahile samma kharcha chaina';
-  document.getElementById('catList').innerHTML='';
- }
- // history
- if(arr.length===0){
-  document.getElementById('history').innerHTML='<p style="padding:12px 0"><small>Ahile samma kehi chaina, mathi bata thapnuhos hai!</small></p>';
- } else {
-  document.getElementById('history').innerHTML=arr.slice(0,50).map(x=>{
-   const sign=x.type==='income'?'+': '-';
-   const col=x.type==='income'?'green':'red';
-   return '<div class="row"><div><b>'+x.category+'</b><br><small>'+x.note+' - '+x.date+'</small></div><div style="text-align:right"><b class="'+col+'">'+sign+' Rs. '+Number(x.amount).toLocaleString()+'</b><br><button class="del" onclick="delTx(\''+x.id+'\')">Delete</button></div></div>';
-  }).join('');
- }
- // month chart last 6 months
- const all=getTx();
- let html='';
- for(let i=5;i>=0;i--){
-  const d=new Date(); d.setMonth(d.getMonth()-i);
-  const y=d.getFullYear(), m=d.getMonth();
-  const mi=all.filter(x=>{ const dd=new Date(x.date); return dd.getFullYear()===y && dd.getMonth()===m && x.type==='income'; }).reduce((s,x)=>s+Number(x.amount),0);
-  const me=all.filter(x=>{ const dd=new Date(x.date); return dd.getFullYear()===y && dd.getMonth()===m && x.type==='expense'; }).reduce((s,x)=>s+Number(x.amount),0);
-  const mx=Math.max(mi,me,1);
-  const h1=Math.max(4, Math.round(mi/mx*65));
-  const h2=Math.max(4, Math.round(me/mx*65));
-  const label=d.toLocaleString('en',{month:'short'});
-  html+='<div class="col"><div class="bars"><div class="b1" style="height:'+h1+'px"></div><div class="b2" style="height:'+h2+'px"></div></div><small>'+label+'</small></div>';
- }
- document.getElementById('monthChart').innerHTML=html;
- renderHabits();
+  const arr=filteredTx();
+  const inc=arr.filter(x=>x.type==='income').reduce((s,x)=>s+Number(x.amount),0);
+  const exp=arr.filter(x=>x.type==='expense').reduce((s,x)=>s+Number(x.amount),0);
+  document.getElementById('totalIncome').textContent='Rs. '+inc.toLocaleString();
+  document.getElementById('totalExpense').textContent='Rs. '+exp.toLocaleString();
+  document.getElementById('balance').textContent='Rs. '+(inc-exp).toLocaleString();
+  document.getElementById('incomeCount').textContent=arr.filter(x=>x.type==='income').length+' transaction';
+  document.getElementById('expenseCount').textContent=arr.filter(x=>x.type==='expense').length+' transaction';
+  const rate=inc>0?Math.max(0,Math.round((inc-exp)/inc*100)):0;
+  document.getElementById('savingBar').style.width=rate+'%';
+  document.getElementById('savingText').textContent='Saving Rate: '+rate+'%';
+  const budget=getBudget();
+  document.getElementById('budgetInput').value=budget||'';
+  if(budget>0){
+    const pct=Math.min(100,Math.round(exp/budget*100));
+    document.getElementById('budgetBar').style.width=pct+'%';
+    document.getElementById('budgetText').textContent='Budget ko '+pct+'% sakiyo - Kharcha Rs. '+exp.toLocaleString()+' / Budget Rs. '+budget.toLocaleString()+(pct>80?' - Bistarai hai!':'');
+  } else {
+    document.getElementById('budgetBar').style.width='0%';
+    document.getElementById('budgetText').textContent='Budget set garnuhos';
+  }
+  const cats={};
+  arr.filter(x=>x.type==='expense').forEach(x=>{ cats[x.category]=(cats[x.category]||0)+Number(x.amount); });
+  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  if(entries.length){
+    const max=entries[0][1];
+    document.getElementById('topCatText').textContent='Timi sabai bhanda dherai '+entries[0][0]+' ma kharcha garchhau - Rs. '+entries[0][1].toLocaleString();
+    document.getElementById('catList').innerHTML=entries.map(([k,v])=>{
+      const pct=exp?Math.round(v/exp*100):0;
+      return '<div class="catrow"><div class="top"><span>'+k+'</span><span>Rs. '+v.toLocaleString()+' - '+pct+'%</span></div><div class="bar"><div style="width:'+pct+'%"></div></div></div>';
+    }).join('');
+  } else {
+    document.getElementById('topCatText').textContent='Ahile samma kharcha chaina';
+    document.getElementById('catList').innerHTML='';
+  }
+  if(arr.length===0){
+    document.getElementById('history').innerHTML='<p style="padding:12px 0"><small>Ahile samma kehi chaina, mathi bata thapnuhos hai!</small></p>';
+  } else {
+    document.getElementById('history').innerHTML=arr.slice(0,50).map(x=>{
+      const sign=x.type==='income'?'+':'-';
+      const col=x.type==='income'?'green':'red';
+      return '<div class="row"><div><b>'+x.category+'</b><br><small>'+x.note+' - '+x.date+'</small></div><div style="text-align:right"><b class="'+col+'">'+sign+' Rs. '+Number(x.amount).toLocaleString()+'</b><br><button class="del" onclick="delTx(\''+x.id+'\')">Delete</button></div></div>';
+    }).join('');
+  }
+  const all=getTx(); let html='';
+  for(let i=5;i>=0;i--){
+    const d=new Date(); d.setMonth(d.getMonth()-i);
+    const y=d.getFullYear(), m=d.getMonth();
+    const mi=all.filter(x=>{ const dd=new Date(x.date); return dd.getFullYear()===y && dd.getMonth()===m && x.type==='income'; }).reduce((s,x)=>s+Number(x.amount),0);
+    const me=all.filter(x=>{ const dd=new Date(x.date); return dd.getFullYear()===y && dd.getMonth()===m && x.type==='expense'; }).reduce((s,x)=>s+Number(x.amount),0);
+    const mx=Math.max(mi,me,1);
+    const h1=Math.max(4,Math.round(mi/mx*65)); const h2=Math.max(4,Math.round(me/mx*65));
+    const label=d.toLocaleString('en',{month:'short'});
+    html+='<div class="col"><div class="bars"><div class="b1" style="height:'+h1+'px"></div><div class="b2" style="height:'+h2+'px"></div></div><small>'+label+'</small></div>';
+  }
+  document.getElementById('monthChart').innerHTML=html;
+  renderHabits();
 }
 document.getElementById('dateInput').value=todayStr();
 fillCats();
