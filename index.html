@@ -145,8 +145,51 @@ pre{background:#0F172A;color:#D1FAE5;padding:12px;border-radius:12px;font-size:1
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;align-items:center;justify-content:center;padding:16px}.modal-bg.show{display:flex}
 .modal{background:var(--card);border-radius:16px;padding:20px;width:100%;max-width:420px;color:var(--text)}
 .modal-info{font-size:13px;color:var(--muted)}
+
+/* FIX: color-scheme light, custom dropdown, field errors, toast, sync grid, file picker, danger zone */
+:root{color-scheme:light}
+select,input[type="date"],input[type="month"]{color-scheme:light}
+select option{background:#fff;color:#0F172A;font-family:'Inter',system-ui,sans-serif}
+.field-error{display:none;color:#DC2626;font-size:12px;margin-top:8px;line-height:1.4}
+.field-error.show{display:block}
+.input-error{border-color:#DC2626!important;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);background:#0F172A;color:#fff;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:99;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{background:#059669}.toast.error{background:#DC2626}
+.hidden-select{display:none}
+.file-input-hidden{display:none}
+.custom-dropdown{position:relative}
+.custom-dropdown-btn{width:100%;min-height:44px;padding:12px;background:#FFFFFF;color:#0F172A;border:1.5px solid #E2E8F0;border-radius:11px;font-family:'Inter',system-ui,sans-serif;font-size:14px;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.custom-dropdown-list{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:11px;box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:240px;overflow:auto;z-index:20;padding:8px}
+.custom-dropdown-list.open{display:block}
+.custom-dropdown-item{padding:12px;border-radius:8px;font-size:14px;font-family:'Inter',system-ui,sans-serif;color:#0F172A;cursor:pointer;background:#FFFFFF}
+.custom-dropdown-item.selected{background:#ECFDF5;font-weight:600}
+.custom-dropdown-item:hover{background:#F1F5F9}
+.sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.sync-grid button{min-height:48px;height:48px;padding:12px 16px;font-weight:600;margin-top:0;width:100%}
+.file-picker{border:1.5px dashed #E2E8F0;border-radius:12px;padding:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#fff}
+.file-picker-name{font-size:13px;color:#64748B;word-break:break-word}
+.file-picker .btn-light{margin-top:0;width:auto}
+.danger-zone{border:1.5px solid #FECACA;background:#FEF2F2;border-radius:16px;padding:16px;margin-top:12px;margin-bottom:24px}
+.danger-zone h3{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:#991B1B;margin-bottom:8px}
+.danger-zone p{color:#991B1B;font-size:13px;line-height:1.6}
+.danger-zone .btn-primary{margin-top:12px}
+.rules-fix-card{border:1.5px solid #FDE68A;background:#FFFBEB}
+.rules-fix-card h3{color:#92400E}
+.rules-steps{margin:8px 0 8px 20px;font-size:13px;line-height:1.7;color:#92400E}
+.savings-desc{white-space:normal;word-break:break-word;line-height:1.6}
+.wrap{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+
+
+.bottomnav{display:none;position:fixed;left:0;right:0;bottom:0;background:#FFFFFF;border-top:1px solid #E2E8F0;z-index:35;padding:8px}
+.bottomnav-inner{display:flex;justify-content:space-around;align-items:center}
+.bnav{flex:1;border:0;background:transparent;padding:8px;font-size:12px;font-weight:600;color:#64748B;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:44px}
+.bnav.active{color:#0F172A}
+.bnav-center{width:44px;height:44px;border-radius:50%;background:#0F172A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800}
+.bottom-add-btn{flex:1;border:0;background:transparent;min-height:44px;display:flex;justify-content:center}
 /* 9. RESPONSIVE */
-@media(max-width:900px){.login-left{display:none}.sidebar{position:fixed;transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.topbar-mobile{display:flex}.wrap{padding:16px}.grid2,.grid3,.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.login-left{display:none}.sidebar{position:fixed;transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.topbar-mobile{display:flex}.bottomnav{display:block}.wrap{padding:16px}.grid2,.grid3,.grid4{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.hero-close{font-size:28px}.flex2{flex-direction:column}.page-head{flex-direction:column}.row{flex-direction:column;align-items:flex-start}.row-right{align-items:flex-start;text-align:left}}
 @media(min-width:601px) and (max-width:900px){.grid4{grid-template-columns:1fr 1fr}}
 </style>
@@ -165,20 +208,32 @@ pre{background:#0F172A;color:#D1FAE5;padding:12px;border-radius:12px;font-size:1
 <div class="hero"><div class="hero-top"><div><div class="hero-label">OPENING BALANCE</div><div class="hero-open" id="openingBalance">Rs. 0</div><div class="hero-sub">Banks ko opening jamma</div></div><div><div class="hero-label">CLOSING BALANCE</div><div class="hero-close" id="closingBalance">Rs. 0</div><div class="hero-sub">Opening + Income - Expense + Udharo hisab</div></div></div>
 <div class="grid4 mt-16"><div class="hero-stat"><span>Total Income</span><b class="text-green" id="totalIncome">Rs. 0</b><span id="incomeCount">0 tx</span></div><div class="hero-stat"><span>Total Expense</span><b class="text-red-soft" id="totalExpense">Rs. 0</b><span id="expenseCount">0 tx</span></div><div class="hero-stat"><span>Udharo - Tirna Baki</span><b id="duePayTop">Rs. 0</b><span id="liyeTop">Liye: Rs. 0</span></div><div class="hero-stat"><span>Udharo - Auna Baki</span><b id="dueReceiveTop">Rs. 0</b><span id="diyeTop">Diye: Rs. 0</span></div></div></div>
 <div class="grid3 mt-12"><div class="card"><h3>Compared to Last Month</h3><b class="big-num" id="compareText">-</b><p class="empty" id="compareSub">Income / Expense change</p></div><div class="card"><h3>Emergency Fund</h3><b class="big-num" id="emergencyTop">Rs. 0 / Rs. 5,000</b><div class="bar"><div id="emergencyBar"></div></div><small>5K per month builds your future</small></div><div class="card"><h3>Budget Used</h3><b class="big-num" id="budgetTop">-</b><div class="bar red"><div id="budgetBarTop"></div></div><small id="budgetTopSub">Budget set garnuhos</small></div></div>
-<div class="grid2 mt-12"><div class="card"><h3>Quick Add - Expense / Income</h3><div class="toggle"><button id="btnExpense" class="active">KHARCHA</button><button id="btnIncome">KAMAI</button></div><label>Amount (Rs.)</label><input id="amount" type="number" placeholder="Ex: 500"><div class="quick"><button data-amount="100">100</button><button data-amount="500">500</button><button data-amount="1000">1000</button><button data-amount="5000">5000</button></div><div class="flex2"><div><label>Bank / Account</label><select id="bankSelect"></select></div><div><label>Category</label><select id="category"></select></div></div><div class="flex2"><div><label>Payment</label><select id="payMethod"><option>Cash</option><option>Bank QR</option><option>eSewa</option><option>Khalti</option><option>Card</option><option>Other</option></select></div><div><label>Date</label><input id="dateInput" type="date"></div></div><label>Need vs Impulse</label><select id="impulseSelect"><option value="need">Need - Chahine thiyo</option><option value="impulse">Impulse - Joss ma kine</option></select><label>Note</label><input id="note" placeholder="Ex: Khaja, Petrol, Salary"><label class="check-row"><input type="checkbox" id="recurringCheck"> Recurring - Har mahina dohorine</label><button class="btn-primary" id="saveTxBtn">Save Garne - Device + Firebase</button><small id="saveMsg" class="empty mt-8"></small></div><div class="stack"><div class="card"><h3>Top Insight</h3><p id="insightText" class="insight">No expenses yet. Log every buy and mark Need vs Impulse — that is how the leak becomes visible.</p></div><div class="card"><h3>Last 6 Mahina</h3><div class="monthbar" id="monthChart"></div></div><div class="card"><h3>Low Balance Alert</h3><div id="lowBalanceList"><small>Sabai bank thik cha.</small></div></div></div></div>
+<div class="grid2 mt-12"><div class="card"><h3>Quick Add - Expense / Income</h3><div class="toggle"><button id="btnExpense" class="active">KHARCHA</button><button id="btnIncome">KAMAI</button></div><label>Amount (Rs.)</label><input id="amount" type="number" placeholder="Ex: 500"><small id="amountError" class="field-error"></small><div class="quick"><button data-amount="100">100</button><button data-amount="500">500</button><button data-amount="1000">1000</button><button data-amount="5000">5000</button></div><div class="flex2"><div><label>Bank / Account</label><select id="bankSelect" class="hidden-select"></select><div class="custom-dropdown" id="bankDropdown"><button type="button" class="custom-dropdown-btn" id="bankDropdownBtn"><span id="bankDropdownLabel">Select Bank</span><span>▾</span></button><div class="custom-dropdown-list" id="bankDropdownList"></div></div></div><div><label>Category</label><select id="category" class="hidden-select"></select><div class="custom-dropdown" id="categoryDropdown"><button type="button" class="custom-dropdown-btn" id="categoryDropdownBtn"><span id="categoryDropdownLabel">Select Category</span><span>▾</span></button><div class="custom-dropdown-list" id="categoryDropdownList"></div></div></div></div><div class="flex2"><div><label>Payment</label><select id="payMethod" class="hidden-select"><option>Cash</option><option>Bank QR</option><option>eSewa</option><option>Khalti</option><option>Card</option><option>Other</option></select><div class="custom-dropdown" id="payDropdown"><button type="button" class="custom-dropdown-btn" id="payDropdownBtn"><span id="payDropdownLabel">Cash</span><span>▾</span></button><div class="custom-dropdown-list" id="payDropdownList"></div></div></div><div><label>Date</label><input id="dateInput" type="date"></div></div><label>Need vs Impulse</label><select id="impulseSelect"><option value="need">Need - Chahine thiyo</option><option value="impulse">Impulse - Joss ma kine</option></select><label>Note</label><input id="note" placeholder="Ex: Khaja, Petrol, Salary"><label class="check-row"><input type="checkbox" id="recurringCheck"> Recurring - Har mahina dohorine</label><button class="btn-primary" id="saveTxBtn">Save Garne - Device + Firebase</button><small id="saveMsg" class="empty mt-8"></small></div><div class="stack"><div class="card"><h3>Top Insight</h3><p id="insightText" class="insight">No expenses yet. Log every buy and mark Need vs Impulse — that is how the leak becomes visible.</p></div><div class="card"><h3>Last 6 Mahina</h3><div class="monthbar" id="monthChart"></div></div><div class="card"><h3>Low Balance Alert</h3><div id="lowBalanceList"><small>Sabai bank thik cha.</small></div></div></div></div>
 </section>
 <section id="sec-transactions" class="section"><div class="page-head"><div><h1>Transactions</h1><p>Every rupee must be tracked — if you don&apos;t write it, you will forget it.</p></div><span class="pill" id="txCountPill">0 transactions</span></div><div class="card"><div class="flex2"><div><label>Month</label><input id="txMonth" type="month"></div><div><label>Search</label><input id="txSearch" placeholder="Search note / category"></div></div><div class="filter"><button id="fAll" class="active">Sabai</button><button id="fKamai">Kamai</button><button id="fKharcha">Kharcha</button><button id="fImpulse">Impulse Only</button></div><div id="txList"></div></div></section>
-<section id="sec-banks" class="section"><div class="page-head"><div><h1>Bank Accounts</h1><p>Know exactly how much you have in each bank - Opening to Closing.</p></div><span class="pill" id="bankTotalPill">Total Closing: Rs. 0</span></div><div class="card"><h3>Add Bank Account</h3><div class="flex2"><div><label>Bank Name</label><select id="newBankName"><option>Nabil Bank</option><option>NIC Asia</option><option>Global IME</option><option>NMB Bank</option><option>Prabhu Bank</option><option>Siddhartha Bank</option><option>Kumari Bank</option><option>Everest Bank</option><option>eSewa Wallet</option><option>Khalti Wallet</option><option>IME Pay</option><option>Cash in Hand</option><option>Other</option></select></div><div><label>Account Type</label><select id="newBankType"><option>Savings</option><option>Current</option><option>Wallet</option><option>Cash</option></select></div></div><label>Nickname (Optional)</label><input id="newBankNick" placeholder="Ex: Mero salary account"><label>Opening Balance (Rs.)</label><input id="newBankOpening" type="number" placeholder="Ex: 10000"><label>Manual Closing (Optional - Aafai closing lekhe)</label><input id="newBankClosing" type="number" placeholder="Khali chhode auto calculate huncha"><label>Note</label><input id="newBankNote" placeholder="Ex: Salary aune account"><button class="btn-primary" id="addBankBtn">Bank Account Add Garne</button></div><div class="card mt-12"><h3>Transfer - Bank to Bank</h3><div class="flex2"><div><label>From</label><select id="trFrom"></select></div><div><label>To</label><select id="trTo"></select></div></div><label>Amount (Rs.)</label><input id="trAmount" type="number" placeholder="Ex: 2000"><label>Date</label><input id="trDate" type="date"><button class="btn-primary" id="transferBtn">Transfer Garne</button><small>Transfer le duitai bank ko closing update garcha.</small></div><div id="bankList"></div></section>
-<section id="sec-budget" class="section"><div class="page-head"><div><h1>Budget</h1><p>Budget is your limit — Strict Mode stops you before you overspend.</p></div></div><div class="card"><h3>Monthly Budget</h3><label>Yo Mahina Ko Budget (Rs.)</label><input id="budgetInput" type="number" placeholder="Ex: 20000"><label class="check-row"><input type="checkbox" id="strictCheck"> Strict Mode ON - Budget naghe pachi warning + save rokne</label><button class="btn-primary" id="saveBudgetBtn">Budget Save Garne</button><div class="bar red mt-12"><div id="budgetBar"></div></div><small id="budgetText">Budget set garnuhos</small><div id="budgetCatList" class="mt-12"></div></div></section>
-<section id="sec-savings" class="section"><div class="page-head"><div><h1>Savings - Emergency Fund</h1><p>Emergency Fund is your safety — 5K per month builds your future.</p></div></div><div class="card"><h3>Emergency Fund Progress</h3><b class="big-num-lg" id="savingsBig">Rs. 0</b><p class="empty">Yo mahina ko saving: Income - Expense. Target: Rs. 5,000 / month.</p><div class="bar"><div id="savingsBar"></div></div><p class="mt-12" id="savingsMsg">Pay yourself first: move savings out on payday, before spending starts.</p><label>Savings ma Sarne Amount (Rs.)</label><input id="savingsMove" type="number" placeholder="Ex: 5000"><button class="btn-primary" id="moveSavingsBtn">Savings ma Rakhe</button></div></section>
-<section id="sec-udharo" class="section"><div class="page-head"><div><h1>Udharo - Liye / Diye</h1><p>Lent money is still your money — don&apos;t forget who owes you.</p></div><span class="pill" id="udharoPill">Total Due: Rs. 0</span></div><div class="card"><h3>Naya Udharo Thapne</h3><div class="toggle"><button id="udLiyeBtn" class="active">LIYEKO - Maile Liye</button><button id="udDiyeBtn">DIYEKO - Maile Diye</button></div><label>Person Name</label><input id="udPerson" placeholder="Ex: Ram, Shyam"><label>Amount (Rs.)</label><input id="udAmount" type="number" placeholder="Ex: 5000"><div class="flex2"><div><label>Date</label><input id="udDate" type="date"></div><div><label>Due Date</label><input id="udDueDate" type="date"></div></div><label>Note</label><input id="udNote" placeholder="Ex: Urgent"><button class="btn-primary" id="udAddBtn">Liyeko Udharo Save</button></div><div class="grid2 mt-12"><div class="card"><h3>Liye Ko - Tirna Baki</h3><small id="liyeSummary">-</small><div id="liyeList"></div></div><div class="card"><h3>Diye Ko - Auna Baki</h3><small id="diyeSummary">-</small><div id="diyeList"></div></div></div></section>
+<section id="sec-banks" class="section"><div class="page-head"><div><h1>Bank Accounts</h1><p>Know exactly how much you have in each bank - Opening to Closing.</p></div><span class="pill" id="bankTotalPill">Total Closing: Rs. 0</span></div><div class="card"><h3>Add Bank Account</h3><div class="flex2"><div><label>Bank Name</label><select id="newBankName"><option>Nabil Bank</option><option>NIC Asia</option><option>Global IME</option><option>NMB Bank</option><option>Prabhu Bank</option><option>Siddhartha Bank</option><option>Kumari Bank</option><option>Everest Bank</option><option>eSewa Wallet</option><option>Khalti Wallet</option><option>IME Pay</option><option>Cash in Hand</option><option>Other</option></select></div><div><label>Account Type</label><select id="newBankType"><option>Savings</option><option>Current</option><option>Wallet</option><option>Cash</option></select></div></div><label>Nickname (Optional)</label><input id="newBankNick" placeholder="Ex: Mero salary account"><label>Opening Balance (Rs.)</label><input id="newBankOpening" type="number" placeholder="Ex: 10000"><label>Manual Closing (Optional - Aafai closing lekhe)</label><input id="newBankClosing" type="number" placeholder="Khali chhode auto calculate huncha"><label>Note</label><input id="newBankNote" placeholder="Ex: Salary aune account"><button class="btn-primary" id="addBankBtn">Bank Account Add Garne</button></div><div class="card mt-12"><h3>Transfer - Bank to Bank</h3><div class="flex2"><div><label>From</label><select id="trFrom"></select></div><div><label>To</label><select id="trTo"></select></div></div><label>Amount (Rs.)</label><input id="trAmount" type="number" placeholder="Ex: 2000"><small id="trAmountError" class="field-error"></small><label>Date</label><input id="trDate" type="date"><button class="btn-primary" id="transferBtn">Transfer Garne</button><small>Transfer le duitai bank ko closing update garcha.</small></div><div id="bankList"></div></section>
+<section id="sec-budget" class="section"><div class="page-head"><div><h1>Budget</h1><p>Budget is your limit — Strict Mode stops you before you overspend.</p></div></div><div class="card"><h3>Monthly Budget</h3><label>Yo Mahina Ko Budget (Rs.)</label><input id="budgetInput" type="number" placeholder="Ex: 20000"><small id="budgetInputError" class="field-error"></small><label class="check-row"><input type="checkbox" id="strictCheck"> Strict Mode ON - Budget naghe pachi warning + save rokne</label><button class="btn-primary" id="saveBudgetBtn">Budget Save Garne</button><div class="bar red mt-12"><div id="budgetBar"></div></div><small id="budgetText">Budget set garnuhos</small><div id="budgetCatList" class="mt-12"></div></div></section>
+<section id="sec-savings" class="section"><div class="page-head"><div><h1>Savings - Emergency Fund</h1><p>Emergency Fund is your safety — 5K per month builds your future.</p></div></div><div class="card"><h3>Emergency Fund Progress</h3><b class="big-num-lg" id="savingsBig">Rs. 0</b><p class="empty savings-desc">Yo mahina ko saving: Income - Expense.<br>Target: Rs. 5,000 / month.</p><div class="bar"><div id="savingsBar"></div></div><p class="mt-12" id="savingsMsg">Pay yourself first: move savings out on payday, before spending starts.</p><label>Savings ma Sarne Amount (Rs.)</label><input id="savingsMove" type="number" placeholder="Ex: 5000"><small id="savingsMoveError" class="field-error"></small><button class="btn-primary" id="moveSavingsBtn">Savings ma Rakhe</button></div></section>
+<section id="sec-udharo" class="section"><div class="page-head"><div><h1>Udharo - Liye / Diye</h1><p>Lent money is still your money — don&apos;t forget who owes you.</p></div><span class="pill" id="udharoPill">Total Due: Rs. 0</span></div><div class="card"><h3>Naya Udharo Thapne</h3><div class="toggle"><button id="udLiyeBtn" class="active">LIYEKO - Maile Liye</button><button id="udDiyeBtn">DIYEKO - Maile Diye</button></div><label>Person Name</label><input id="udPerson" placeholder="Ex: Ram, Shyam"><small id="udPersonError" class="field-error"></small><label>Amount (Rs.)</label><input id="udAmount" type="number" placeholder="Ex: 5000"><small id="udAmountError" class="field-error"></small><div class="flex2"><div><label>Date</label><input id="udDate" type="date"></div><div><label>Due Date</label><input id="udDueDate" type="date"></div></div><label>Note</label><input id="udNote" placeholder="Ex: Urgent"><button class="btn-primary" id="udAddBtn">Liyeko Udharo Save</button></div><div class="grid2 mt-12"><div class="card"><h3>Liye Ko - Tirna Baki</h3><small id="liyeSummary">-</small><div id="liyeList"></div></div><div class="card"><h3>Diye Ko - Auna Baki</h3><small id="diyeSummary">-</small><div id="diyeList"></div></div></div></section>
 <section id="sec-habits" class="section"><div class="page-head"><div><h1>Habits &amp; Levels</h1><p>Habits make saving automatic — XP and Levels keep you consistent.</p></div><span class="pill" id="habitPill">Score: 0 / 5</span></div><div class="card"><h3>Aaja Ko Habit - +20 XP per habit</h3><div id="habitList"></div><div class="mt-12"><b id="habitScore">Aaja ko Habit Score: 0 / 5</b><br><small id="streakText">Streak: 0 din</small></div></div><div class="card mt-12"><h3>Challenges</h3><div id="challengeList"></div></div></section>
-<section id="sec-settings" class="section"><div class="page-head"><div><h1>Settings / Data</h1><p>Control your system — reminders, mode, and data.</p></div></div><div class="card"><h3>Firebase Sync - financehabit-13683</h3><div class="flex2 mt-12"><button class="btn-light" id="pushBtn">Firebase ma Sync</button><button class="btn-light" id="loadBtn">Firebase bata Load</button></div><div class="flex2 mt-8"><button class="btn-dark" id="testBtn">Firebase Test</button><button class="btn-light" id="rulesBtn">Rules Copy</button></div><p class="empty mt-12" id="lastSync">Last Sync: -</p></div><div class="card mt-12"><h3>Data - Export / Import / Delete</h3><div class="flex2 mt-12"><button class="btn-light" id="csvBtn">CSV Download</button><button class="btn-light" id="jsonBtn">JSON Backup</button></div><div class="mt-12"><label>JSON Backup Import</label><input id="importFile" type="file" accept=".json"></div><button class="btn-primary btn-danger" id="deleteAllBtn">All Data Delete - Fresh Start</button></div><div class="setup"><b>Firebase Setup (1 choti):</b><br>1. Authentication &gt; Email/Password, Google ON<br>2. Realtime Database &gt; Rules &gt; Publish:<pre id="rulesText">{\n  "rules": {\n    ".read": true,\n    ".write": true\n  }\n}</pre><small>Firestore hoina! Realtime Database ho. Data: users / UID / transactions, bank_accounts, udharo, budgets, habit_checks, mero_users</small></div></section>
+<section id="sec-settings" class="section"><div class="page-head"><div><h1>Settings / Data</h1><p>Control your system — reminders, mode, and data.</p></div></div><div class="card"><h3>Firebase Sync - financehabit-13683</h3><div class="sync-grid"><button class="btn-light" id="pushBtn">Firebase ma Sync</button><button class="btn-light" id="loadBtn">Firebase bata Load</button><button class="btn-dark" id="testBtn">Firebase Test</button><button class="btn-light" id="rulesBtn">Rules Copy</button></div><p class="empty mt-12" id="lastSync">Last Sync: -</p></div><div class="card mt-12"><h3>Data - Export / Import / Delete</h3><div class="flex2 mt-12"><button class="btn-light" id="csvBtn">CSV Download</button><button class="btn-light" id="jsonBtn">JSON Backup</button></div><div class="mt-12"><label>JSON Backup Import</label><div class="file-picker"><button type="button" class="btn-light" id="chooseFileBtn">Choose File</button><span id="importFileName" class="file-picker-name">No file chosen</span><input id="importFile" class="file-input-hidden" type="file" accept=".json"></div></div></div><div class="card danger-zone"><h3>Danger Zone</h3><p>Pahila JSON Backup linus. Yo undo hudaina.</p><button class="btn-primary btn-danger" id="deleteAllBtn">All Data Delete - Fresh Start</button></div><div class="card rules-fix-card" id="rulesFixCard"><h3>Firebase Rules Fix</h3><ol class="rules-steps"><li>Open Firebase Console &gt; Realtime Database (NOT Firestore)</li><li>Click Rules tab</li><li>Paste the Rules below</li><li>Click Publish, then click Firebase Test in app.</li></ol><pre id="rulesText">{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    }
+  }
+}</pre><small>Firestore hoina! Realtime Database ho. Data: users / UID / transactions, bank_accounts, udharo, budgets, habit_checks, mero_users</small></div></section>
 <p class="footer-note">Mero Paisa • finance.yonghangishak.com.np • Imported from your file • Connected to financehabit-13683</p>
 </div></div></div></div>
+<nav class="bottomnav" id="bottomNav"><div class="bottomnav-inner"><button class="bnav active" data-nav="dashboard">Dashboard</button><button class="bnav" data-nav="transactions">Transactions</button><button class="bottom-add-btn" id="bottomAddBtn" aria-label="Quick Add"><span class="bnav-center">+</span></button><button class="bnav" data-nav="banks">Banks</button><button class="bnav" data-nav="udharo">Udharo</button></div></nav>
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <div id="drawer"><div class="drawer-head"><b>Mero Paisa</b><button id="drawerCloseBtn" class="drawer-close">×</button></div><div id="drawerNavSlot"></div><div class="drawer-user"><b id="drawerUser">User</b><p id="drawerEmail">-</p><button id="drawerLogoutBtn" class="btn-small white mt-12 w-full">Logout</button></div></div>
-<div class="modal-bg" id="payModalBg"><div class="modal"><h3 id="payModalTitle">Udharo Payment</h3><p id="payModalInfo" class="modal-info"></p><label>Pay / Return Amount (Rs.)</label><input id="payModalAmount" type="number" placeholder="Ex: 1000"><label>Date</label><input id="payModalDate" type="date"><div class="flex2 mt-16"><button class="btn-light" id="payCancelBtn">Cancel</button><button class="btn-dark" id="paySaveBtn">Pay Save</button></div></div></div>
+<div class="modal-bg" id="payModalBg"><div class="modal"><h3 id="payModalTitle">Udharo Payment</h3><p id="payModalInfo" class="modal-info"></p><label>Pay / Return Amount (Rs.)</label><input id="payModalAmount" type="number" placeholder="Ex: 1000"><small id="payModalAmountError" class="field-error"></small><label>Date</label><input id="payModalDate" type="date"><div class="flex2 mt-16"><button class="btn-light" id="payCancelBtn">Cancel</button><button class="btn-dark" id="paySaveBtn">Pay Save</button></div></div></div>
+<div id="toast" class="toast" role="status"></div>
+<div class="modal-bg" id="confirmModalBg"><div class="modal"><h3 id="confirmModalTitle">Confirm</h3><p id="confirmModalMsg" class="modal-info"></p><div class="flex2 mt-16"><button class="btn-light" id="confirmCancelBtn">Cancel</button><button class="btn-primary btn-danger" id="confirmOkBtn">Delete</button></div></div></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -291,6 +346,85 @@ function getXP() {
   return xp;
 }
 function getLevel(xp) { if (xp >= 500) return "Budget Boss"; if (xp >= 200) return "Smart Saver"; return "Money Saver"; }
+function showToast(msg, type) {
+  const toast = el("toast");
+  toast.textContent = msg;
+  toast.className = "toast show " + (type || "");
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => { toast.className = "toast"; }, 2800);
+}
+function setFieldError(inputId, errorId, msg) {
+  const input = el(inputId), err = el(errorId);
+  if (input) input.classList.add("input-error");
+  if (err) { err.textContent = msg; err.classList.add("show"); }
+  showErr(msg);
+  showToast(msg, "error");
+}
+function clearFieldError(inputId, errorId) {
+  const input = el(inputId), err = el(errorId);
+  if (input) input.classList.remove("input-error");
+  if (err) { err.textContent = ""; err.classList.remove("show"); }
+}
+function isPermissionDenied(e) {
+  if (!e) return false;
+  const s = String(e.message || "") + " " + String(e.code || "");
+  return s.indexOf("PERMISSION_DENIED") !== -1;
+}
+function showPermissionDenied() {
+  const msg = "Rules milena. Settings > Firebase Rules Fix ma bhako Rules lai Realtime Database > Rules ma paste garera Publish garnus. Firestore ma hoina.";
+  showErr(msg);
+  showToast(msg, "error");
+  showSection("settings");
+  setTimeout(() => { const c = el("rulesFixCard"); if (c) c.scrollIntoView({ behavior: "smooth", block: "start" }); }, 150);
+}
+let confirmCallback = null;
+function openConfirm(title, message, label, onConfirm) {
+  el("confirmModalTitle").textContent = title;
+  el("confirmModalMsg").textContent = message;
+  el("confirmOkBtn").textContent = label || "Delete";
+  confirmCallback = onConfirm || null;
+  el("confirmModalBg").classList.add("show");
+  el("confirmModalBg").style.display = "flex";
+}
+function closeConfirm() {
+  el("confirmModalBg").classList.remove("show");
+  el("confirmModalBg").style.display = "none";
+  confirmCallback = null;
+}
+function closeAllDropdowns(exceptId) {
+  document.querySelectorAll(".custom-dropdown-list").forEach((list) => { if (list.id !== exceptId) list.classList.remove("open"); });
+}
+function syncDropdownLabel(selectId, labelId) {
+  const sel = el(selectId), label = el(labelId);
+  if (!sel || !label) return;
+  const opt = sel.options[sel.selectedIndex];
+  label.textContent = opt ? opt.text : "Select";
+}
+function buildDropdownList(selectId, listId, labelId) {
+  const sel = el(selectId), list = el(listId);
+  if (!sel || !list) return;
+  list.innerHTML = "";
+  Array.from(sel.options).forEach((opt) => {
+    const item = document.createElement("div");
+    item.className = "custom-dropdown-item" + (opt.selected ? " selected" : "");
+    item.textContent = opt.text;
+    item.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      sel.value = opt.value;
+      syncDropdownLabel(selectId, labelId);
+      buildDropdownList(selectId, listId, labelId);
+      closeAllDropdowns(null);
+    });
+    list.appendChild(item);
+  });
+  syncDropdownLabel(selectId, labelId);
+}
+function refreshCustomDropdowns() {
+  buildDropdownList("bankSelect", "bankDropdownList", "bankDropdownLabel");
+  buildDropdownList("category", "categoryDropdownList", "categoryDropdownLabel");
+  buildDropdownList("payMethod", "payDropdownList", "payDropdownLabel");
+}
+
 function showSection(id) {
   document.querySelectorAll(".section").forEach((s) => s.classList.remove("active"));
   el("sec-" + id).classList.add("active");
@@ -392,13 +526,13 @@ window.loadUserData = async function () {
     if (h.exists()) saveHabits(h.val());
     const bud = await get(ref(db, base + "/budgets"));
     if (bud.exists()) { const v = Object.values(bud.val())[0]; if (v && v.amount) localStorage.setItem(sk("budget"), v.amount); }
-  } catch (e) { console.log(e); }
+  } catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); else console.log(e); }
   renderAll();
 };
 function bankOption(b) { return `<option value="${esc(b.id)}">${esc(b.bankName)} - ${esc(b.nickname || b.accountType)}</option>`; }
 function refreshBankSelects() {
   const opts = getBanks().map(bankOption).join("");
-  ["bankSelect", "trFrom", "trTo"].forEach((id) => { const e = el(id); if (e) e.innerHTML = opts; });
+  ["bankSelect", "trFrom", "trTo"].forEach((id) => { const e = el(id); if (e) e.innerHTML = opts; }); refreshCustomDropdowns();
 }
 function setType(t) {
   curType = t;
@@ -409,7 +543,7 @@ function setType(t) {
 function setAmount(v) { el("amount").value = v; }
 function fillCats() {
   const list = curType === "kamai" ? INCOME_CATS : EXPENSE_CATS;
-  el("category").innerHTML = list.map((c) => `<option>${esc(c)}</option>`).join("");
+  el("category").innerHTML = list.map((c) => `<option>${esc(c)}</option>`).join(""); refreshCustomDropdowns();
 }
 function setTxFilter(f) {
   curTxFilter = f;
@@ -425,25 +559,27 @@ function buildTxFromForm(amt) {
 }
 async function addTransaction() {
   const amt = Number(el("amount").value || 0);
-  if (!amt) { alert("Amount halnuhos"); return; }
+  if (!amt) { setFieldError("amount", "amountError", "Amount halnuhos"); return; }
   const budget = getBudget();
   const expSoFar = sumBy(getTx().filter((x) => x.type === "kharcha"), (x) => x.amount);
   const strict = el("strictCheck").checked;
-  if (curType === "kharcha" && strict && budget > 0 && expSoFar + amt > budget) { alert("Strict Mode: Budget naghyo! Budget Rs. " + budget + " - Kharcha Rs. " + expSoFar); return; }
+  if (curType === "kharcha" && strict && budget > 0 && expSoFar + amt > budget) { setFieldError("amount", "amountError", "Strict Mode: Budget naghyo! Budget Rs. " + budget + " - Kharcha Rs. " + expSoFar); return; }
   const tx = buildTxFromForm(amt);
   const arr = getTx(); arr.unshift(tx); saveTx(arr);
   el("amount").value = ""; el("note").value = "";
   if (!isGuest && window.currentUser) {
     try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/transactions/" + tx.id), tx); el("saveMsg").textContent = "Saved online — " + (curType === "kamai" ? "Income saved. +10 XP earned!" : "Expense logged. +10 XP earned!"); }
-    catch (e) { el("saveMsg").textContent = "Device ma save, Firebase fail: " + e.message; }
+    catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); else el("saveMsg").textContent = "Device ma save, Firebase fail: " + e.message; }
   } else el("saveMsg").textContent = "Guest: Device ma save bhayo.";
   renderAll();
 }
 async function delTx(id) {
-  if (!confirm("Yo transaction delete garne?")) return;
-  saveTx(getTx().filter((x) => String(x.id) !== String(id)));
-  if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/transactions/" + id)); } catch (e) {} }
-  renderAll();
+  openConfirm("Transaction Delete garne?", "Yo transaction delete huncha. Undo hudaina.", "Delete", async () => {
+    saveTx(getTx().filter((x) => String(x.id) !== String(id)));
+    if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/transactions/" + id)); } catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); } }
+    renderAll();
+    showToast("Transaction delete bhayo.", "success");
+  });
 }
 function addBank() {
   const name = el("newBankName").value;
@@ -456,15 +592,17 @@ function addBank() {
   if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; set(ref(db, getUserPath() + "/bank_accounts/" + b.id), b); } catch (e) {} }
   renderAll(); showOk("Saved online — Bank account added.");
 }
-async function delBank(id) {
-  if (!confirm("Bank account delete garne?")) return;
-  saveBanks(getBanks().filter((b) => b.id !== id));
-  if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/bank_accounts/" + id)); } catch (e) {} }
-  renderAll();
+function delBank(id) {
+  openConfirm("Bank Account Delete garne?", "Yo bank account delete huncha. Undo hudaina.", "Delete", async () => {
+    saveBanks(getBanks().filter((b) => b.id !== id));
+    if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/bank_accounts/" + id)); } catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); } }
+    renderAll();
+    showToast("Bank account delete bhayo.", "success");
+  });
 }
 async function doTransfer() {
   const from = el("trFrom").value, to = el("trTo").value, amt = Number(el("trAmount").value || 0);
-  if (!amt || from === to) { alert("From / To farak ra Amount halnuhos"); return; }
+  if (!amt || from === to) { setFieldError("trAmount", "trAmountError", "From / To farak ra Amount halnuhos"); return; }
   const date = el("trDate").value || todayStr();
   const fb = getBanks().find((b) => b.id === from), tb = getBanks().find((b) => b.id === to);
   const out = { id: String(Date.now()) + "_out", type: "kharcha", amount: amt, category: "Transfer", bankId: from, bankLabel: fb.bankName, payment: "Transfer", date, note: "Transfer to " + (tb.nickname || tb.bankName), impulse: false, transferDirection: "out", createdAt: Date.now() };
@@ -483,8 +621,8 @@ function setUdKind(k) {
 async function addUdharo() {
   const person = el("udPerson").value.trim();
   const amt = Number(el("udAmount").value || 0);
-  if (!person) { alert("Please enter the person's name."); return; }
-  if (!amt || amt < 1 || amt > 100000000) { alert("Please enter a valid amount (1 to 100,000,000 Rs.)."); return; }
+  if (!person) { setFieldError("udPerson", "udPersonError", "Please enter the person's name."); return; }
+  if (!amt || amt < 1 || amt > 100000000) { setFieldError("udAmount", "udAmountError", "Please enter a valid amount (1 to 100,000,000 Rs.)."); return; }
   const u = { id: "ud_" + Date.now(), person, amount: amt, kind: curUdKind, date: el("udDate").value || todayStr(), dueDate: el("udDueDate").value || "", note: el("udNote").value || "", paid: 0, status: "pending", createdAt: Date.now() };
   const arr = getUd(); arr.unshift(u); saveUd(arr);
   el("udPerson").value = ""; el("udAmount").value = ""; el("udNote").value = "";
@@ -502,17 +640,19 @@ function openPayModal(id) {
 function closePayModal() { el("payModalBg").classList.remove("show"); el("payModalBg").style.display = "none"; currentPayUdId = null; }
 async function saveUdPayment() {
   const amt = Number(el("payModalAmount").value || 0);
-  if (!amt || !currentPayUdId) { alert("Amount halnuhos"); return; }
+  if (!amt || !currentPayUdId) { setFieldError("payModalAmount", "payModalAmountError", "Amount halnuhos"); return; }
   const arr = getUd(); const u = arr.find((x) => x.id === currentPayUdId);
   u.paid = Number(u.paid || 0) + amt; if (u.paid >= Number(u.amount)) u.status = "paid"; saveUd(arr);
   if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/udharo/" + u.id), u); } catch (e) {} }
   closePayModal(); renderAll(); showOk("Payment save bhayo: Rs. " + amt);
 }
-async function delUd(id) {
-  if (!confirm("Udharo entry delete garne?")) return;
-  saveUd(getUd().filter((x) => x.id !== id));
-  if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/udharo/" + id)); } catch (e) {} }
-  renderAll();
+function delUd(id) {
+  openConfirm("Udharo Entry Delete garne?", "Yo udharo entry delete huncha. Undo hudaina.", "Delete", async () => {
+    saveUd(getUd().filter((x) => x.id !== id));
+    if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/udharo/" + id)); } catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); } }
+    renderAll();
+    showToast("Udharo entry delete bhayo.", "success");
+  });
 }
 function toggleHabit(i, checked) {
   const h = getHabits(); const d = todayStr(); if (!h[d]) h[d] = {}; h[d][i] = checked; saveHabits(h);
@@ -521,20 +661,25 @@ function toggleHabit(i, checked) {
 }
 async function saveBudget() {
   const v = Number(el("budgetInput").value || 0);
-  if (!v || v < 1 || v > 100000000) { alert("Please enter a valid budget amount (1 to 100,000,000 Rs.)."); return; }
+  if (!v || v < 1 || v > 100000000) { setFieldError("budgetInput", "budgetInputError", "Please enter a valid budget amount (1 to 100,000,000 Rs.)."); return; }
   localStorage.setItem(sk("budget"), v); localStorage.setItem(sk("strict"), el("strictCheck").checked ? "1" : "0");
   if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/budgets/main"), { amount: v, strict: el("strictCheck").checked }); } catch (e) {} }
   renderAll(); showOk("Budget save bhayo.");
 }
-function moveToSavings() {
+async function moveToSavings() {
   const amt = Number(el("savingsMove").value || 0);
-  if (!amt) { alert("Amount halnuhos"); return; }
+  if (!amt) { setFieldError("savingsMove", "savingsMoveError", "Amount halnuhos"); return; }
+  clearFieldError("savingsMove", "savingsMoveError");
   const tx = { id: String(Date.now()), type: "kharcha", amount: amt, category: "Saving", bankId: "cash", bankLabel: "Cash", payment: "Cash", date: todayStr(), note: "Emergency Fund ma sareko", impulse: false, createdAt: Date.now() };
   const arr = getTx(); arr.unshift(tx); saveTx(arr); el("savingsMove").value = "";
-  renderAll(); showOk("Savings ma Rs. " + amt + " sareko.");
+  if (!isGuest && window.currentUser) {
+    try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/transactions/" + tx.id), tx); }
+    catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); else showErr("Device ma save, Firebase fail: " + e.message); }
+  }
+  renderAll(); showOk("Savings ma Rs. " + amt + " sareko."); showToast("Savings ma Rs. " + amt + " sareko.", "success");
 }
 async function pushAllToFirebase() {
-  if (isGuest || !window.currentUser) { showErr("Guest ma sync hudaina. Login garnus."); return; }
+  if (isGuest || !window.currentUser) { showErr("Guest ma sync hudaina. Login garnus."); showToast("Guest ma sync hudaina. Login garnus.", "error"); return; }
   showOk("Sync gardai...");
   try {
     const { db, ref, set } = window._fb; const base = getUserPath();
@@ -545,24 +690,24 @@ async function pushAllToFirebase() {
     await set(ref(db, base + "/budgets/main"), { amount: getBudget(), strict: localStorage.getItem(sk("strict")) === "1" });
     showOk("<b>Sync Success!</b> Sabai data Firebase ma pugyo. Path: " + base);
     el("lastSync").textContent = "Last Sync: " + new Date().toLocaleString();
-  } catch (e) { showErr("Sync Fail: " + e.message); }
+  } catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); else showErr("Sync Fail: " + e.message); }
 }
 async function loadFromFirebase() {
-  if (isGuest || !window.currentUser) { showErr("Guest ma load hudaina."); return; }
-  await window.loadUserData(); showOk("Firebase bata load bhayo.");
-  el("lastSync").textContent = "Last Sync: " + new Date().toLocaleString();
+  if (isGuest || !window.currentUser) { showErr("Guest ma sync hudaina. Login garnus."); showToast("Guest ma sync hudaina. Login garnus.", "error"); return; }
+  try { await window.loadUserData(); showOk("Firebase bata load bhayo."); el("lastSync").textContent = "Last Sync: " + new Date().toLocaleString(); }
+  catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); else showErr("Load Fail: " + e.message); }
 }
 async function testFirebase() {
-  if (isGuest || !window.currentUser) { showErr("Guest ma Test hudaina. Login garnus."); return; }
+  if (isGuest || !window.currentUser) { showErr("Guest ma sync hudaina. Login garnus."); showToast("Guest ma sync hudaina. Login garnus.", "error"); return; }
   showOk("Test gardai...");
   try {
     const { db, ref, set, get } = window._fb; const id = "test_" + Date.now();
     await set(ref(db, getUserPath() + "/_test/" + id), { time: new Date().toISOString(), ok: true });
     const s = await get(ref(db, getUserPath() + "/_test/" + id));
     if (s.exists()) showOk("<b>Firebase TEST PASS!</b> Path: " + getUserPath() + "/_test"); else showErr("Test fail - Read sakiyena.");
-  } catch (e) { showErr("TEST FAIL: " + e.message); }
+  } catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); else showErr("TEST FAIL: " + e.message); }
 }
-function copyRules() { const t = el("rulesText").innerText; if (navigator.clipboard) navigator.clipboard.writeText(t).then(() => alert("Rules copy bhayo!")); }
+function copyRules() { const txt = el("rulesText").innerText; if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => { showOk("Rules copy bhayo!"); showToast("Rules copy bhayo!", "success"); }); }
 function exportCSV() {
   const rows = [["Date,Type,Category,Note,Amount,PaymentMethod,IncomeSource,Impulse,Bank,TransferFrom,TransferTo,Recurring"]];
   getTx().forEach((t) => rows.push([t.date, t.type, t.category, '"' + (t.note || "").replace(/"/g, "") + '"', t.amount, t.payment || "", t.incomeSource || "", t.impulse ? "Yes" : "No", t.bankLabel || "", t.transferDirection || "", "", "" + (t.recurring ? "Yes" : "No")].join(",")));
@@ -574,11 +719,14 @@ function exportJSON() {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "mero-paisa-backup-" + todayStr() + ".json"; a.click(); URL.revokeObjectURL(a.href); showOk("JSON backup download bhayo.");
 }
-async function deleteAllData() {
-  if (!confirm("All data deleted. Fresh start! Pakka?")) return;
-  ["transactions", "bank_accounts", "udharo", "habit_checks", "budget"].forEach((k) => localStorage.removeItem(sk(k)));
-  if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath())); } catch (e) {} }
-  renderAll(); showOk("All data deleted. Fresh start!");
+function deleteAllData() {
+  openConfirm("All Data Delete? Undo hudaina", "Pahila JSON Backup linus. Sabai data delete huncha ra undo hudaina.", "Continue", () => {
+    openConfirm("Pakka ho? Last Chance", "Yo last chance ho. Sabai data permanently delete huncha.", "Yes, Delete All", async () => {
+      ["transactions", "bank_accounts", "udharo", "habit_checks", "budget"].forEach((k) => localStorage.removeItem(sk(k)));
+      if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath())); } catch (e) { if (isPermissionDenied(e)) showPermissionDenied(); } }
+      renderAll(); showOk("All data deleted. Fresh start!"); showToast("All data deleted. Fresh start!", "success");
+    });
+  });
 }
 function bindEvents() {
   el("tabLogin").addEventListener("click", () => switchTab("login"));
@@ -595,6 +743,8 @@ function bindEvents() {
   el("logoutBtn").addEventListener("click", handleLogout);
   el("themeToggle").addEventListener("click", toggleTheme);
   document.querySelectorAll("#mainNav [data-nav]").forEach((b) => b.addEventListener("click", () => showSection(b.getAttribute("data-nav"))));
+  document.querySelectorAll("#bottomNav [data-nav]").forEach((b) => b.addEventListener("click", () => showSection(b.getAttribute("data-nav"))));
+  el("bottomAddBtn").addEventListener("click", () => { showSection("dashboard"); setTimeout(() => el("amount").focus(), 150); });
   el("dashFilter").addEventListener("change", renderAll);
   el("btnExpense").addEventListener("click", () => setType("kharcha"));
   el("btnIncome").addEventListener("click", () => setType("kamai"));
@@ -623,7 +773,7 @@ function bindEvents() {
   el("payCancelBtn").addEventListener("click", closePayModal);
   el("paySaveBtn").addEventListener("click", saveUdPayment);
   el("importFile").addEventListener("change", async (e) => {
-    const f = e.target.files[0]; if (!f) return;
+    const f = e.target.files[0]; if (!f) return; el("importFileName").textContent = f.name;
     try {
       const data = JSON.parse(await f.text());
       if (Array.isArray(data.transactions)) saveTx(data.transactions);
@@ -631,10 +781,25 @@ function bindEvents() {
       if (Array.isArray(data.udharo)) saveUd(data.udharo);
       if (data.budgets && data.budgets.amount) localStorage.setItem(sk("budget"), data.budgets.amount);
       if (data.habits) saveHabits(data.habits);
-      renderAll(); showOk("Backup import bhayo.");
+      renderAll(); showOk("Backup import bhayo."); showToast("Backup import bhayo.", "success");
     } catch (err) { showErr("Import fail: " + err.message); }
   });
+  el("confirmCancelBtn").addEventListener("click", closeConfirm);
+  el("confirmOkBtn").addEventListener("click", () => { const cb = confirmCallback; closeConfirm(); if (cb) cb(); });
+  el("confirmModalBg").addEventListener("click", (e) => { if (e.target === el("confirmModalBg")) closeConfirm(); });
+  el("chooseFileBtn").addEventListener("click", () => el("importFile").click());
+  el("bankDropdownBtn").addEventListener("click", (e) => { e.stopPropagation(); const l = el("bankDropdownList"); const was = l.classList.contains("open"); closeAllDropdowns(null); if (!was) l.classList.add("open"); });
+  el("categoryDropdownBtn").addEventListener("click", (e) => { e.stopPropagation(); const l = el("categoryDropdownList"); const was = l.classList.contains("open"); closeAllDropdowns(null); if (!was) l.classList.add("open"); });
+  el("payDropdownBtn").addEventListener("click", (e) => { e.stopPropagation(); const l = el("payDropdownList"); const was = l.classList.contains("open"); closeAllDropdowns(null); if (!was) l.classList.add("open"); });
+  el("amount").addEventListener("input", () => clearFieldError("amount", "amountError"));
+  el("savingsMove").addEventListener("input", () => clearFieldError("savingsMove", "savingsMoveError"));
+  el("udPerson").addEventListener("input", () => clearFieldError("udPerson", "udPersonError"));
+  el("udAmount").addEventListener("input", () => clearFieldError("udAmount", "udAmountError"));
+  el("budgetInput").addEventListener("input", () => clearFieldError("budgetInput", "budgetInputError"));
+  el("payModalAmount").addEventListener("input", () => clearFieldError("payModalAmount", "payModalAmountError"));
+  el("trAmount").addEventListener("input", () => clearFieldError("trAmount", "trAmountError"));
   document.addEventListener("click", (e) => {
+    if (!e.target.closest(".custom-dropdown")) closeAllDropdowns(null);
     const del = e.target.closest("[data-del-tx]");
     if (del) { delTx(del.getAttribute("data-del-tx")); return; }
     const delB = e.target.closest("[data-del-bank]");
@@ -901,6 +1066,7 @@ initTheme();
 initDrawerNav();
 el("dateInput").value = todayStr(); el("trDate").value = todayStr(); el("udDate").value = todayStr();
 fillCats();
+refreshCustomDropdowns();
 renderAll();
 </script>
 </body>
