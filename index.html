@@ -7,229 +7,901 @@
 <meta name="description" content="Mero Paisa - Track income, expenses, banks, budgets and udharo in Rs. (NPR).">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0F172A;--emerald:#059669;--slate:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--red:#DC2626;--amber:#D97706;--blue:#2563EB}
+/* 1. VARIABLES */
+:root{--navy:#0F172A;--emerald:#059669;--emerald-soft:#ECFDF5;--red:#DC2626;--red-soft:#FEF2F2;--amber:#D97706;--amber-soft:#FFFBEB;--slate:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--card:#fff;--text:#0F172A;--muted:#64748B;--input-bg:#fff;--radius-card:16px;--radius-btn:12px;--radius-input:11px;--radius-badge:999px;--shadow:0 1px 3px rgba(0,0,0,.04)}
+[data-theme="dark"]{--bg:#0F172A;--card:#1E293B;--line:#334155;--text:#fff;--muted:#94A3B8;--input-bg:#0F172A}
+/* 2. RESET */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',system-ui,Arial,sans-serif;background:var(--bg);color:var(--navy);line-height:1.5}
-input,select,textarea{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:11px;font-size:14px;outline:none;background:#fff}
-input:focus,select:focus{border-color:var(--emerald)}
-label{font-size:13px;font-weight:600;display:block;margin:11px 0 5px}
-button{font-family:inherit;cursor:pointer}
-.err{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;padding:11px;border-radius:11px;font-size:13px;display:none}
-.ok{background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;padding:11px;border-radius:11px;font-size:13px;display:none}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:14px}
+button{font-family:inherit;cursor:pointer;min-height:40px}
+a{color:var(--emerald);text-decoration:none}
+small{color:var(--muted)}
+/* 3. LAYOUT */
 #loginScreen{min-height:100vh;display:flex}
-.login-left{flex:1;background:linear-gradient(160deg,#0F172A,#064E3B);color:#fff;padding:34px;display:flex;flex-direction:column;justify-content:space-between}
-.login-left h2{font-size:31px;line-height:1.15;margin-top:22px;letter-spacing:-1px}
-.login-left p{color:#CBD5E1;margin-top:10px;font-size:14px;line-height:1.6}
-.feature{margin-top:20px;display:flex;flex-direction:column;gap:10px}
-.feature div{display:flex;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:12px;font-size:13px}
-.login-right{flex:1;display:flex;align-items:center;justify-content:center;padding:22px;background:#fff}
+.login-left{flex:1;background:linear-gradient(160deg,#0F172A,#064E3B);color:#fff;padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+.login-left h1{font-size:24px;font-weight:800}
+.login-left h2{font-size:24px;line-height:1.2;margin-top:20px;font-weight:700}
+.login-left p{color:#CBD5E1;margin-top:12px;font-size:14px;line-height:1.6}
+.login-dot{color:#34D399}
+.login-foot{font-size:12px;color:#94A3B8}
+.login-right{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--card)}
 .login-card{width:100%;max-width:430px}
-.logo{width:52px;height:52px;background:var(--navy);color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:19px}
-.tabs{display:flex;background:#F1F5F9;padding:4px;border-radius:12px;margin:16px 0}
-.tabs button{flex:1;padding:10px;border:0;background:transparent;border-radius:9px;font-weight:700;color:var(--slate)}
-.tabs button.active{background:#fff;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.btn{width:100%;padding:13px;border:0;border-radius:12px;background:var(--navy);color:#fff;font-weight:700;margin-top:14px}
-.btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
-.divider{display:flex;align-items:center;gap:10px;color:var(--slate);font-size:12px;margin:15px 0}
-.divider:before,.divider:after{content:"";flex:1;height:1px;background:var(--line)}
+.feature{margin-top:20px;display:flex;flex-direction:column;gap:8px}
+.feature-row{display:flex;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:12px;font-size:13px}
+.feature-row span{color:#CBD5E1}
 #appScreen{display:none}
 .app-layout{display:flex;min-height:100vh}
-.sidebar{width:264px;min-width:264px;background:#0F172A;color:#fff;padding:18px 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
-.nav{margin-top:14px;display:flex;flex-direction:column;gap:4px}
-.nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:11px 12px;border:0;border-radius:11px;background:transparent;color:#CBD5E1;font-size:14px;font-weight:600}
-.nav button.active{background:#fff;color:#0F172A}
-.nav small{font-size:11px;letter-spacing:1px;color:#94A3B8;padding:10px 10px 4px;text-transform:uppercase}
+.sidebar{width:264px;min-width:264px;background:#0F172A;color:#fff;padding:16px 12px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;z-index:41}
+.sidebar-brand{display:flex;align-items:center;gap:12px;padding:0 8px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand-mark{width:40px;height:40px;background:#fff;color:#0F172A;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0}
+.brand-name{font-size:18px}
+.brand-sub{font-size:12px;color:#94A3B8}
+.nav{margin-top:16px;display:flex;flex-direction:column;gap:4px}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;border:0;border-radius:11px;background:transparent;color:#CBD5E1;font-size:14px;font-weight:600}
+.nav button.active{background:#fff;color:#0F172A;box-shadow:var(--shadow)}
+.nav small{font-size:11px;letter-spacing:1px;color:#94A3B8;padding:12px 12px 4px;text-transform:uppercase}
+.sidebar-user{margin-top:auto;background:rgba(255,255,255,.08);border-radius:12px;padding:12px}
+.sidebar-user-actions{display:flex;gap:8px;margin-top:12px}
+.sidebar-user-actions>*{flex:1}
+.sync-text{margin-top:8px;font-size:12px;color:#CBD5E1}
 .main{flex:1;min-width:0}
-.topbar-mobile{display:none;background:#fff;border-bottom:1px solid var(--line);padding:11px 14px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
-.hamburger{width:40px;height:40px;border:1.5px solid var(--line);background:#fff;border-radius:10px;font-size:18px}
+.topbar-mobile{display:none;background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
+.topbar-brand{display:flex;align-items:center;gap:8px}
+.topbar-mark{width:32px;height:32px;background:#0F172A;color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px}
+.hamburger{width:40px;height:40px;border:1.5px solid var(--line);background:var(--card);border-radius:12px;font-size:18px;color:var(--text)}
+.avatar{width:36px;height:36px;background:#E0F2FE;color:#0369A1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
 .wrap{max-width:1080px;margin:0 auto;padding:20px}
-.page-head h1{font-size:25px;letter-spacing:-.5px}
-.page-head p{color:var(--slate);font-size:13px;margin-top:4px}
-.pill{padding:6px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:600}
+.page-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin-bottom:16px}
+.page-head h1{font-size:24px;font-weight:700}
+.page-head p{color:var(--muted);font-size:13px;margin-top:4px}
+.page-head-actions{display:flex;gap:8px;flex-wrap:wrap}
 .section{display:none}.section.active{display:block}
-.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.card h3{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--slate)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.stack-sm{display:flex;flex-direction:column;gap:8px}
+.mt-8{margin-top:8px}.hidden{display:none}.w-full{width:100%}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+/* 4. CARDS */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-card);padding:16px;box-shadow:var(--shadow)}
+.card h3{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.hero{background:linear-gradient(135deg,#0F172A,#065F46);color:#fff;border-radius:20px;padding:20px}
+.hero-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.hero-label{font-size:12px;letter-spacing:1px;color:#A7F3D0}
+.hero-open{font-size:28px;font-weight:800}
+.hero-close{font-size:32px;font-weight:800;color:#34D399}
+.hero-sub{font-size:12px;color:#CBD5E1}
+.hero-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:12px;border-radius:12px}
+.hero-stat span{font-size:12px;color:#CBD5E1}
+.hero-stat b{display:block;font-size:18px}
+.text-green{color:#34D399}.text-red-soft{color:#FCA5A5}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
-.hero{background:linear-gradient(135deg,#0F172A,#065F46);color:#fff;border-radius:20px;padding:22px}
-.toggle{display:flex;gap:8px;margin-top:10px}.toggle button{flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--line);background:#F8FAFC;font-weight:700}
-.toggle button.active{border-color:var(--navy);background:var(--navy);color:#fff}
-.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.quick button{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:600;font-size:13px}
-.btn-primary{width:100%;padding:13px;border:0;border-radius:12px;background:var(--emerald);color:#fff;font-weight:700;margin-top:12px}
-.btn-dark{padding:10px 14px;border:0;border-radius:10px;background:var(--navy);color:#fff;font-weight:600;font-size:13px}
-.btn-light{padding:10px 14px;border:1.5px solid var(--line);background:#fff;border-radius:10px;font-weight:600;font-size:13px}
-.bar{height:10px;background:#F1F5F9;border-radius:999px;overflow:hidden;margin-top:8px}.bar>div{height:100%;background:var(--emerald)}.bar.red>div{background:var(--red)}
-.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #F1F5F9;gap:10px}.row:last-child{border:0}
-.del{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:600}
-.pay{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:700}
-.filter{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}.filter button{padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:13px}
-.filter button.active{background:var(--navy);color:#fff}
+.big-num{font-size:20px;font-weight:700}
+.big-num-lg{font-size:24px;font-weight:700}
+.bar{height:10px;background:var(--bg);border-radius:999px;overflow:hidden;margin-top:8px}.bar>div{height:100%;background:var(--emerald)}.bar.red>div{background:var(--red)}
+.pill{padding:8px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--text)}
 .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
 .badge.green{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0}.badge.red{background:#FEF2F2;color:#991B1B;border:1px solid #FECACA}.badge.amber{background:#FFFBEB;color:#92400E;border:1px solid #FDE68A}.badge.blue{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
-.habit{display:flex;gap:12px;background:#F8FAFC;border:1px solid var(--line);padding:12px;border-radius:12px;margin-top:10px}.habit input{width:20px;height:20px;accent-color:var(--emerald)}
+.empty{color:var(--muted);font-size:13px}
+.empty-box{padding:16px;text-align:center;color:var(--muted);font-size:13px}
+.footer-note{text-align:center;margin-top:20px;color:#94A3B8;font-size:12px}
+/* 5. BUTTONS */
+.btn{width:100%;padding:12px;border:0;border-radius:var(--radius-btn);background:var(--navy);color:#fff;font-weight:700;margin-top:16px;min-height:44px}
+.btn-outline{background:var(--card);color:var(--text);border:1.5px solid var(--line)}
+.btn-primary{width:100%;padding:12px;border:0;border-radius:var(--radius-btn);background:var(--emerald);color:#fff;font-weight:700;margin-top:12px;min-height:44px}
+.btn-dark{padding:12px 16px;border:0;border-radius:12px;background:var(--navy);color:#fff;font-weight:600;font-size:13px;min-height:44px}
+.btn-light{padding:12px 16px;border:1.5px solid var(--line);background:var(--card);border-radius:12px;font-weight:600;font-size:13px;min-height:44px;color:var(--text)}
+.btn-danger{background:var(--red)}
+.btn-small{padding:8px 12px;border:0;border-radius:8px;font-weight:700;font-size:12px;min-height:40px}
+.btn-small.green{background:var(--emerald);color:#fff}.btn-small.light{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.btn-small.white{background:#fff;color:#0F172A}
+.tabs{display:flex;background:var(--bg);padding:4px;border-radius:12px;margin:16px 0}
+.tabs button{flex:1;padding:12px;border:0;background:transparent;border-radius:9px;font-weight:700;color:var(--muted)}
+.tabs button.active{background:var(--card);color:var(--text);box-shadow:var(--shadow)}
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;margin:16px 0}
+.divider:before,.divider:after{content:"";flex:1;height:1px;background:var(--line)}
+.toggle{display:flex;gap:8px;margin-top:12px}.toggle button{flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);font-weight:700;color:var(--text)}
+.toggle button.active{border-color:var(--navy);background:var(--navy);color:#fff}
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.quick button{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:600;font-size:13px;color:var(--text);min-height:40px}
+.filter{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.filter button{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:13px;color:var(--text);min-height:40px}
+.filter button.active{background:var(--navy);color:#fff}
+.logo{width:52px;height:52px;background:var(--navy);color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:19px}
+/* 6. FORMS */
+label{font-size:13px;font-weight:600;display:block;margin:12px 0 8px}
+input,select,textarea{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:var(--radius-input);font-size:14px;outline:none;background:var(--input-bg);color:var(--text);font-family:inherit;min-height:44px}
+input:focus,select:focus{border-color:var(--emerald)}
+.check-row{display:flex;align-items:center;gap:8px;font-weight:500;margin-top:12px}
+.check-row input{width:auto;min-height:auto}
+.check-row-inline{display:flex;justify-content:space-between;margin-top:12px;align-items:center}
+.check-row-inline label{margin:0;font-size:13px;display:flex;align-items:center;gap:8px}
+.check-row-inline input{width:auto}
+.err{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;padding:12px;border-radius:11px;font-size:13px;display:none}
+.ok{background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;padding:12px;border-radius:11px;font-size:13px;display:none}
 .flex2{display:flex;gap:8px}.flex2>*{flex:1}
-.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40}
-.drawer{position:fixed;left:0;top:0;bottom:0;width:280px;background:#0F172A;color:#fff;z-index:41;transform:translateX(-100%);transition:.25s;padding:18px 14px;overflow:auto}
-.drawer.open{transform:translateX(0)}
-.bottomnav{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:35;padding:6px}
-.bottomnav-inner{display:flex;justify-content:space-around}.bnav{flex:1;border:0;background:transparent;padding:6px 2px;font-size:11px;font-weight:600;color:var(--slate);display:flex;flex-direction:column;align-items:center;gap:2px}.bnav.active{color:var(--navy)}
-.bnav-center{width:52px;height:52px;margin-top:-26px;background:var(--emerald);color:#fff;border:4px solid var(--bg);border-radius:50%;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;align-items:center;justify-content:center;padding:16px}.modal{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:420px}
-.setup{font-size:13px;line-height:1.7;background:#FFFBEB;border:1px solid #FDE68A;padding:13px;border-radius:13px;margin-top:12px}
-pre{background:#0F172A;color:#D1FAE5;padding:11px;border-radius:10px;font-size:12px;overflow:auto;margin-top:8px;white-space:pre-wrap}
+.auth-title{margin-top:16px;font-size:24px;font-weight:700}.auth-sub{color:var(--muted);font-size:14px}
+.auth-note{font-size:12px;color:var(--muted);margin-top:12px;text-align:center;line-height:1.6}
+/* 7. TABLES / LISTS */
+.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);gap:12px}.row:last-child{border:0}
+.row-main{min-width:0}.row-meta{font-size:12px;color:var(--muted);word-break:break-word}
+.row-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.row-amount{font-weight:700}.row-amount.in{color:var(--emerald)}.row-amount.out{color:var(--red)}
+.del{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600}
+.pay{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:700}
+.habit{display:flex;gap:12px;background:var(--bg);border:1px solid var(--line);padding:12px;border-radius:12px;margin-top:12px}.habit input{width:20px;height:20px;accent-color:var(--emerald);min-height:20px}
+.habit-xp{font-size:12px;color:var(--muted)}
+.bank-card{margin-top:12px}.bank-top{display:flex;justify-content:space-between;gap:12px}.bank-right{text-align:right;flex-shrink:0}
+.ud-card{margin-top:12px}.ud-top{display:flex;justify-content:space-between;gap:12px}.ud-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.budget-row{display:flex;justify-content:space-between;font-size:13px;margin-top:8px}
 .monthbar{display:flex;gap:8px;align-items:flex-end;height:100px;margin-top:12px}.monthbar .col{flex:1;text-align:center}.monthbar .bars{display:flex;gap:3px;justify-content:center;align-items:flex-end;height:76px}.monthbar .b1{width:11px;background:#059669;border-radius:4px 4px 0 0}.monthbar .b2{width:11px;background:#DC2626;border-radius:4px 4px 0 0}
-@media(max-width:900px){.login-left{display:none}.sidebar{display:none}.topbar-mobile{display:flex}.wrap{padding:14px;padding-bottom:90px}.grid2,.grid3,.grid4{grid-template-columns:1fr}.bottomnav{display:block}}
+.setup{font-size:13px;line-height:1.7;background:#FFFBEB;border:1px solid #FDE68A;padding:12px;border-radius:12px;margin-top:12px;color:#92400E}
+pre{background:#0F172A;color:#D1FAE5;padding:12px;border-radius:12px;font-size:12px;overflow:auto;margin-top:8px;white-space:pre-wrap}
+.insight{font-size:14px;line-height:1.6}
+/* 8. MODALS / DRAWER */
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40}
+.drawer-overlay.show{display:block}
+#drawer{position:fixed;left:0;top:0;bottom:0;width:280px;background:#0F172A;color:#fff;z-index:41;transform:translateX(-100%);transition:.25s;padding:16px 12px;overflow:auto}
+#drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:0 8px 12px;border-bottom:1px solid rgba(255,255,255,.12)}
+.drawer-close{background:transparent;border:0;color:#fff;font-size:20px;min-height:40px}
+.drawer-user{margin-top:16px;background:rgba(255,255,255,.08);padding:12px;border-radius:12px}
+.drawer-user p{font-size:12px;color:#CBD5E1}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;align-items:center;justify-content:center;padding:16px}.modal-bg.show{display:flex}
+.modal{background:var(--card);border-radius:16px;padding:20px;width:100%;max-width:420px;color:var(--text)}
+.modal-info{font-size:13px;color:var(--muted)}
+/* 9. RESPONSIVE */
+@media(max-width:900px){.login-left{display:none}.sidebar{position:fixed;transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.topbar-mobile{display:flex}.wrap{padding:16px}.grid2,.grid3,.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.hero-close{font-size:28px}.flex2{flex-direction:column}.page-head{flex-direction:column}.row{flex-direction:column;align-items:flex-start}.row-right{align-items:flex-start;text-align:left}}
+@media(min-width:601px) and (max-width:900px){.grid4{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div id="loginScreen">
-<div class="login-left"><div><h1>Mero Paisa <span style="color:#34D399">.</span></h1><h2>Save Money,<br>Track Expenses.<br>Bank dekhi Udharo samma.</h2><p>Tapai ko file bata import garieko full version — Dashboard, Transactions, Budget, Savings, Bank Accounts (Opening to Closing), Habits & Levels, Udharo, Settings. Abba Firebase project <b>financehabit-13683</b> sanga connected.</p><div class="feature"><div><b>Bank Accounts</b><span style="color:#CBD5E1"> — Nabil, NIC Asia, Global IME, NMB, Prabhu, Siddhartha, Kumari, Everest, eSewa, Khalti, IME Pay, Cash</span></div><div><b>Udharo</b><span style="color:#CBD5E1"> — Lent money is still your money, don't forget who owes you</span></div><div><b>Budget + Savings</b><span style="color:#CBD5E1"> — Strict Mode + Emergency Fund 5K / month</span></div><div><b>Habits + XP</b><span style="color:#CBD5E1"> — Money Saver, Smart Saver, Budget Boss, 5K Saver, 7-Day Streak</span></div></div></div><p style="font-size:12px;color:#94A3B8">Mero Paisa • finance.yonghangishak.com.np • Firebase • financehabit-13683</p></div>
-<div class="login-right"><div class="login-card"><div class="logo">Rs.</div><h2 id="authTitle" style="margin-top:14px">Welcome back</h2><p style="color:#64748B;font-size:14px" id="authSub">Login garera dashboard kholnus.</p><div class="tabs"><button id="tabLogin" class="active" onclick="switchTab('login')">Login</button><button id="tabSignup" onclick="switchTab('signup')">Sign Up</button></div><div id="authErr" class="err"></div><div id="authOk" class="ok"></div><div id="nameField" style="display:none"><label>Full Name</label><input id="authName" placeholder="Ex: Yonghang Isaac"></div><label>Email Address</label><input id="authEmail" type="email" placeholder="you@example.com"><label>Password</label><input id="authPass" type="password" placeholder="Min 8 characters, letter + number"><div id="secField" style="display:none"><label>Security Answer - Password birsida (Ex: Aama ko naam)</label><input id="authSec" placeholder="Security answer"></div><div style="display:flex;justify-content:space-between;margin-top:10px"><label style="margin:0;font-size:13px"><input type="checkbox" checked style="width:auto"> Remember me</label><a href="#" onclick="forgotPass(event)" style="font-size:13px;font-weight:600;color:#059669">Forgot password?</a></div><button class="btn" id="authBtn" onclick="handleAuth()">Login</button><div class="divider">OR CONTINUE WITH</div><button class="btn btn-outline" onclick="handleGoogle()">G - Continue with Google</button><button class="btn btn-outline" onclick="handleGuest()">Continue as Guest</button><p style="font-size:12px;color:#64748B;margin-top:12px;text-align:center;line-height:1.6">Password SHA-256 jasto secure rule: min 8, letter + number.<br>Firebase &gt; Authentication &gt; Email/Password, Google ON garnus.</p></div></div>
+<div class="login-left"><div><h1>Mero Paisa <span class="login-dot">.</span></h1><h2>Save Money,<br>Track Expenses.<br>Bank dekhi Udharo samma.</h2><p>Dashboard, Transactions, Budget, Savings, Bank Accounts (Opening to Closing), Habits &amp; Levels, Udharo, Settings. Firebase project <b>financehabit-13683</b> sanga connected.</p><div class="feature"><div class="feature-row"><b>Bank Accounts</b><span> — Nabil, NIC Asia, Global IME, NMB, Prabhu, Siddhartha, Kumari, Everest, eSewa, Khalti, IME Pay, Cash</span></div><div class="feature-row"><b>Udharo</b><span> — Lent money is still your money, don&apos;t forget who owes you</span></div><div class="feature-row"><b>Budget + Savings</b><span> — Strict Mode + Emergency Fund 5K / month</span></div><div class="feature-row"><b>Habits + XP</b><span> — Money Saver, Smart Saver, Budget Boss, 5K Saver, 7-Day Streak</span></div></div></div><p class="login-foot">Mero Paisa • finance.yonghangishak.com.np • Firebase • financehabit-13683</p></div>
+<div class="login-right"><div class="login-card"><div class="logo">Rs.</div><h2 id="authTitle" class="auth-title">Welcome back</h2><p id="authSub" class="auth-sub">Login garera dashboard kholnus.</p><div class="tabs"><button id="tabLogin" class="active">Login</button><button id="tabSignup">Sign Up</button></div><div id="authErr" class="err"></div><div id="authOk" class="ok"></div><div id="nameField" class="hidden"><label>Full Name</label><input id="authName" placeholder="Ex: Yonghang Isaac"></div><label>Email Address</label><input id="authEmail" type="email" placeholder="you@example.com"><label>Password</label><input id="authPass" type="password" placeholder="Min 8 characters, letter + number"><div id="secField" class="hidden"><label>Security Answer - Password birsida (Ex: Aama ko naam)</label><input id="authSec" placeholder="Security answer"></div><div class="check-row-inline"><label><input type="checkbox" checked> Remember me</label><a href="#" id="forgotLink">Forgot password?</a></div><button class="btn" id="authBtn">Login</button><div class="divider">OR CONTINUE WITH</div><button class="btn btn-outline" id="googleBtn">G - Continue with Google</button><button class="btn btn-outline" id="guestBtn">Continue as Guest</button><p class="auth-note">Password SHA-256 jasto secure rule: min 8, letter + number.<br>Firebase &gt; Authentication &gt; Email/Password, Google ON garnus.</p></div></div>
 </div>
-
 <div id="appScreen"><div class="app-layout">
-<aside class="sidebar"><div style="display:flex;align-items:center;gap:10px;padding:0 8px 14px;border-bottom:1px solid rgba(255,255,255,.12)"><div style="width:40px;height:40px;background:#fff;color:#0F172A;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:900">Rs.</div><div><b style="font-size:18px">Mero Paisa</b><div style="font-size:12px;color:#94A3B8">Save Money, Track Expenses</div></div></div><nav class="nav"><small>Main</small><button data-nav="dashboard" class="active" onclick="showSection('dashboard')">Dashboard</button><button data-nav="transactions" onclick="showSection('transactions')">Transactions</button><button data-nav="banks" onclick="showSection('banks')">Bank Accounts</button><small>Money</small><button data-nav="budget" onclick="showSection('budget')">Budget</button><button data-nav="savings" onclick="showSection('savings')">Savings - Emergency Fund</button><button data-nav="udharo" onclick="showSection('udharo')">Udharo - Liye / Diye</button><small>Other</small><button data-nav="habits" onclick="showSection('habits')">Habits & Levels</button><button data-nav="settings" onclick="showSection('settings')">Settings / Data</button></nav><div style="margin-top:auto;background:rgba(255,255,255,.08);border-radius:13px;padding:12px"><b id="sideUserName">User</b><p id="sideUserEmail" style="font-size:12px;color:#CBD5E1">-</p><div style="display:flex;gap:6px;margin-top:10px"><button onclick="pushAllToFirebase()" style="flex:1;padding:8px;border:0;border-radius:8px;background:#059669;color:#fff;font-weight:700;font-size:12px">Sync</button><button onclick="handleLogout()" style="flex:1;padding:8px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:transparent;color:#fff;font-size:12px">Logout</button></div><p id="sideSync" style="margin-top:8px;font-size:12px">Firebase: Checking...</p></div></aside>
-<div class="main"><div class="topbar-mobile"><button class="hamburger" onclick="openDrawer()">☰</button><div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;background:#0F172A;color:#fff;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px">Rs.</div><b>Mero Paisa</b></div><div id="mobileAvatar" style="width:36px;height:36px;background:#E0F2FE;color:#0369A1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800">U</div></div>
+<aside class="sidebar" id="sidebar"><div class="sidebar-brand"><div class="brand-mark">Rs.</div><div><b class="brand-name">Mero Paisa</b><div class="brand-sub">Save Money, Track Expenses</div></div></div><nav class="nav" id="mainNav"><small>Main</small><button data-nav="dashboard" class="active">Dashboard</button><button data-nav="transactions">Transactions</button><button data-nav="banks">Bank Accounts</button><small>Money</small><button data-nav="budget">Budget</button><button data-nav="savings">Savings - Emergency Fund</button><button data-nav="udharo">Udharo - Liye / Diye</button><small>Other</small><button data-nav="habits">Habits &amp; Levels</button><button data-nav="settings">Settings / Data</button></nav><div class="sidebar-user"><b id="sideUserName">User</b><p id="sideUserEmail">-</p><div class="sidebar-user-actions"><button id="syncBtn" class="btn-small green">Sync</button><button id="logoutBtn" class="btn-small light">Logout</button></div><p id="sideSync" class="sync-text">Firebase: Checking...</p><button id="themeToggle" class="btn-small white mt-8 w-full">Dark Mode</button></div></aside>
+<div class="main"><div class="topbar-mobile"><button class="hamburger" id="hamburgerBtn">☰</button><div class="topbar-brand"><div class="topbar-mark">Rs.</div><b>Mero Paisa</b></div><div id="mobileAvatar" class="avatar">U</div></div>
 <div class="wrap"><div id="okBox" class="ok"></div><div id="errBox" class="err"></div>
-
 <section id="sec-dashboard" class="section active">
-<div class="page-head"><div><h1 id="welcomeTitle">Namaste, Welcome back</h1><p id="welcomeDate">Full money picture in 10 seconds.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="dashFilter" onchange="renderAll()" style="width:auto"><option value="all">Sabai Samaya</option><option value="this">Yo Mahina</option><option value="7">Last 7 Din</option></select><span class="pill" id="xpPill">XP: 0 • Level: Money Saver</span></div></div>
-<div class="hero"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><div style="font-size:12px;letter-spacing:1px;color:#A7F3D0">OPENING BALANCE</div><div style="font-size:28px;font-weight:900" id="openingBalance">Rs. 0</div><div style="font-size:12px;color:#CBD5E1">Banks ko opening jamma</div></div><div style="text-align:right"><div style="font-size:12px;letter-spacing:1px;color:#A7F3D0">CLOSING BALANCE</div><div style="font-size:34px;font-weight:900;color:#34D399" id="closingBalance">Rs. 0</div><div style="font-size:12px;color:#CBD5E1">Opening + Income - Expense + Udharo hisab</div></div></div>
-<div class="grid4" style="margin-top:16px"><div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:12px;border-radius:12px"><span style="font-size:12px;color:#CBD5E1">Total Income</span><b style="display:block;font-size:18px;color:#34D399" id="totalIncome">Rs. 0</b><span style="font-size:12px;color:#CBD5E1" id="incomeCount">0 tx</span></div><div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:12px;border-radius:12px"><span style="font-size:12px;color:#CBD5E1">Total Expense</span><b style="display:block;font-size:18px;color:#FCA5A5" id="totalExpense">Rs. 0</b><span style="font-size:12px;color:#CBD5E1" id="expenseCount">0 tx</span></div><div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:12px;border-radius:12px"><span style="font-size:12px;color:#CBD5E1">Udharo - Tirna Baki</span><b style="display:block;font-size:18px" id="duePayTop">Rs. 0</b><span style="font-size:12px;color:#CBD5E1" id="liyeTop">Liye: Rs. 0</span></div><div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:12px;border-radius:12px"><span style="font-size:12px;color:#CBD5E1">Udharo - Auna Baki</span><b style="display:block;font-size:18px" id="dueReceiveTop">Rs. 0</b><span style="font-size:12px;color:#CBD5E1" id="diyeTop">Diye: Rs. 0</span></div></div></div>
-<div class="grid3" style="margin-top:12px"><div class="card"><h3>Compared to Last Month</h3><b style="font-size:19px" id="compareText">-</b><p style="font-size:12px;color:#64748B" id="compareSub">Income / Expense change</p></div><div class="card"><h3>Emergency Fund</h3><b style="font-size:19px" id="emergencyTop">Rs. 0 / Rs. 5,000</b><div class="bar"><div id="emergencyBar" style="width:0%"></div></div><small>5K per month builds your future</small></div><div class="card"><h3>Budget Used</h3><b style="font-size:19px" id="budgetTop">-</b><div class="bar red"><div id="budgetBarTop" style="width:0%"></div></div><small id="budgetTopSub">Budget set garnuhos</small></div></div>
-<div class="grid2" style="margin-top:12px"><div class="card"><h3>Quick Add - Expense / Income</h3><div class="toggle"><button id="btnExpense" class="active" onclick="setType('kharcha')">KHARCHA</button><button id="btnIncome" onclick="setType('kamai')">KAMAI</button></div><label>Amount (Rs.)</label><input id="amount" type="number" placeholder="Ex: 500"><div class="quick"><button onclick="setAmount(100)">100</button><button onclick="setAmount(500)">500</button><button onclick="setAmount(1000)">1000</button><button onclick="setAmount(5000)">5000</button></div><div class="flex2"><div><label>Bank / Account</label><select id="bankSelect"></select></div><div><label>Category</label><select id="category"></select></div></div><div class="flex2"><div><label>Payment</label><select id="payMethod"><option>Cash</option><option>Bank QR</option><option>eSewa</option><option>Khalti</option><option>Card</option><option>Other</option></select></div><div><label>Date</label><input id="dateInput" type="date"></div></div><label>Need vs Impulse</label><select id="impulseSelect"><option value="need">Need - Chahine thiyo</option><option value="impulse">Impulse - Joss ma kine</option></select><label>Note</label><input id="note" placeholder="Ex: Khaja, Petrol, Salary"><label style="font-weight:500"><input type="checkbox" id="recurringCheck" style="width:auto"> Recurring - Har mahina dohorine</label><button class="btn-primary" onclick="addTransaction()">Save Garne - Device + Firebase</button><small id="saveMsg" style="display:block;margin-top:8px;color:#64748B"></small></div><div style="display:flex;flex-direction:column;gap:12px"><div class="card"><h3>Top Insight</h3><p id="insightText" style="font-size:14px;line-height:1.6">No expenses yet. Log every buy and mark Need vs Impulse — that is how the leak becomes visible.</p></div><div class="card"><h3>Last 6 Mahina</h3><div class="monthbar" id="monthChart"></div></div><div class="card"><h3>Low Balance Alert</h3><div id="lowBalanceList"><small style="color:#64748B">Sabai bank thik cha.</small></div></div></div></div>
+<div class="page-head"><div><h1 id="welcomeTitle">Namaste, Welcome back</h1><p id="welcomeDate">Full money picture in 10 seconds.</p></div><div class="page-head-actions"><select id="dashFilter"><option value="all">Sabai Samaya</option><option value="this">Yo Mahina</option><option value="7">Last 7 Din</option></select><span class="pill" id="xpPill">XP: 0 • Level: Money Saver</span></div></div>
+<div class="hero"><div class="hero-top"><div><div class="hero-label">OPENING BALANCE</div><div class="hero-open" id="openingBalance">Rs. 0</div><div class="hero-sub">Banks ko opening jamma</div></div><div><div class="hero-label">CLOSING BALANCE</div><div class="hero-close" id="closingBalance">Rs. 0</div><div class="hero-sub">Opening + Income - Expense + Udharo hisab</div></div></div>
+<div class="grid4 mt-16"><div class="hero-stat"><span>Total Income</span><b class="text-green" id="totalIncome">Rs. 0</b><span id="incomeCount">0 tx</span></div><div class="hero-stat"><span>Total Expense</span><b class="text-red-soft" id="totalExpense">Rs. 0</b><span id="expenseCount">0 tx</span></div><div class="hero-stat"><span>Udharo - Tirna Baki</span><b id="duePayTop">Rs. 0</b><span id="liyeTop">Liye: Rs. 0</span></div><div class="hero-stat"><span>Udharo - Auna Baki</span><b id="dueReceiveTop">Rs. 0</b><span id="diyeTop">Diye: Rs. 0</span></div></div></div>
+<div class="grid3 mt-12"><div class="card"><h3>Compared to Last Month</h3><b class="big-num" id="compareText">-</b><p class="empty" id="compareSub">Income / Expense change</p></div><div class="card"><h3>Emergency Fund</h3><b class="big-num" id="emergencyTop">Rs. 0 / Rs. 5,000</b><div class="bar"><div id="emergencyBar"></div></div><small>5K per month builds your future</small></div><div class="card"><h3>Budget Used</h3><b class="big-num" id="budgetTop">-</b><div class="bar red"><div id="budgetBarTop"></div></div><small id="budgetTopSub">Budget set garnuhos</small></div></div>
+<div class="grid2 mt-12"><div class="card"><h3>Quick Add - Expense / Income</h3><div class="toggle"><button id="btnExpense" class="active">KHARCHA</button><button id="btnIncome">KAMAI</button></div><label>Amount (Rs.)</label><input id="amount" type="number" placeholder="Ex: 500"><div class="quick"><button data-amount="100">100</button><button data-amount="500">500</button><button data-amount="1000">1000</button><button data-amount="5000">5000</button></div><div class="flex2"><div><label>Bank / Account</label><select id="bankSelect"></select></div><div><label>Category</label><select id="category"></select></div></div><div class="flex2"><div><label>Payment</label><select id="payMethod"><option>Cash</option><option>Bank QR</option><option>eSewa</option><option>Khalti</option><option>Card</option><option>Other</option></select></div><div><label>Date</label><input id="dateInput" type="date"></div></div><label>Need vs Impulse</label><select id="impulseSelect"><option value="need">Need - Chahine thiyo</option><option value="impulse">Impulse - Joss ma kine</option></select><label>Note</label><input id="note" placeholder="Ex: Khaja, Petrol, Salary"><label class="check-row"><input type="checkbox" id="recurringCheck"> Recurring - Har mahina dohorine</label><button class="btn-primary" id="saveTxBtn">Save Garne - Device + Firebase</button><small id="saveMsg" class="empty mt-8"></small></div><div class="stack"><div class="card"><h3>Top Insight</h3><p id="insightText" class="insight">No expenses yet. Log every buy and mark Need vs Impulse — that is how the leak becomes visible.</p></div><div class="card"><h3>Last 6 Mahina</h3><div class="monthbar" id="monthChart"></div></div><div class="card"><h3>Low Balance Alert</h3><div id="lowBalanceList"><small>Sabai bank thik cha.</small></div></div></div></div>
 </section>
-
-<section id="sec-transactions" class="section"><div class="page-head"><div><h1>Transactions</h1><p>Every rupee must be tracked — if you don't write it, you will forget it.</p></div><span class="pill" id="txCountPill">0 transactions</span></div><div class="card"><div class="flex2"><div><label>Month</label><input id="txMonth" type="month" onchange="renderAll()"></div><div><label>Search</label><input id="txSearch" placeholder="Search note / category" oninput="renderAll()"></div></div><div class="filter"><button id="fAll" class="active" onclick="setTxFilter('all')">Sabai</button><button id="fKamai" onclick="setTxFilter('kamai')">Kamai</button><button id="fKharcha" onclick="setTxFilter('kharcha')">Kharcha</button><button id="fImpulse" onclick="setTxFilter('impulse')">Impulse Only</button></div><div id="txList"></div></div></section>
-
-<section id="sec-banks" class="section"><div class="page-head"><div><h1>Bank Accounts</h1><p>Know exactly how much you have in each bank - Opening to Closing.</p></div><span class="pill" id="bankTotalPill">Total Closing: Rs. 0</span></div><div class="card"><h3>Add Bank Account</h3><div class="flex2"><div><label>Bank Name</label><select id="newBankName"><option>Nabil Bank</option><option>NIC Asia</option><option>Global IME</option><option>NMB Bank</option><option>Prabhu Bank</option><option>Siddhartha Bank</option><option>Kumari Bank</option><option>Everest Bank</option><option>eSewa Wallet</option><option>Khalti Wallet</option><option>IME Pay</option><option>Cash in Hand</option><option>Other</option></select></div><div><label>Account Type</label><select id="newBankType"><option>Savings</option><option>Current</option><option>Wallet</option><option>Cash</option></select></div></div><label>Nickname (Optional)</label><input id="newBankNick" placeholder="Ex: Mero salary account"><label>Opening Balance (Rs.)</label><input id="newBankOpening" type="number" placeholder="Ex: 10000"><label>Manual Closing (Optional - Aafai closing lekhe)</label><input id="newBankClosing" type="number" placeholder="Khali chhode auto calculate huncha"><label>Note</label><input id="newBankNote" placeholder="Ex: Salary aune account"><button class="btn-primary" onclick="addBank()">Bank Account Add Garne</button></div><div class="card" style="margin-top:12px"><h3>Transfer - Bank to Bank</h3><div class="flex2"><div><label>From</label><select id="trFrom"></select></div><div><label>To</label><select id="trTo"></select></div></div><label>Amount (Rs.)</label><input id="trAmount" type="number" placeholder="Ex: 2000"><label>Date</label><input id="trDate" type="date"><button class="btn-primary" style="background:#0F172A" onclick="doTransfer()">Transfer Garne</button><small style="color:#64748B">Transfer le duitai bank ko closing update garcha.</small></div><div id="bankList"></div></section>
-
-<section id="sec-budget" class="section"><div class="page-head"><div><h1>Budget</h1><p>Budget is your limit — Strict Mode stops you before you overspend.</p></div></div><div class="card"><h3>Monthly Budget</h3><label>Yo Mahina Ko Budget (Rs.)</label><input id="budgetInput" type="number" placeholder="Ex: 20000"><label style="font-weight:500"><input type="checkbox" id="strictCheck" style="width:auto"> Strict Mode ON - Budget naghe pachi warning + save rokne</label><button class="btn-primary" onclick="saveBudget()">Budget Save Garne</button><div class="bar red" style="margin-top:12px"><div id="budgetBar" style="width:0%"></div></div><small id="budgetText">Budget set garnuhos</small><div id="budgetCatList" style="margin-top:12px"></div></div></section>
-
-<section id="sec-savings" class="section"><div class="page-head"><div><h1>Savings - Emergency Fund</h1><p>Emergency Fund is your safety — 5K per month builds your future.</p></div></div><div class="card"><h3>Emergency Fund Progress</h3><b style="font-size:24px" id="savingsBig">Rs. 0</b><p style="font-size:13px;color:#64748B">Yo mahina ko saving: Income - Expense. Target: Rs. 5,000 / month.</p><div class="bar"><div id="savingsBar" style="width:0%"></div></div><p style="font-size:13px;margin-top:10px" id="savingsMsg">Pay yourself first: move savings out on payday, before spending starts.</p><label>Savings ma Sarne Amount (Rs.)</label><input id="savingsMove" type="number" placeholder="Ex: 5000"><button class="btn-primary" onclick="moveToSavings()">Savings ma Rakhe</button></div></section>
-
-<section id="sec-udharo" class="section"><div class="page-head"><div><h1>Udharo - Liye / Diye</h1><p>Lent money is still your money — don't forget who owes you.</p></div><span class="pill" id="udharoPill">Total Due: Rs. 0</span></div><div class="card"><h3>Naya Udharo Thapne</h3><div class="toggle"><button id="udLiyeBtn" class="active" onclick="setUdKind('liye')">LIYEKO - Maile Liye</button><button id="udDiyeBtn" onclick="setUdKind('diye')">DIYEKO - Maile Diye</button></div><label>Person Name</label><input id="udPerson" placeholder="Ex: Ram, Shyam"><label>Amount (Rs.)</label><input id="udAmount" type="number" placeholder="Ex: 5000"><div class="flex2"><div><label>Date</label><input id="udDate" type="date"></div><div><label>Due Date</label><input id="udDueDate" type="date"></div></div><label>Note</label><input id="udNote" placeholder="Ex: Urgent"><button class="btn-primary" id="udAddBtn" onclick="addUdharo()">Liyeko Udharo Save</button></div><div class="grid2" style="margin-top:12px"><div class="card"><h3>Liye Ko - Tirna Baki</h3><small id="liyeSummary">-</small><div id="liyeList"></div></div><div class="card"><h3>Diye Ko - Auna Baki</h3><small id="diyeSummary">-</small><div id="diyeList"></div></div></div></section>
-
-<section id="sec-habits" class="section"><div class="page-head"><div><h1>Habits & Levels</h1><p>Habits make saving automatic — XP and Levels keep you consistent.</p></div><span class="pill" id="habitPill">Score: 0 / 5</span></div><div class="card"><h3>Aaja Ko Habit - +20 XP per habit</h3><div id="habitList"></div><div style="margin-top:12px"><b id="habitScore">Aaja ko Habit Score: 0 / 5</b><br><small id="streakText">Streak: 0 din</small></div></div><div class="card" style="margin-top:12px"><h3>Challenges</h3><div id="challengeList"></div></div></section>
-
-<section id="sec-settings" class="section"><div class="page-head"><div><h1>Settings / Data</h1><p>Control your system — reminders, mode, and data.</p></div></div><div class="card"><h3>Firebase Sync - financehabit-13683</h3><div class="flex2" style="margin-top:10px"><button class="btn-light" onclick="pushAllToFirebase()">Firebase ma Sync</button><button class="btn-light" onclick="loadFromFirebase()">Firebase bata Load</button></div><div class="flex2" style="margin-top:8px"><button class="btn-dark" onclick="testFirebase()">Firebase Test</button><button class="btn-light" onclick="copyRules()">Rules Copy</button></div><p style="font-size:13px;color:#64748B;margin-top:10px" id="lastSync">Last Sync: -</p></div><div class="card" style="margin-top:12px"><h3>Data - Export / Import / Delete</h3><div class="flex2" style="margin-top:10px"><button class="btn-light" onclick="exportCSV()">CSV Download</button><button class="btn-light" onclick="exportJSON()">JSON Backup</button></div><div style="margin-top:10px"><label>JSON Backup Import</label><input id="importFile" type="file" accept=".json"></div><button class="btn-primary" style="background:#DC2626" onclick="deleteAllData()">All Data Delete - Fresh Start</button></div><div class="setup"><b>Firebase Setup (1 choti):</b><br>1. Authentication &gt; Email/Password, Google ON<br>2. Realtime Database &gt; Rules &gt; Publish:<pre id="rulesText">{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}</pre><small>Firestore hoina! Realtime Database ho. Data: users / UID / transactions, bank_accounts, udharo, budgets, habit_checks, mero_users</small></div></section>
-<p style="text-align:center;margin-top:20px;color:#94A3B8;font-size:12px">Mero Paisa • finance.yonghangishak.com.np • Imported from your file • Connected to financehabit-13683</p>
+<section id="sec-transactions" class="section"><div class="page-head"><div><h1>Transactions</h1><p>Every rupee must be tracked — if you don&apos;t write it, you will forget it.</p></div><span class="pill" id="txCountPill">0 transactions</span></div><div class="card"><div class="flex2"><div><label>Month</label><input id="txMonth" type="month"></div><div><label>Search</label><input id="txSearch" placeholder="Search note / category"></div></div><div class="filter"><button id="fAll" class="active">Sabai</button><button id="fKamai">Kamai</button><button id="fKharcha">Kharcha</button><button id="fImpulse">Impulse Only</button></div><div id="txList"></div></div></section>
+<section id="sec-banks" class="section"><div class="page-head"><div><h1>Bank Accounts</h1><p>Know exactly how much you have in each bank - Opening to Closing.</p></div><span class="pill" id="bankTotalPill">Total Closing: Rs. 0</span></div><div class="card"><h3>Add Bank Account</h3><div class="flex2"><div><label>Bank Name</label><select id="newBankName"><option>Nabil Bank</option><option>NIC Asia</option><option>Global IME</option><option>NMB Bank</option><option>Prabhu Bank</option><option>Siddhartha Bank</option><option>Kumari Bank</option><option>Everest Bank</option><option>eSewa Wallet</option><option>Khalti Wallet</option><option>IME Pay</option><option>Cash in Hand</option><option>Other</option></select></div><div><label>Account Type</label><select id="newBankType"><option>Savings</option><option>Current</option><option>Wallet</option><option>Cash</option></select></div></div><label>Nickname (Optional)</label><input id="newBankNick" placeholder="Ex: Mero salary account"><label>Opening Balance (Rs.)</label><input id="newBankOpening" type="number" placeholder="Ex: 10000"><label>Manual Closing (Optional - Aafai closing lekhe)</label><input id="newBankClosing" type="number" placeholder="Khali chhode auto calculate huncha"><label>Note</label><input id="newBankNote" placeholder="Ex: Salary aune account"><button class="btn-primary" id="addBankBtn">Bank Account Add Garne</button></div><div class="card mt-12"><h3>Transfer - Bank to Bank</h3><div class="flex2"><div><label>From</label><select id="trFrom"></select></div><div><label>To</label><select id="trTo"></select></div></div><label>Amount (Rs.)</label><input id="trAmount" type="number" placeholder="Ex: 2000"><label>Date</label><input id="trDate" type="date"><button class="btn-primary" id="transferBtn">Transfer Garne</button><small>Transfer le duitai bank ko closing update garcha.</small></div><div id="bankList"></div></section>
+<section id="sec-budget" class="section"><div class="page-head"><div><h1>Budget</h1><p>Budget is your limit — Strict Mode stops you before you overspend.</p></div></div><div class="card"><h3>Monthly Budget</h3><label>Yo Mahina Ko Budget (Rs.)</label><input id="budgetInput" type="number" placeholder="Ex: 20000"><label class="check-row"><input type="checkbox" id="strictCheck"> Strict Mode ON - Budget naghe pachi warning + save rokne</label><button class="btn-primary" id="saveBudgetBtn">Budget Save Garne</button><div class="bar red mt-12"><div id="budgetBar"></div></div><small id="budgetText">Budget set garnuhos</small><div id="budgetCatList" class="mt-12"></div></div></section>
+<section id="sec-savings" class="section"><div class="page-head"><div><h1>Savings - Emergency Fund</h1><p>Emergency Fund is your safety — 5K per month builds your future.</p></div></div><div class="card"><h3>Emergency Fund Progress</h3><b class="big-num-lg" id="savingsBig">Rs. 0</b><p class="empty">Yo mahina ko saving: Income - Expense. Target: Rs. 5,000 / month.</p><div class="bar"><div id="savingsBar"></div></div><p class="mt-12" id="savingsMsg">Pay yourself first: move savings out on payday, before spending starts.</p><label>Savings ma Sarne Amount (Rs.)</label><input id="savingsMove" type="number" placeholder="Ex: 5000"><button class="btn-primary" id="moveSavingsBtn">Savings ma Rakhe</button></div></section>
+<section id="sec-udharo" class="section"><div class="page-head"><div><h1>Udharo - Liye / Diye</h1><p>Lent money is still your money — don&apos;t forget who owes you.</p></div><span class="pill" id="udharoPill">Total Due: Rs. 0</span></div><div class="card"><h3>Naya Udharo Thapne</h3><div class="toggle"><button id="udLiyeBtn" class="active">LIYEKO - Maile Liye</button><button id="udDiyeBtn">DIYEKO - Maile Diye</button></div><label>Person Name</label><input id="udPerson" placeholder="Ex: Ram, Shyam"><label>Amount (Rs.)</label><input id="udAmount" type="number" placeholder="Ex: 5000"><div class="flex2"><div><label>Date</label><input id="udDate" type="date"></div><div><label>Due Date</label><input id="udDueDate" type="date"></div></div><label>Note</label><input id="udNote" placeholder="Ex: Urgent"><button class="btn-primary" id="udAddBtn">Liyeko Udharo Save</button></div><div class="grid2 mt-12"><div class="card"><h3>Liye Ko - Tirna Baki</h3><small id="liyeSummary">-</small><div id="liyeList"></div></div><div class="card"><h3>Diye Ko - Auna Baki</h3><small id="diyeSummary">-</small><div id="diyeList"></div></div></div></section>
+<section id="sec-habits" class="section"><div class="page-head"><div><h1>Habits &amp; Levels</h1><p>Habits make saving automatic — XP and Levels keep you consistent.</p></div><span class="pill" id="habitPill">Score: 0 / 5</span></div><div class="card"><h3>Aaja Ko Habit - +20 XP per habit</h3><div id="habitList"></div><div class="mt-12"><b id="habitScore">Aaja ko Habit Score: 0 / 5</b><br><small id="streakText">Streak: 0 din</small></div></div><div class="card mt-12"><h3>Challenges</h3><div id="challengeList"></div></div></section>
+<section id="sec-settings" class="section"><div class="page-head"><div><h1>Settings / Data</h1><p>Control your system — reminders, mode, and data.</p></div></div><div class="card"><h3>Firebase Sync - financehabit-13683</h3><div class="flex2 mt-12"><button class="btn-light" id="pushBtn">Firebase ma Sync</button><button class="btn-light" id="loadBtn">Firebase bata Load</button></div><div class="flex2 mt-8"><button class="btn-dark" id="testBtn">Firebase Test</button><button class="btn-light" id="rulesBtn">Rules Copy</button></div><p class="empty mt-12" id="lastSync">Last Sync: -</p></div><div class="card mt-12"><h3>Data - Export / Import / Delete</h3><div class="flex2 mt-12"><button class="btn-light" id="csvBtn">CSV Download</button><button class="btn-light" id="jsonBtn">JSON Backup</button></div><div class="mt-12"><label>JSON Backup Import</label><input id="importFile" type="file" accept=".json"></div><button class="btn-primary btn-danger" id="deleteAllBtn">All Data Delete - Fresh Start</button></div><div class="setup"><b>Firebase Setup (1 choti):</b><br>1. Authentication &gt; Email/Password, Google ON<br>2. Realtime Database &gt; Rules &gt; Publish:<pre id="rulesText">{\n  "rules": {\n    ".read": true,\n    ".write": true\n  }\n}</pre><small>Firestore hoina! Realtime Database ho. Data: users / UID / transactions, bank_accounts, udharo, budgets, habit_checks, mero_users</small></div></section>
+<p class="footer-note">Mero Paisa • finance.yonghangishak.com.np • Imported from your file • Connected to financehabit-13683</p>
 </div></div></div></div>
-
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div><div class="drawer" id="drawer"><div style="display:flex;justify-content:space-between;align-items:center;padding:0 8px 12px;border-bottom:1px solid rgba(255,255,255,.12)"><b>Mero Paisa</b><button onclick="closeDrawer()" style="background:transparent;border:0;color:#fff;font-size:20px">×</button></div><nav class="nav"><button data-nav="dashboard" onclick="showSection('dashboard')">Dashboard</button><button data-nav="transactions" onclick="showSection('transactions')">Transactions</button><button data-nav="banks" onclick="showSection('banks')">Bank Accounts</button><button data-nav="budget" onclick="showSection('budget')">Budget</button><button data-nav="savings" onclick="showSection('savings')">Savings</button><button data-nav="udharo" onclick="showSection('udharo')">Udharo</button><button data-nav="habits" onclick="showSection('habits')">Habits</button><button data-nav="settings" onclick="showSection('settings')">Settings</button></nav><div style="margin-top:16px;background:rgba(255,255,255,.08);padding:12px;border-radius:12px"><b id="drawerUser">User</b><p id="drawerEmail" style="font-size:12px;color:#CBD5E1">-</p><button onclick="handleLogout()" style="margin-top:10px;width:100%;padding:9px;border:0;border-radius:8px;background:#fff;color:#0F172A;font-weight:700">Logout</button></div></div>
-<div class="bottomnav"><div class="bottomnav-inner"><button class="bnav active" data-nav="dashboard" onclick="showSection('dashboard')">Dashboard</button><button class="bnav" data-nav="transactions" onclick="showSection('transactions')">Transactions</button><button onclick="showSection('dashboard');document.getElementById('amount').focus()" style="border:0;background:transparent"><div class="bnav-center">+</div></button><button class="bnav" data-nav="banks" onclick="showSection('banks')">Banks</button><button class="bnav" data-nav="udharo" onclick="showSection('udharo')">Udharo</button></div></div>
-<div class="modal-bg" id="payModalBg"><div class="modal"><h3 id="payModalTitle">Udharo Payment</h3><p id="payModalInfo" style="font-size:13px;color:#64748B"></p><label>Pay / Return Amount (Rs.)</label><input id="payModalAmount" type="number" placeholder="Ex: 1000"><label>Date</label><input id="payModalDate" type="date"><div class="flex2" style="margin-top:14px"><button class="btn-light" onclick="closePayModal()">Cancel</button><button class="btn-dark" style="background:#059669" onclick="saveUdPayment()">Pay Save</button></div></div></div>
-
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div id="drawer"><div class="drawer-head"><b>Mero Paisa</b><button id="drawerCloseBtn" class="drawer-close">×</button></div><div id="drawerNavSlot"></div><div class="drawer-user"><b id="drawerUser">User</b><p id="drawerEmail">-</p><button id="drawerLogoutBtn" class="btn-small white mt-12 w-full">Logout</button></div></div>
+<div class="modal-bg" id="payModalBg"><div class="modal"><h3 id="payModalTitle">Udharo Payment</h3><p id="payModalInfo" class="modal-info"></p><label>Pay / Return Amount (Rs.)</label><input id="payModalAmount" type="number" placeholder="Ex: 1000"><label>Date</label><input id="payModalDate" type="date"><div class="flex2 mt-16"><button class="btn-light" id="payCancelBtn">Cancel</button><button class="btn-dark" id="paySaveBtn">Pay Save</button></div></div></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, sendPasswordResetEmail, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 const firebaseConfig = { apiKey: "AIzaSyDXxnTFnLX3HGfIARahE-kulg_ZF-n_nEA", authDomain: "financehabit-13683.firebaseapp.com", databaseURL: "https://financehabit-13683-default-rtdb.firebaseio.com", projectId: "financehabit-13683", storageBucket: "financehabit-13683.firebasestorage.app", messagingSenderId: "681883146838", appId: "1:681883146838:web:462477121df17a1d9939f7", measurementId: "G-9DF0LBGY4M" };
-const app = initializeApp(firebaseConfig); const db = getDatabase(app); const auth = getAuth(app); const gp = new GoogleAuthProvider();
-window._fb={db,ref,set,get,remove,auth}; window._authFns={createUserWithEmailAndPassword,signInWithEmailAndPassword,signInWithPopup,GoogleAuthProvider,signOut,sendPasswordResetEmail,updateProfile,gp};
-window.showOk=(m)=>{const e=document.getElementById('okBox');e.style.display='block';e.innerHTML=m;document.getElementById('errBox').style.display='none';};
-window.showErr=(m)=>{const e=document.getElementById('errBox');e.style.display='block';e.innerHTML=m;document.getElementById('okBox').style.display='none';};
-window.showAuthErr=(m)=>{const e=document.getElementById('authErr');e.style.display='block';e.textContent=m;};
-window.showAuthOk=(m)=>{const e=document.getElementById('authOk');e.style.display='block';e.textContent=m;};
-onAuthStateChanged(auth,(u)=>{ if(u){ window.currentUser=u; document.getElementById('loginScreen').style.display='none'; document.getElementById('appScreen').style.display='block'; const n=u.displayName||u.email.split('@')[0]; document.getElementById('sideUserName').textContent=n; document.getElementById('sideUserEmail').textContent=u.email; document.getElementById('drawerUser').textContent=n; document.getElementById('drawerEmail').textContent=u.email; document.getElementById('welcomeTitle').textContent='Namaste, '+n; document.getElementById('sideSync').textContent='Firebase: Connected - financehabit-13683'; document.getElementById('mobileAvatar').textContent=n.charAt(0).toUpperCase(); if(window.loadUserData) window.loadUserData(); } else { window.currentUser=null; document.getElementById('loginScreen').style.display='flex'; document.getElementById('appScreen').style.display='none'; } });
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
+const gp = new GoogleAuthProvider();
+window._fb = { db, ref, set, get, remove, auth };
+window._authFns = { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, sendPasswordResetEmail, updateProfile, gp };
+function showBox(id, msg, otherId) {
+  const e = document.getElementById(id);
+  e.textContent = msg;
+  e.style.display = "block";
+  document.getElementById(otherId).style.display = "none";
+}
+window.showOk = (m) => { const e = document.getElementById("okBox"); e.innerHTML = m; e.style.display = "block"; document.getElementById("errBox").style.display = "none"; };
+window.showErr = (m) => { const e = document.getElementById("errBox"); e.innerHTML = m; e.style.display = "block"; document.getElementById("okBox").style.display = "none"; };
+window.showAuthErr = (m) => showBox("authErr", m, "authOk");
+window.showAuthOk = (m) => showBox("authOk", m, "authErr");
+function applyAuthUI(u) {
+  if (!u) return;
+  window.currentUser = u;
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("appScreen").style.display = "block";
+  const n = u.displayName || u.email.split("@")[0];
+  document.getElementById("sideUserName").textContent = n;
+  document.getElementById("sideUserEmail").textContent = u.email;
+  document.getElementById("drawerUser").textContent = n;
+  document.getElementById("drawerEmail").textContent = u.email;
+  document.getElementById("welcomeTitle").textContent = "Namaste, " + n;
+  document.getElementById("sideSync").textContent = "Firebase: Connected - financehabit-13683";
+  document.getElementById("mobileAvatar").textContent = n.charAt(0).toUpperCase();
+  if (window.loadUserData) window.loadUserData();
+}
+function applyLoggedOutUI() {
+  window.currentUser = null;
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("appScreen").style.display = "none";
+}
+onAuthStateChanged(auth, (u) => { if (u) applyAuthUI(u); else applyLoggedOutUI(); });
 </script>
 <script>
-let curTab='login',curType='kharcha',curTxFilter='all',curUdKind='liye',isGuest=false,currentPayUdId=null;
-let guestId=localStorage.getItem('mp_guest_id')||('guest_'+Date.now()); localStorage.setItem('mp_guest_id',guestId);
-const EXPENSE_CATS=["Khana","Yatra / Transport","Khaja / Chiya","Shopping","Mobile / Recharge","Ghar / Bill","Swasthya","Arko"];
-const INCOME_CATS=["Salary","Business","Freelance","Arko"];
-const HABITS=["Aaja sabai kharcha lekhe","Aaja No-Spend Day (kehi pani unnecessary kineko chaina)","Khaja / Junk ma paisa bachaye","Saving ma thorai paisa hale","Rati budget check gare"];
-const BANKS=["Nabil Bank","NIC Asia","Global IME","NMB Bank","Prabhu Bank","Siddhartha Bank","Kumari Bank","Everest Bank","eSewa Wallet","Khalti Wallet","IME Pay","Cash in Hand","Other"];
-function todayStr(){return new Date().toISOString().slice(0,10);}
-function sk(s){return window.currentUser?'mp_'+window.currentUser.uid+'_'+s:'mp_'+guestId+'_'+s;}
-function getTx(){try{return JSON.parse(localStorage.getItem(sk('transactions'))||'[]')}catch(e){return[]}}
-function saveTx(a){localStorage.setItem(sk('transactions'),JSON.stringify(a))}
-function getBanks(){try{let a=JSON.parse(localStorage.getItem(sk('bank_accounts'))||'null');if(!a){a=[{id:'cash',bankName:'Cash in Hand',accountType:'Cash',nickname:'Cash',openingBalance:0,manualClosing:null,note:'',createdAt:Date.now()},{id:'esewa',bankName:'eSewa Wallet',accountType:'Wallet',nickname:'eSewa',openingBalance:0,manualClosing:null,note:'',createdAt:Date.now()}];localStorage.setItem(sk('bank_accounts'),JSON.stringify(a))}return a}catch(e){return[]}}
-function saveBanks(a){localStorage.setItem(sk('bank_accounts'),JSON.stringify(a))}
-function getUd(){try{return JSON.parse(localStorage.getItem(sk('udharo'))||'[]')}catch(e){return[]}}
-function saveUd(a){localStorage.setItem(sk('udharo'),JSON.stringify(a))}
-function getHabits(){try{return JSON.parse(localStorage.getItem(sk('habit_checks'))||'{}')}catch(e){return{}}}
-function saveHabits(o){localStorage.setItem(sk('habit_checks'),JSON.stringify(o))}
-function getBudget(){return Number(localStorage.getItem(sk('budget'))||0)}
-function getUserPath(){return window.currentUser?'users/'+window.currentUser.uid:'users/'+guestId}
-function getOpening(){return getBanks().reduce((s,b)=>s+Number(b.openingBalance||0),0)}
-function getUdTotals(){const u=getUd();const liye=u.filter(x=>x.kind==='liye');const diye=u.filter(x=>x.kind==='diye');const tL=liye.reduce((s,x)=>s+Number(x.amount||0),0);const tD=diye.reduce((s,x)=>s+Number(x.amount||0),0);const pL=liye.reduce((s,x)=>s+Number(x.paid||0),0);const rD=diye.reduce((s,x)=>s+Number(x.paid||0),0);return{totalLiye:tL,totalDiye:tD,paidLiye:pL,receivedDiye:rD,dueLiye:tL-pL,dueDiye:tD-rD}}
-function getClosing(){const all=getTx();const inc=all.filter(x=>x.type==='kamai').reduce((s,x)=>s+Number(x.amount||0),0);const exp=all.filter(x=>x.type==='kharcha').reduce((s,x)=>s+Number(x.amount||0),0);const ut=getUdTotals();return getOpening()+inc-exp+ut.totalLiye-ut.totalDiye-ut.paidLiye+ut.receivedDiye}
-function getBankClosing(b){const tx=getTx().filter(x=>(x.bankId||'cash')===b.id);const inc=tx.filter(x=>x.type==='kamai').reduce((s,x)=>s+Number(x.amount||0),0);const exp=tx.filter(x=>x.type==='kharcha').reduce((s,x)=>s+Number(x.amount||0),0);if(b.manualClosing!==null&&b.manualClosing!==undefined&&b.manualClosing!=='')return Number(b.manualClosing);return Number(b.openingBalance||0)+inc-exp}
-function getXP(){const h=getHabits();let xp=0;Object.values(h).forEach(d=>{xp+=Object.values(d).filter(Boolean).length*20});xp+=getTx().length*10;return xp}
-function getLevel(xp){if(xp>=500)return'Budget Boss';if(xp>=200)return'Smart Saver';if(xp>=50)return'Money Saver';return'Money Saver'}
-function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById('sec-'+id).classList.add('active');document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.getAttribute('data-nav')===id));closeDrawer();window.scrollTo({top:0,behavior:'smooth'});renderAll()}
-function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').style.display='block'}
-function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOverlay').style.display='none'}
-function switchTab(t){curTab=t;document.getElementById('tabLogin').className=t==='login'?'active':'';document.getElementById('tabSignup').className=t==='signup'?'active':'';document.getElementById('nameField').style.display=t==='signup'?'block':'none';document.getElementById('secField').style.display=t==='signup'?'block':'none';document.getElementById('authTitle').textContent=t==='login'?'Welcome back':'Create your account';document.getElementById('authBtn').textContent=t==='login'?'Login':'Create Account'}
-function isValidPassword(p){return p.length>=8&&/[A-Za-z]/.test(p)&&/[0-9]/.test(p)}
-async function handleAuth(){const email=document.getElementById('authEmail').value.trim();const pass=document.getElementById('authPass').value;const name=document.getElementById('authName').value.trim();if(!email||!pass){showAuthErr('Email ra Password halnuhos.');return}if(!isValidPassword(pass)){showAuthErr('Password must be min 8 characters with letter + number.');return}const btn=document.getElementById('authBtn');btn.textContent='Please wait...';btn.disabled=true;try{const {auth}=window._fb;const f=window._authFns;if(curTab==='signup'){const c=await f.createUserWithEmailAndPassword(auth,email,pass);await f.updateProfile(c.user,{displayName:name});localStorage.setItem(sk('mero_users'),JSON.stringify({email,sec:document.getElementById('authSec').value||'',createdAt:Date.now()}));showAuthOk('Account banayo!')}else{await f.signInWithEmailAndPassword(auth,email,pass);showAuthOk('Login bhayo!')}isGuest=false}catch(e){let m=e.message;if(e.code==='auth/email-already-in-use')m='Yo email le account banisakyo. Login garnus.';if(e.code==='auth/invalid-credential')m='Email / Password milena.';if(e.code==='auth/operation-not-allowed')m='Firebase > Authentication > Email/Password ON garnus.';showAuthErr(m)}btn.textContent=curTab==='login'?'Login':'Create Account';btn.disabled=false}
-async function handleGoogle(){try{await window._authFns.signInWithPopup(window._fb.auth,window._authFns.gp);isGuest=false}catch(e){showAuthErr(e.code==='auth/operation-not-allowed'?'Firebase > Authentication > Google ON garnus.':e.message)}}
-async function handleGuest(){isGuest=true;window.currentUser=null;document.getElementById('loginScreen').style.display='none';document.getElementById('appScreen').style.display='block';document.getElementById('sideUserName').textContent='Guest User';document.getElementById('sideUserEmail').textContent='Guest Mode - Local Only';document.getElementById('welcomeTitle').textContent='Namaste, Guest';renderAll()}
-async function handleLogout(){isGuest=false;try{if(window._fb&&window.currentUser)await window._authFns.signOut(window._fb.auth)}catch(e){}window.currentUser=null;document.getElementById('loginScreen').style.display='flex';document.getElementById('appScreen').style.display='none'}
-async function forgotPass(e){e.preventDefault();const email=document.getElementById('authEmail').value.trim();if(!email){showAuthErr('Pahila Email halnuhos.');return}try{await window._authFns.sendPasswordResetEmail(window._fb.auth,email);showAuthOk('Reset link '+email+' ma pathaiyo.')}catch(err){showAuthErr(err.message)}}
-window.loadUserData=async function(){try{const {db,ref,get}=window._fb;const base=getUserPath();const t=await get(ref(db,base+'/transactions'));if(t.exists())saveTx(Object.values(t.val()).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)));const b=await get(ref(db,base+'/bank_accounts'));if(b.exists())saveBanks(Object.values(b.val()));const u=await get(ref(db,base+'/udharo'));if(u.exists())saveUd(Object.values(u.val()));const h=await get(ref(db,base+'/habit_checks'));if(h.exists())saveHabits(h.val());const bud=await get(ref(db,base+'/budgets'));if(bud.exists()){const v=Object.values(bud.val())[0];if(v&&v.amount)localStorage.setItem(sk('budget'),v.amount)} }catch(e){console.log(e)}renderAll()};
-function refreshBankSelects(){const b=getBanks();const opts=b.map(x=>'<option value="'+x.id+'">'+x.bankName+' - '+(x.nickname||x.accountType)+'</option>').join('');['bankSelect','trFrom','trTo'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts})}
-function setType(t){curType=t;document.getElementById('btnExpense').className=t==='kharcha'?'active':'';document.getElementById('btnIncome').className=t==='kamai'?'active':'';fillCats()}
-function setAmount(v){document.getElementById('amount').value=v}
-function fillCats(){const sel=document.getElementById('category');const list=curType==='kamai'?INCOME_CATS:EXPENSE_CATS;sel.innerHTML=list.map(c=>'<option>'+c+'</option>').join('')}
-function setTxFilter(f){curTxFilter=f;['fAll','fKamai','fKharcha','fImpulse'].forEach(id=>document.getElementById(id).className='');document.getElementById(f==='all'?'fAll':f==='kamai'?'fKamai':f==='kharcha'?'fKharcha':'fImpulse').className='active';renderAll()}
-async function addTransaction(){const amt=Number(document.getElementById('amount').value||0);if(!amt){alert('Amount halnuhos');return}const budget=getBudget();const expSoFar=getTx().filter(x=>x.type==='kharcha').reduce((s,x)=>s+Number(x.amount||0),0);const strict=document.getElementById('strictCheck').checked;if(curType==='kharcha'&&strict&&budget>0&&expSoFar+amt>budget){alert('Strict Mode: Budget naghyo! Budget Rs. '+budget+' - Kharcha Rs. '+expSoFar);return}const tx={id:String(Date.now()),type:curType,amount:amt,category:document.getElementById('category').value,bankId:document.getElementById('bankSelect').value||'cash',bankLabel:(getBanks().find(b=>b.id===document.getElementById('bankSelect').value)||{bankName:'Cash'}).bankName,payment:document.getElementById('payMethod').value,date:document.getElementById('dateInput').value||todayStr(),note:document.getElementById('note').value||document.getElementById('category').value,impulse:document.getElementById('impulseSelect').value==='impulse',incomeSource:curType==='kamai'?document.getElementById('category').value:'',recurring:document.getElementById('recurringCheck').checked,createdAt:Date.now()};const arr=getTx();arr.unshift(tx);saveTx(arr);document.getElementById('amount').value='';document.getElementById('note').value='';if(!isGuest&&window.currentUser){try{const {db,ref,set}=window._fb;await set(ref(db,getUserPath()+'/transactions/'+tx.id),tx);document.getElementById('saveMsg').textContent='Saved online — '+(curType==='kamai'?'Income saved. +10 XP earned!':'Expense logged. +10 XP earned!')}catch(e){document.getElementById('saveMsg').textContent='Device ma save, Firebase fail: '+e.message}}else document.getElementById('saveMsg').textContent='Guest: Device ma save bhayo.';renderAll()}
-async function delTx(id){if(!confirm('Yo transaction delete garne?'))return;saveTx(getTx().filter(x=>String(x.id)!==String(id)));if(!isGuest&&window.currentUser){try{const {db,ref,remove}=window._fb;await remove(ref(db,getUserPath()+'/transactions/'+id))}catch(e){}}renderAll()}
-function addBank(){const name=document.getElementById('newBankName').value;const type=document.getElementById('newBankType').value;const opening=Number(document.getElementById('newBankOpening').value||0);const closing=document.getElementById('newBankClosing').value;const b={id:'bank_'+Date.now(),bankName:name,accountType:type,nickname:document.getElementById('newBankNick').value||name,openingBalance:opening,manualClosing:closing===''?null:Number(closing),note:document.getElementById('newBankNote').value||'',createdAt:Date.now()};const arr=getBanks();arr.push(b);saveBanks(arr);document.getElementById('newBankNick').value='';document.getElementById('newBankOpening').value='';document.getElementById('newBankClosing').value='';document.getElementById('newBankNote').value='';if(!isGuest&&window.currentUser){try{const {db,ref,set}=window._fb;set(ref(db,getUserPath()+'/bank_accounts/'+b.id),b)}catch(e){}}renderAll();showOk('Saved online — Bank account added.')}
-async function delBank(id){if(!confirm('Bank account delete garne?'))return;saveBanks(getBanks().filter(b=>b.id!==id));if(!isGuest&&window.currentUser){try{const {db,ref,remove}=window._fb;await remove(ref(db,getUserPath()+'/bank_accounts/'+id))}catch(e){}}renderAll()}
-async function doTransfer(){const from=document.getElementById('trFrom').value;const to=document.getElementById('trTo').value;const amt=Number(document.getElementById('trAmount').value||0);if(!amt||from===to){alert('From / To farak ra Amount halnuhos');return}const date=document.getElementById('trDate').value||todayStr();const fb=getBanks().find(b=>b.id===from);const tb=getBanks().find(b=>b.id===to);const out={id:String(Date.now())+'_out',type:'kharcha',amount:amt,category:'Transfer',bankId:from,bankLabel:fb.bankName,payment:'Transfer',date,note:'Transfer to '+(tb.nickname||tb.bankName),impulse:false,transferDirection:'out',createdAt:Date.now()};const inn={id:String(Date.now())+'_in',type:'kamai',amount:amt,category:'Transfer',bankId:to,bankLabel:tb.bankName,payment:'Transfer',date,note:'Transfer from '+(fb.nickname||fb.bankName),impulse:false,transferDirection:'in',createdAt:Date.now()+1};const arr=getTx();arr.unshift(inn);arr.unshift(out);saveTx(arr);document.getElementById('trAmount').value='';if(!isGuest&&window.currentUser){try{const {db,ref,set}=window._fb;await set(ref(db,getUserPath()+'/transactions/'+out.id),out);await set(ref(db,getUserPath()+'/transactions/'+inn.id),inn)}catch(e){}}renderAll();showOk('Saved online — Transfer: '+(fb.bankName)+' → '+(tb.bankName)+' Rs. '+amt)}
-function setUdKind(k){curUdKind=k;document.getElementById('udLiyeBtn').className=k==='liye'?'active':'';document.getElementById('udDiyeBtn').className=k==='diye'?'active':'';document.getElementById('udAddBtn').textContent=k==='liye'?'Liyeko Udharo Save':'Diyeko Udharo Save'}
-async function addUdharo(){const person=document.getElementById('udPerson').value.trim();const amt=Number(document.getElementById('udAmount').value||0);if(!person){alert("Please enter the person's name.");return}if(!amt||amt<1||amt>100000000){alert('Please enter a valid amount (1 to 100,000,000 Rs.).');return}const u={id:'ud_'+Date.now(),person,amount:amt,kind:curUdKind,date:document.getElementById('udDate').value||todayStr(),dueDate:document.getElementById('udDueDate').value||'',note:document.getElementById('udNote').value||'',paid:0,status:'pending',createdAt:Date.now()};const arr=getUd();arr.unshift(u);saveUd(arr);document.getElementById('udPerson').value='';document.getElementById('udAmount').value='';document.getElementById('udNote').value='';if(!isGuest&&window.currentUser){try{const {db,ref,set}=window._fb;await set(ref(db,getUserPath()+'/udharo/'+u.id),u)}catch(e){}}renderAll();showOk('Udharo save bhayo: '+person+' - Rs. '+amt)}
-function openPayModal(id){const u=getUd().find(x=>x.id===id);if(!u)return;currentPayUdId=id;document.getElementById('payModalTitle').textContent=u.kind==='liye'?'Pay Garne - '+u.person+' lai tirne':'Return Line - '+u.person+' bata line';document.getElementById('payModalInfo').textContent='Total: Rs. '+Number(u.amount).toLocaleString()+' | Baki: Rs. '+(Number(u.amount)-Number(u.paid||0)).toLocaleString();document.getElementById('payModalAmount').value='';document.getElementById('payModalDate').value=todayStr();document.getElementById('payModalBg').style.display='flex'}
-function closePayModal(){document.getElementById('payModalBg').style.display='none';currentPayUdId=null}
-async function saveUdPayment(){const amt=Number(document.getElementById('payModalAmount').value||0);if(!amt||!currentPayUdId){alert('Amount halnuhos');return}const arr=getUd();const u=arr.find(x=>x.id===currentPayUdId);u.paid=Number(u.paid||0)+amt;if(u.paid>=Number(u.amount))u.status='paid';saveUd(arr);if(!isGuest&&window.currentUser){try{const {db,ref,set}=window._fb;await set(ref(db,getUserPath()+'/udharo/'+u.id),u)}catch(e){}}closePayModal();renderAll();showOk('Payment save bhayo: Rs. '+amt)}
-async function delUd(id){if(!confirm('Udharo entry delete garne?'))return;saveUd(getUd().filter(x=>x.id!==id));if(!isGuest&&window.currentUser){try{const {db,ref,remove}=window._fb;await remove(ref(db,getUserPath()+'/udharo/'+id))}catch(e){}}renderAll()}
-function toggleHabit(i,checked){const h=getHabits();const d=todayStr();if(!h[d])h[d]={};h[d][i]=checked;saveHabits(h);if(!isGuest&&window.currentUser){try{const {db,ref,set}=window._fb;set(ref(db,getUserPath()+'/habit_checks'),h)}catch(e){}}renderAll()}
-async function saveBudget(){const v=Number(document.getElementById('budgetInput').value||0);if(!v||v<1||v>100000000){alert('Please enter a valid budget amount (1 to 100,000,000 Rs.).');return}localStorage.setItem(sk('budget'),v);localStorage.setItem(sk('strict'),document.getElementById('strictCheck').checked?'1':'0');if(!isGuest&&window.currentUser){try{const {db,ref,set}=window._fb;await set(ref(db,getUserPath()+'/budgets/main'),{amount:v,strict:document.getElementById('strictCheck').checked})}catch(e){}}renderAll();showOk('Budget save bhayo.')}
-function moveToSavings(){const amt=Number(document.getElementById('savingsMove').value||0);if(!amt){alert('Amount halnuhos');return}const tx={id:String(Date.now()),type:'kharcha',amount:amt,category:'Saving',bankId:'cash',bankLabel:'Cash',payment:'Cash',date:todayStr(),note:'Emergency Fund ma sareko',impulse:false,createdAt:Date.now()};const arr=getTx();arr.unshift(tx);saveTx(arr);document.getElementById('savingsMove').value='';renderAll();showOk('Savings ma Rs. '+amt+' sareko.')}
-async function pushAllToFirebase(){if(isGuest||!window.currentUser){showErr('Guest ma sync hudaina. Login garnus.');return}showOk('Sync gardai...');try{const {db,ref,set}=window._fb;const base=getUserPath();const tx={};getTx().forEach(t=>tx[t.id]=t);await set(ref(db,base+'/transactions'),tx);const bk={};getBanks().forEach(b=>bk[b.id]=b);await set(ref(db,base+'/bank_accounts'),bk);const ud={};getUd().forEach(u=>ud[u.id]=u);await set(ref(db,base+'/udharo'),ud);await set(ref(db,base+'/habit_checks'),getHabits());await set(ref(db,base+'/budgets/main'),{amount:getBudget(),strict:localStorage.getItem(sk('strict'))==='1'});showOk('<b>Sync Success!</b> Sabai data Firebase ma pugyo. Path: '+base);document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString()}catch(e){showErr('Sync Fail: '+e.message)}}
-async function loadFromFirebase(){if(isGuest||!window.currentUser){showErr('Guest ma load hudaina.');return}await window.loadUserData();showOk('Firebase bata load bhayo.');document.getElementById('lastSync').textContent='Last Sync: '+new Date().toLocaleString()}
-async function testFirebase(){if(isGuest||!window.currentUser){showErr('Guest ma Test hudaina. Login garnus.');return}showOk('Test gardai...');try{const {db,ref,set,get}=window._fb;const id='test_'+Date.now();await set(ref(db,getUserPath()+'/_test/'+id),{time:new Date().toISOString(),ok:true});const s=await get(ref(db,getUserPath()+'/_test/'+id));if(s.exists())showOk('<b>Firebase TEST PASS!</b> Path: '+getUserPath()+'/_test');else showErr('Test fail - Read sakiyena.')}catch(e){showErr('TEST FAIL: '+e.message)}}
-function copyRules(){const t=document.getElementById('rulesText').innerText;if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>alert('Rules copy bhayo!'))}
-function exportCSV(){const rows=[['Date,Type,Category,Note,Amount,PaymentMethod,IncomeSource,Impulse,Bank,TransferFrom,TransferTo,Recurring']];getTx().forEach(t=>rows.push([t.date,t.type,t.category,'"'+(t.note||'').replace(/"/g,'')+'"',t.amount,t.payment||'',t.incomeSource||'',t.impulse?'Yes':'No',t.bankLabel||'',t.transferDirection||'','',''+(t.recurring?'Yes':'No')].join(',')));const blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mero-paisa-'+todayStr()+'.csv';a.click();URL.revokeObjectURL(a.href);showOk('CSV download bhayo.')}
-function exportJSON(){const data={transactions:getTx(),banks:getBanks(),udharo:getUd(),budgets:{amount:getBudget()},habits:getHabits(),exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mero-paisa-backup-'+todayStr()+'.json';a.click();URL.revokeObjectURL(a.href);showOk('JSON backup download bhayo.')}
-async function deleteAllData(){if(!confirm('All data deleted. Fresh start! Pakka?'))return;['transactions','bank_accounts','udharo','habit_checks','budget'].forEach(k=>localStorage.removeItem(sk(k)));if(!isGuest&&window.currentUser){try{const {db,ref,remove}=window._fb;await remove(ref(db,getUserPath()))}catch(e){}}renderAll();showOk('All data deleted. Fresh start!')}
-document.getElementById('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(Array.isArray(data.transactions))saveTx(data.transactions);if(Array.isArray(data.banks))saveBanks(data.banks);if(Array.isArray(data.udharo))saveUd(data.udharo);if(data.budgets&&data.budgets.amount)localStorage.setItem(sk('budget'),data.budgets.amount);if(data.habits)saveHabits(data.habits);renderAll();showOk('Backup import bhayo.')}catch(err){showErr('Import fail: '+err.message)}});
-function renderAll(){
-refreshBankSelects();
-const dashFilter=document.getElementById('dashFilter').value;let dashArr=getTx();const now=new Date();if(dashFilter==='this')dashArr=dashArr.filter(x=>{const d=new Date(x.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()});if(dashFilter==='7'){const s=new Date();s.setDate(now.getDate()-7);dashArr=dashArr.filter(x=>new Date(x.date)>=s)}
-const inc=dashArr.filter(x=>x.type==='kamai').reduce((s,x)=>s+Number(x.amount||0),0);const exp=dashArr.filter(x=>x.type==='kharcha').reduce((s,x)=>s+Number(x.amount||0),0);
-const opening=getOpening();const closing=getClosing();const ut=getUdTotals();
-document.getElementById('openingBalance').textContent='Rs. '+opening.toLocaleString();document.getElementById('closingBalance').textContent='Rs. '+closing.toLocaleString();document.getElementById('totalIncome').textContent='Rs. '+inc.toLocaleString();document.getElementById('totalExpense').textContent='Rs. '+exp.toLocaleString();document.getElementById('incomeCount').textContent=dashArr.filter(x=>x.type==='kamai').length+' tx';document.getElementById('expenseCount').textContent=dashArr.filter(x=>x.type==='kharcha').length+' tx';
-document.getElementById('duePayTop').textContent='Rs. '+ut.dueLiye.toLocaleString();document.getElementById('liyeTop').textContent='Liye: Rs. '+ut.totalLiye.toLocaleString()+' | Tiriyo: '+ut.paidLiye.toLocaleString();document.getElementById('dueReceiveTop').textContent='Rs. '+ut.dueDiye.toLocaleString();document.getElementById('diyeTop').textContent='Diye: Rs. '+ut.totalDiye.toLocaleString()+' | Firtyo: '+ut.receivedDiye.toLocaleString();
-const xp=getXP();document.getElementById('xpPill').textContent='XP: '+xp+' • Level: '+getLevel(xp);
-// Compare last month
-const lm=new Date();lm.setMonth(lm.getMonth()-1);const lmInc=getTx().filter(x=>{const d=new Date(x.date);return d.getMonth()===lm.getMonth()&&d.getFullYear()===lm.getFullYear()&&x.type==='kamai'}).reduce((s,x)=>s+Number(x.amount||0),0);const lmExp=getTx().filter(x=>{const d=new Date(x.date);return d.getMonth()===lm.getMonth()&&d.getFullYear()===lm.getFullYear()&&x.type==='kharcha'}).reduce((s,x)=>s+Number(x.amount||0),0);document.getElementById('compareText').textContent='Last Month: Income Rs. '+lmInc.toLocaleString()+' | Expense Rs. '+lmExp.toLocaleString();document.getElementById('compareSub').textContent='Yo mahina: Income Rs. '+inc.toLocaleString()+' | Expense Rs. '+exp.toLocaleString();
-// Emergency + Budget
-const saving=Math.max(0,inc-exp);document.getElementById('emergencyTop').textContent='Rs. '+saving.toLocaleString()+' / Rs. 5,000';document.getElementById('emergencyBar').style.width=Math.min(100,Math.round(saving/5000*100))+'%';document.getElementById('savingsBig').textContent='Rs. '+saving.toLocaleString();document.getElementById('savingsBar').style.width=Math.min(100,Math.round(saving/5000*100))+'%';document.getElementById('savingsMsg').textContent=saving>=5000?'You hit the 5K saving habit this month. Protect it — that is your emergency fund growing.':'Try one No-Spend Day this week. Pack lunch, skip the extra stop, and bank the win.';
-const budget=getBudget();document.getElementById('budgetInput').value=budget||'';document.getElementById('strictCheck').checked=localStorage.getItem(sk('strict'))==='1';if(budget>0){const pct=Math.min(100,Math.round(exp/budget*100));document.getElementById('budgetBar').style.width=pct+'%';document.getElementById('budgetBarTop').style.width=pct+'%';document.getElementById('budgetText').textContent='Budget ko '+pct+'% sakiyo - Rs. '+exp.toLocaleString()+' / Rs. '+budget.toLocaleString();document.getElementById('budgetTop').textContent=pct+'%';document.getElementById('budgetTopSub').textContent='Rs. '+exp.toLocaleString()+' / '+budget.toLocaleString()}else{document.getElementById('budgetBar').style.width='0%';document.getElementById('budgetBarTop').style.width='0%';document.getElementById('budgetText').textContent='Budget set garnuhos';document.getElementById('budgetTop').textContent='-';document.getElementById('budgetTopSub').textContent='Budget set garnuhos'}
-// Insight
-const cats={};dashArr.filter(x=>x.type==='kharcha').forEach(x=>{cats[x.category]=(cats[x.category]||0)+Number(x.amount||0)});const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);const impulseCount=dashArr.filter(x=>x.impulse).length;let insight='No expenses yet. Log every buy and mark Need vs Impulse — that is how the leak becomes visible.';if(entries.length){const top=entries[0];const pct=exp?Math.round(top[1]/exp*100):0;insight='Sabai bhanda dherai '+top[0]+' ma - Rs. '+top[1].toLocaleString()+' ('+pct+'%). '+(pct>40?'Balanced Saver: No single category dominates. Keep watching the small leaks and your balance will grow.':'Pay yourself first: move savings out on payday, before spending starts.');if(impulseCount>0)insight+=' Impulse: '+impulseCount+' ota. Impulse logged honestly. +10 XP — awareness is the first win.'}document.getElementById('insightText').textContent=insight;
-document.getElementById('budgetCatList').innerHTML=entries.length?entries.map(([k,v])=>{const p=exp?Math.round(v/exp*100):0;return '<div style="margin-top:8px;display:flex;justify-content:space-between;font-size:13px"><span>'+k+'</span><span>Rs. '+v.toLocaleString()+' - '+p+'%</span></div><div class="bar"><div style="width:'+p+'%"></div></div>'}).join(''):'';
-// Banks
-const banks=getBanks();let totalClosing=0;document.getElementById('bankList').innerHTML=banks.map(b=>{const cl=getBankClosing(b);totalClosing+=cl;const low=cl<1000;return '<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px"><div><b>'+b.bankName+'</b> <span class="badge blue">'+b.accountType+'</span><br><small style="color:#64748B">'+(b.nickname||'')+' • '+(b.note||'')+'</small><br><small style="color:#64748B">Opening: Rs. '+Number(b.openingBalance||0).toLocaleString()+' → Closing: Rs. '+cl.toLocaleString()+'</small></div><div style="text-align:right"><b>Rs. '+cl.toLocaleString()+'</b><br>'+(low?'<span class="badge red">Low Balance Alert</span>':'<span class="badge green">OK</span>')+'<br><button class="del" style="margin-top:6px" onclick="delBank(\''+b.id+'\')">Delete</button></div></div></div>'}).join('');document.getElementById('bankTotalPill').textContent='Total Closing: Rs. '+totalClosing.toLocaleString();document.getElementById('lowBalanceList').innerHTML=banks.filter(b=>getBankClosing(b)<1000).length?banks.filter(b=>getBankClosing(b)<1000).map(b=>'<div style="font-size:13px;margin-top:6px">Low Balance Alert — '+b.bankName+': Rs. '+getBankClosing(b).toLocaleString()+'</div>').join(''):'<small style="color:#64748B">Sabai bank thik cha.</small>';
-// Transactions list
-let txArr=getTx();const txMonth=document.getElementById('txMonth').value;if(txMonth)txArr=txArr.filter(x=>x.date.startsWith(txMonth));const q=(document.getElementById('txSearch').value||'').toLowerCase();if(q)txArr=txArr.filter(x=>(x.note+' '+x.category).toLowerCase().includes(q));if(curTxFilter==='kamai')txArr=txArr.filter(x=>x.type==='kamai');if(curTxFilter==='kharcha')txArr=txArr.filter(x=>x.type==='kharcha');if(curTxFilter==='impulse')txArr=txArr.filter(x=>x.impulse);document.getElementById('txCountPill').textContent=txArr.length+' transactions';document.getElementById('txList').innerHTML=txArr.length?txArr.slice(0,50).map(x=>'<div class="row"><div><b>'+x.category+'</b> '+(x.impulse?'<span class="badge amber">Impulse</span>':'<span class="badge green">Need</span>')+' '+(x.transferDirection?'<span class="badge blue">Transfer</span>':'')+'<br><small style="color:#64748B">'+x.note+' • '+x.date+' • '+(x.bankLabel||'')+' • '+(x.payment||'')+(x.recurring?' • Recurring':'')+'</small></div><div style="text-align:right"><b style="color:'+(x.type==='kamai'?'#059669':'#DC2626')+'">'+(x.type==='kamai'?'+':'-')+' Rs. '+Number(x.amount).toLocaleString()+'</b><br><button class="del" onclick="delTx(\''+x.id+'\')">Delete</button></div></div>').join(''):'<p style="color:#64748B;font-size:13px">No expenses yet.</p>';
-// Udharo
-document.getElementById('udharoPill').textContent='Total Due: Rs. '+(ut.dueLiye+ut.dueDiye).toLocaleString();document.getElementById('liyeSummary').textContent='Total Liye: Rs. '+ut.totalLiye.toLocaleString()+' | Tiriyo: '+ut.paidLiye.toLocaleString()+' | Baki: '+ut.dueLiye.toLocaleString();document.getElementById('diyeSummary').textContent='Total Diye: Rs. '+ut.totalDiye.toLocaleString()+' | Firtyo: '+ut.receivedDiye.toLocaleString()+' | Baki: '+ut.dueDiye.toLocaleString();const card=u=>{const due=Number(u.amount)-Number(u.paid||0);return '<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><div><b>'+u.person+'</b> '+(due<=0?'<span class="badge green">PAID / CLEAR</span>':'<span class="badge amber">Baki: Rs. '+due.toLocaleString()+'</span>')+'<br><small style="color:#64748B">'+(u.note||'')+' • Date: '+u.date+' • Due: '+(u.dueDate||'-')+' • Status: '+(u.status||'pending')+'</small></div><div style="text-align:right"><b>Rs. '+Number(u.amount).toLocaleString()+'</b><br><small>Pay: '+Number(u.paid||0).toLocaleString()+'</small></div></div><div style="display:flex;gap:6px;margin-top:10px"><button class="pay" onclick="openPayModal(\''+u.id+'\')">'+(u.kind==='liye'?'Pay Garne':'Return Line')+'</button><button class="del" onclick="delUd(\''+u.id+'\')">Delete</button></div></div>'};document.getElementById('liyeList').innerHTML=getUd().filter(x=>x.kind==='liye').length?getUd().filter(x=>x.kind==='liye').map(card).join(''):'<p style="color:#64748B;font-size:13px">Liye ko udharo chaina.</p>';document.getElementById('diyeList').innerHTML=getUd().filter(x=>x.kind==='diye').length?getUd().filter(x=>x.kind==='diye').map(card).join(''):'<p style="color:#64748B;font-size:13px">Diye ko udharo chaina.</p>';
-// Habits
-const h=getHabits();const today=h[todayStr()]||{};let done=0;document.getElementById('habitList').innerHTML=HABITS.map((t,i)=>{const c=today[i]?'checked':'';if(today[i])done++;return '<div class="habit"><input type="checkbox" '+c+' onchange="toggleHabit('+i+',this.checked)"><div><b>'+t+'</b><br><span style="font-size:12px;color:#64748B">+20 XP</span></div></div>'}).join('');document.getElementById('habitScore').textContent='Aaja ko Habit Score: '+done+' / 5';document.getElementById('habitPill').textContent='Score: '+done+' / 5';let streak=0;let d=new Date();for(let i=0;i<30;i++){const ds=d.toISOString().slice(0,10);const day=h[ds]||{};const cnt=Object.values(day).filter(Boolean).length;if(cnt>=3)streak++;else if(i>0)break;d.setDate(d.getDate()-1)}document.getElementById('streakText').textContent='Streak: '+streak+' din';document.getElementById('challengeList').innerHTML='<div style="font-size:13px;line-height:1.7"><b>Rs. 100 Day</b> — Spend Rs. 100 or less in a day. Small days build big savings.<br><b>5K Saver</b> — Saved Rs. 5,000 or more this month<br><b>7-Day Streak</b> — Built Rs. 5,000+ toward your emergency fund<br>Current: XP '+xp+' • Level '+getLevel(xp)+' • Streak '+streak+' din</div>';
-// Month chart
-const all=getTx();let html='';for(let i=5;i>=0;i--){const d=new Date();d.setMonth(d.getMonth()-i);const y=d.getFullYear(),m=d.getMonth();const mi=all.filter(x=>{const dd=new Date(x.date);return dd.getFullYear()===y&&dd.getMonth()===m&&x.type==='kamai'}).reduce((s,x)=>s+Number(x.amount||0),0);const me=all.filter(x=>{const dd=new Date(x.date);return dd.getFullYear()===y&&dd.getMonth()===m&&x.type==='kharcha'}).reduce((s,x)=>s+Number(x.amount||0),0);const mx=Math.max(mi,me,1);const h1=Math.max(4,Math.round(mi/mx*76));const h2=Math.max(4,Math.round(me/mx*76));const label=d.toLocaleString('en',{month:'short'});html+='<div class="col"><div class="bars"><div class="b1" style="height:'+h1+'px"></div><div class="b2" style="height:'+h2+'px"></div></div><small style="color:#64748B">'+label+'</small></div>'}document.getElementById('monthChart').innerHTML=html;
-document.getElementById('welcomeDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' — Full money picture in 10 seconds.';
+let curTab = "login", curType = "kharcha", curTxFilter = "all", curUdKind = "liye", isGuest = false, currentPayUdId = null;
+let guestId = localStorage.getItem("mp_guest_id") || ("guest_" + Date.now());
+localStorage.setItem("mp_guest_id", guestId);
+const EXPENSE_CATS = ["Khana","Yatra / Transport","Khaja / Chiya","Shopping","Mobile / Recharge","Ghar / Bill","Swasthya","Arko"];
+const INCOME_CATS = ["Salary","Business","Freelance","Arko"];
+const HABITS = ["Aaja sabai kharcha lekhe","Aaja No-Spend Day (kehi pani unnecessary kineko chaina)","Khaja / Junk ma paisa bachaye","Saving ma thorai paisa hale","Rati budget check gare"];
+const BANKS = ["Nabil Bank","NIC Asia","Global IME","NMB Bank","Prabhu Bank","Siddhartha Bank","Kumari Bank","Everest Bank","eSewa Wallet","Khalti Wallet","IME Pay","Cash in Hand","Other"];
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+function el(id) { return document.getElementById(id); }
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function fmt(n) { return Number(n || 0).toLocaleString(); }
+function rs(n) { return "Rs. " + fmt(n); }
+function sk(s) { return window.currentUser ? "mp_" + window.currentUser.uid + "_" + s : "mp_" + guestId + "_" + s; }
+function readJSON(key, fallback) { try { return JSON.parse(localStorage.getItem(sk(key)) || "null") ?? fallback; } catch (e) { return fallback; } }
+function getTx() { return readJSON("transactions", []); }
+function saveTx(a) { localStorage.setItem(sk("transactions"), JSON.stringify(a)); }
+function getBanks() {
+  let a = readJSON("bank_accounts", null);
+  if (!a) {
+    a = [
+      { id: "cash", bankName: "Cash in Hand", accountType: "Cash", nickname: "Cash", openingBalance: 0, manualClosing: null, note: "", createdAt: Date.now() },
+      { id: "esewa", bankName: "eSewa Wallet", accountType: "Wallet", nickname: "eSewa", openingBalance: 0, manualClosing: null, note: "", createdAt: Date.now() }
+    ];
+    localStorage.setItem(sk("bank_accounts"), JSON.stringify(a));
+  }
+  return a;
 }
-document.getElementById('dateInput').value=todayStr();document.getElementById('trDate').value=todayStr();document.getElementById('udDate').value=todayStr();
-fillCats();renderAll();
+function saveBanks(a) { localStorage.setItem(sk("bank_accounts"), JSON.stringify(a)); }
+function getUd() { return readJSON("udharo", []); }
+function saveUd(a) { localStorage.setItem(sk("udharo"), JSON.stringify(a)); }
+function getHabits() { return readJSON("habit_checks", {}); }
+function saveHabits(o) { localStorage.setItem(sk("habit_checks"), JSON.stringify(o)); }
+function getBudget() { return Number(localStorage.getItem(sk("budget")) || 0); }
+function getUserPath() { return window.currentUser ? "users/" + window.currentUser.uid : "users/" + guestId; }
+function getOpening() { return getBanks().reduce((s, b) => s + Number(b.openingBalance || 0), 0); }
+function sumBy(arr, fn) { return arr.reduce((s, x) => s + Number(fn(x) || 0), 0); }
+function getUdTotals() {
+  const u = getUd();
+  const liye = u.filter((x) => x.kind === "liye");
+  const diye = u.filter((x) => x.kind === "diye");
+  const totalLiye = sumBy(liye, (x) => x.amount);
+  const totalDiye = sumBy(diye, (x) => x.amount);
+  const paidLiye = sumBy(liye, (x) => x.paid);
+  const receivedDiye = sumBy(diye, (x) => x.paid);
+  return { totalLiye, totalDiye, paidLiye, receivedDiye, dueLiye: totalLiye - paidLiye, dueDiye: totalDiye - receivedDiye };
+}
+function getClosing() {
+  const all = getTx();
+  const inc = sumBy(all.filter((x) => x.type === "kamai"), (x) => x.amount);
+  const exp = sumBy(all.filter((x) => x.type === "kharcha"), (x) => x.amount);
+  const ut = getUdTotals();
+  return getOpening() + inc - exp + ut.totalLiye - ut.totalDiye - ut.paidLiye + ut.receivedDiye;
+}
+function getBankClosing(b) {
+  const tx = getTx().filter((x) => (x.bankId || "cash") === b.id);
+  const inc = sumBy(tx.filter((x) => x.type === "kamai"), (x) => x.amount);
+  const exp = sumBy(tx.filter((x) => x.type === "kharcha"), (x) => x.amount);
+  if (b.manualClosing !== null && b.manualClosing !== undefined && b.manualClosing !== "") return Number(b.manualClosing);
+  return Number(b.openingBalance || 0) + inc - exp;
+}
+function getXP() {
+  const h = getHabits();
+  let xp = 0;
+  Object.values(h).forEach((d) => { xp += Object.values(d).filter(Boolean).length * 20; });
+  xp += getTx().length * 10;
+  return xp;
+}
+function getLevel(xp) { if (xp >= 500) return "Budget Boss"; if (xp >= 200) return "Smart Saver"; return "Money Saver"; }
+function showSection(id) {
+  document.querySelectorAll(".section").forEach((s) => s.classList.remove("active"));
+  el("sec-" + id).classList.add("active");
+  document.querySelectorAll("[data-nav]").forEach((b) => b.classList.toggle("active", b.getAttribute("data-nav") === id));
+  closeDrawer();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  renderAll();
+}
+function openDrawer() {
+  const sidebar = el("sidebar");
+  if (window.innerWidth <= 900) sidebar.classList.add("open");
+  el("drawer").classList.add("open");
+  el("drawerOverlay").classList.add("show");
+  el("drawerOverlay").style.display = "block";
+}
+function closeDrawer() {
+  el("sidebar").classList.remove("open");
+  el("drawer").classList.remove("open");
+  el("drawerOverlay").classList.remove("show");
+  el("drawerOverlay").style.display = "none";
+}
+function switchTab(t) {
+  curTab = t;
+  el("tabLogin").className = t === "login" ? "active" : "";
+  el("tabSignup").className = t === "signup" ? "active" : "";
+  el("nameField").style.display = t === "signup" ? "block" : "none";
+  el("secField").style.display = t === "signup" ? "block" : "none";
+  el("authTitle").textContent = t === "login" ? "Welcome back" : "Create your account";
+  el("authBtn").textContent = t === "login" ? "Login" : "Create Account";
+}
+function isValidPassword(p) { return p.length >= 8 && /[A-Za-z]/.test(p) && /[0-9]/.test(p); }
+function authErrorMessage(e) {
+  if (e.code === "auth/email-already-in-use") return "Yo email le account banisakyo. Login garnus.";
+  if (e.code === "auth/invalid-credential") return "Email / Password milena.";
+  if (e.code === "auth/operation-not-allowed") return "Firebase > Authentication > Email/Password ON garnus.";
+  return e.message;
+}
+async function handleAuth() {
+  const email = el("authEmail").value.trim();
+  const pass = el("authPass").value;
+  const name = el("authName").value.trim();
+  if (!email || !pass) { showAuthErr("Email ra Password halnuhos."); return; }
+  if (!isValidPassword(pass)) { showAuthErr("Password must be min 8 characters with letter + number."); return; }
+  const btn = el("authBtn");
+  btn.textContent = "Please wait...";
+  btn.disabled = true;
+  try {
+    const { auth } = window._fb;
+    const f = window._authFns;
+    if (curTab === "signup") {
+      const c = await f.createUserWithEmailAndPassword(auth, email, pass);
+      await f.updateProfile(c.user, { displayName: name });
+      localStorage.setItem(sk("mero_users"), JSON.stringify({ email, sec: el("authSec").value || "", createdAt: Date.now() }));
+      showAuthOk("Account banayo!");
+    } else {
+      await f.signInWithEmailAndPassword(auth, email, pass);
+      showAuthOk("Login bhayo!");
+    }
+    isGuest = false;
+  } catch (e) { showAuthErr(authErrorMessage(e)); }
+  btn.textContent = curTab === "login" ? "Login" : "Create Account";
+  btn.disabled = false;
+}
+async function handleGoogle() {
+  try { await window._authFns.signInWithPopup(window._fb.auth, window._authFns.gp); isGuest = false; }
+  catch (e) { showAuthErr(e.code === "auth/operation-not-allowed" ? "Firebase > Authentication > Google ON garnus." : e.message); }
+}
+async function handleGuest() {
+  isGuest = true; window.currentUser = null;
+  el("loginScreen").style.display = "none"; el("appScreen").style.display = "block";
+  el("sideUserName").textContent = "Guest User"; el("sideUserEmail").textContent = "Guest Mode - Local Only";
+  el("welcomeTitle").textContent = "Namaste, Guest";
+  renderAll();
+}
+async function handleLogout() {
+  isGuest = false;
+  try { if (window._fb && window.currentUser) await window._authFns.signOut(window._fb.auth); } catch (e) {}
+  window.currentUser = null;
+  el("loginScreen").style.display = "flex"; el("appScreen").style.display = "none";
+}
+async function forgotPass(e) {
+  e.preventDefault();
+  const email = el("authEmail").value.trim();
+  if (!email) { showAuthErr("Pahila Email halnuhos."); return; }
+  try { await window._authFns.sendPasswordResetEmail(window._fb.auth, email); showAuthOk("Reset link " + email + " ma pathaiyo."); }
+  catch (err) { showAuthErr(err.message); }
+}
+window.loadUserData = async function () {
+  try {
+    const { db, ref, get } = window._fb;
+    const base = getUserPath();
+    const t = await get(ref(db, base + "/transactions"));
+    if (t.exists()) saveTx(Object.values(t.val()).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)));
+    const b = await get(ref(db, base + "/bank_accounts"));
+    if (b.exists()) saveBanks(Object.values(b.val()));
+    const u = await get(ref(db, base + "/udharo"));
+    if (u.exists()) saveUd(Object.values(u.val()));
+    const h = await get(ref(db, base + "/habit_checks"));
+    if (h.exists()) saveHabits(h.val());
+    const bud = await get(ref(db, base + "/budgets"));
+    if (bud.exists()) { const v = Object.values(bud.val())[0]; if (v && v.amount) localStorage.setItem(sk("budget"), v.amount); }
+  } catch (e) { console.log(e); }
+  renderAll();
+};
+function bankOption(b) { return `<option value="${esc(b.id)}">${esc(b.bankName)} - ${esc(b.nickname || b.accountType)}</option>`; }
+function refreshBankSelects() {
+  const opts = getBanks().map(bankOption).join("");
+  ["bankSelect", "trFrom", "trTo"].forEach((id) => { const e = el(id); if (e) e.innerHTML = opts; });
+}
+function setType(t) {
+  curType = t;
+  el("btnExpense").className = t === "kharcha" ? "active" : "";
+  el("btnIncome").className = t === "kamai" ? "active" : "";
+  fillCats();
+}
+function setAmount(v) { el("amount").value = v; }
+function fillCats() {
+  const list = curType === "kamai" ? INCOME_CATS : EXPENSE_CATS;
+  el("category").innerHTML = list.map((c) => `<option>${esc(c)}</option>`).join("");
+}
+function setTxFilter(f) {
+  curTxFilter = f;
+  ["fAll", "fKamai", "fKharcha", "fImpulse"].forEach((id) => el(id).className = "");
+  const map = { all: "fAll", kamai: "fKamai", kharcha: "fKharcha", impulse: "fImpulse" };
+  el(map[f]).className = "active";
+  renderAll();
+}
+function buildTxFromForm(amt) {
+  const bankId = el("bankSelect").value || "cash";
+  const bank = getBanks().find((b) => b.id === bankId) || { bankName: "Cash" };
+  return { id: String(Date.now()), type: curType, amount: amt, category: el("category").value, bankId, bankLabel: bank.bankName, payment: el("payMethod").value, date: el("dateInput").value || todayStr(), note: el("note").value || el("category").value, impulse: el("impulseSelect").value === "impulse", incomeSource: curType === "kamai" ? el("category").value : "", recurring: el("recurringCheck").checked, createdAt: Date.now() };
+}
+async function addTransaction() {
+  const amt = Number(el("amount").value || 0);
+  if (!amt) { alert("Amount halnuhos"); return; }
+  const budget = getBudget();
+  const expSoFar = sumBy(getTx().filter((x) => x.type === "kharcha"), (x) => x.amount);
+  const strict = el("strictCheck").checked;
+  if (curType === "kharcha" && strict && budget > 0 && expSoFar + amt > budget) { alert("Strict Mode: Budget naghyo! Budget Rs. " + budget + " - Kharcha Rs. " + expSoFar); return; }
+  const tx = buildTxFromForm(amt);
+  const arr = getTx(); arr.unshift(tx); saveTx(arr);
+  el("amount").value = ""; el("note").value = "";
+  if (!isGuest && window.currentUser) {
+    try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/transactions/" + tx.id), tx); el("saveMsg").textContent = "Saved online — " + (curType === "kamai" ? "Income saved. +10 XP earned!" : "Expense logged. +10 XP earned!"); }
+    catch (e) { el("saveMsg").textContent = "Device ma save, Firebase fail: " + e.message; }
+  } else el("saveMsg").textContent = "Guest: Device ma save bhayo.";
+  renderAll();
+}
+async function delTx(id) {
+  if (!confirm("Yo transaction delete garne?")) return;
+  saveTx(getTx().filter((x) => String(x.id) !== String(id)));
+  if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/transactions/" + id)); } catch (e) {} }
+  renderAll();
+}
+function addBank() {
+  const name = el("newBankName").value;
+  const type = el("newBankType").value;
+  const opening = Number(el("newBankOpening").value || 0);
+  const closing = el("newBankClosing").value;
+  const b = { id: "bank_" + Date.now(), bankName: name, accountType: type, nickname: el("newBankNick").value || name, openingBalance: opening, manualClosing: closing === "" ? null : Number(closing), note: el("newBankNote").value || "", createdAt: Date.now() };
+  const arr = getBanks(); arr.push(b); saveBanks(arr);
+  el("newBankNick").value = ""; el("newBankOpening").value = ""; el("newBankClosing").value = ""; el("newBankNote").value = "";
+  if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; set(ref(db, getUserPath() + "/bank_accounts/" + b.id), b); } catch (e) {} }
+  renderAll(); showOk("Saved online — Bank account added.");
+}
+async function delBank(id) {
+  if (!confirm("Bank account delete garne?")) return;
+  saveBanks(getBanks().filter((b) => b.id !== id));
+  if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/bank_accounts/" + id)); } catch (e) {} }
+  renderAll();
+}
+async function doTransfer() {
+  const from = el("trFrom").value, to = el("trTo").value, amt = Number(el("trAmount").value || 0);
+  if (!amt || from === to) { alert("From / To farak ra Amount halnuhos"); return; }
+  const date = el("trDate").value || todayStr();
+  const fb = getBanks().find((b) => b.id === from), tb = getBanks().find((b) => b.id === to);
+  const out = { id: String(Date.now()) + "_out", type: "kharcha", amount: amt, category: "Transfer", bankId: from, bankLabel: fb.bankName, payment: "Transfer", date, note: "Transfer to " + (tb.nickname || tb.bankName), impulse: false, transferDirection: "out", createdAt: Date.now() };
+  const inn = { id: String(Date.now()) + "_in", type: "kamai", amount: amt, category: "Transfer", bankId: to, bankLabel: tb.bankName, payment: "Transfer", date, note: "Transfer from " + (fb.nickname || fb.bankName), impulse: false, transferDirection: "in", createdAt: Date.now() + 1 };
+  const arr = getTx(); arr.unshift(inn); arr.unshift(out); saveTx(arr);
+  el("trAmount").value = "";
+  if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/transactions/" + out.id), out); await set(ref(db, getUserPath() + "/transactions/" + inn.id), inn); } catch (e) {} }
+  renderAll(); showOk("Saved online — Transfer: " + fb.bankName + " → " + tb.bankName + " Rs. " + amt);
+}
+function setUdKind(k) {
+  curUdKind = k;
+  el("udLiyeBtn").className = k === "liye" ? "active" : "";
+  el("udDiyeBtn").className = k === "diye" ? "active" : "";
+  el("udAddBtn").textContent = k === "liye" ? "Liyeko Udharo Save" : "Diyeko Udharo Save";
+}
+async function addUdharo() {
+  const person = el("udPerson").value.trim();
+  const amt = Number(el("udAmount").value || 0);
+  if (!person) { alert("Please enter the person's name."); return; }
+  if (!amt || amt < 1 || amt > 100000000) { alert("Please enter a valid amount (1 to 100,000,000 Rs.)."); return; }
+  const u = { id: "ud_" + Date.now(), person, amount: amt, kind: curUdKind, date: el("udDate").value || todayStr(), dueDate: el("udDueDate").value || "", note: el("udNote").value || "", paid: 0, status: "pending", createdAt: Date.now() };
+  const arr = getUd(); arr.unshift(u); saveUd(arr);
+  el("udPerson").value = ""; el("udAmount").value = ""; el("udNote").value = "";
+  if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/udharo/" + u.id), u); } catch (e) {} }
+  renderAll(); showOk("Udharo save bhayo: " + person + " - Rs. " + amt);
+}
+function openPayModal(id) {
+  const u = getUd().find((x) => x.id === id); if (!u) return;
+  currentPayUdId = id;
+  el("payModalTitle").textContent = u.kind === "liye" ? "Pay Garne - " + u.person + " lai tirne" : "Return Line - " + u.person + " bata line";
+  el("payModalInfo").textContent = "Total: " + rs(u.amount) + " | Baki: " + rs(Number(u.amount) - Number(u.paid || 0));
+  el("payModalAmount").value = ""; el("payModalDate").value = todayStr();
+  el("payModalBg").classList.add("show"); el("payModalBg").style.display = "flex";
+}
+function closePayModal() { el("payModalBg").classList.remove("show"); el("payModalBg").style.display = "none"; currentPayUdId = null; }
+async function saveUdPayment() {
+  const amt = Number(el("payModalAmount").value || 0);
+  if (!amt || !currentPayUdId) { alert("Amount halnuhos"); return; }
+  const arr = getUd(); const u = arr.find((x) => x.id === currentPayUdId);
+  u.paid = Number(u.paid || 0) + amt; if (u.paid >= Number(u.amount)) u.status = "paid"; saveUd(arr);
+  if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/udharo/" + u.id), u); } catch (e) {} }
+  closePayModal(); renderAll(); showOk("Payment save bhayo: Rs. " + amt);
+}
+async function delUd(id) {
+  if (!confirm("Udharo entry delete garne?")) return;
+  saveUd(getUd().filter((x) => x.id !== id));
+  if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath() + "/udharo/" + id)); } catch (e) {} }
+  renderAll();
+}
+function toggleHabit(i, checked) {
+  const h = getHabits(); const d = todayStr(); if (!h[d]) h[d] = {}; h[d][i] = checked; saveHabits(h);
+  if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; set(ref(db, getUserPath() + "/habit_checks"), h); } catch (e) {} }
+  renderAll();
+}
+async function saveBudget() {
+  const v = Number(el("budgetInput").value || 0);
+  if (!v || v < 1 || v > 100000000) { alert("Please enter a valid budget amount (1 to 100,000,000 Rs.)."); return; }
+  localStorage.setItem(sk("budget"), v); localStorage.setItem(sk("strict"), el("strictCheck").checked ? "1" : "0");
+  if (!isGuest && window.currentUser) { try { const { db, ref, set } = window._fb; await set(ref(db, getUserPath() + "/budgets/main"), { amount: v, strict: el("strictCheck").checked }); } catch (e) {} }
+  renderAll(); showOk("Budget save bhayo.");
+}
+function moveToSavings() {
+  const amt = Number(el("savingsMove").value || 0);
+  if (!amt) { alert("Amount halnuhos"); return; }
+  const tx = { id: String(Date.now()), type: "kharcha", amount: amt, category: "Saving", bankId: "cash", bankLabel: "Cash", payment: "Cash", date: todayStr(), note: "Emergency Fund ma sareko", impulse: false, createdAt: Date.now() };
+  const arr = getTx(); arr.unshift(tx); saveTx(arr); el("savingsMove").value = "";
+  renderAll(); showOk("Savings ma Rs. " + amt + " sareko.");
+}
+async function pushAllToFirebase() {
+  if (isGuest || !window.currentUser) { showErr("Guest ma sync hudaina. Login garnus."); return; }
+  showOk("Sync gardai...");
+  try {
+    const { db, ref, set } = window._fb; const base = getUserPath();
+    const tx = {}; getTx().forEach((t) => tx[t.id] = t); await set(ref(db, base + "/transactions"), tx);
+    const bk = {}; getBanks().forEach((b) => bk[b.id] = b); await set(ref(db, base + "/bank_accounts"), bk);
+    const ud = {}; getUd().forEach((u) => ud[u.id] = u); await set(ref(db, base + "/udharo"), ud);
+    await set(ref(db, base + "/habit_checks"), getHabits());
+    await set(ref(db, base + "/budgets/main"), { amount: getBudget(), strict: localStorage.getItem(sk("strict")) === "1" });
+    showOk("<b>Sync Success!</b> Sabai data Firebase ma pugyo. Path: " + base);
+    el("lastSync").textContent = "Last Sync: " + new Date().toLocaleString();
+  } catch (e) { showErr("Sync Fail: " + e.message); }
+}
+async function loadFromFirebase() {
+  if (isGuest || !window.currentUser) { showErr("Guest ma load hudaina."); return; }
+  await window.loadUserData(); showOk("Firebase bata load bhayo.");
+  el("lastSync").textContent = "Last Sync: " + new Date().toLocaleString();
+}
+async function testFirebase() {
+  if (isGuest || !window.currentUser) { showErr("Guest ma Test hudaina. Login garnus."); return; }
+  showOk("Test gardai...");
+  try {
+    const { db, ref, set, get } = window._fb; const id = "test_" + Date.now();
+    await set(ref(db, getUserPath() + "/_test/" + id), { time: new Date().toISOString(), ok: true });
+    const s = await get(ref(db, getUserPath() + "/_test/" + id));
+    if (s.exists()) showOk("<b>Firebase TEST PASS!</b> Path: " + getUserPath() + "/_test"); else showErr("Test fail - Read sakiyena.");
+  } catch (e) { showErr("TEST FAIL: " + e.message); }
+}
+function copyRules() { const t = el("rulesText").innerText; if (navigator.clipboard) navigator.clipboard.writeText(t).then(() => alert("Rules copy bhayo!")); }
+function exportCSV() {
+  const rows = [["Date,Type,Category,Note,Amount,PaymentMethod,IncomeSource,Impulse,Bank,TransferFrom,TransferTo,Recurring"]];
+  getTx().forEach((t) => rows.push([t.date, t.type, t.category, '"' + (t.note || "").replace(/"/g, "") + '"', t.amount, t.payment || "", t.incomeSource || "", t.impulse ? "Yes" : "No", t.bankLabel || "", t.transferDirection || "", "", "" + (t.recurring ? "Yes" : "No")].join(",")));
+  const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "mero-paisa-" + todayStr() + ".csv"; a.click(); URL.revokeObjectURL(a.href); showOk("CSV download bhayo.");
+}
+function exportJSON() {
+  const data = { transactions: getTx(), banks: getBanks(), udharo: getUd(), budgets: { amount: getBudget() }, habits: getHabits(), exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "mero-paisa-backup-" + todayStr() + ".json"; a.click(); URL.revokeObjectURL(a.href); showOk("JSON backup download bhayo.");
+}
+async function deleteAllData() {
+  if (!confirm("All data deleted. Fresh start! Pakka?")) return;
+  ["transactions", "bank_accounts", "udharo", "habit_checks", "budget"].forEach((k) => localStorage.removeItem(sk(k)));
+  if (!isGuest && window.currentUser) { try { const { db, ref, remove } = window._fb; await remove(ref(db, getUserPath())); } catch (e) {} }
+  renderAll(); showOk("All data deleted. Fresh start!");
+}
+function bindEvents() {
+  el("tabLogin").addEventListener("click", () => switchTab("login"));
+  el("tabSignup").addEventListener("click", () => switchTab("signup"));
+  el("authBtn").addEventListener("click", handleAuth);
+  el("googleBtn").addEventListener("click", handleGoogle);
+  el("guestBtn").addEventListener("click", handleGuest);
+  el("forgotLink").addEventListener("click", forgotPass);
+  el("hamburgerBtn").addEventListener("click", openDrawer);
+  el("drawerCloseBtn").addEventListener("click", closeDrawer);
+  el("drawerOverlay").addEventListener("click", closeDrawer);
+  el("drawerLogoutBtn").addEventListener("click", handleLogout);
+  el("syncBtn").addEventListener("click", pushAllToFirebase);
+  el("logoutBtn").addEventListener("click", handleLogout);
+  el("themeToggle").addEventListener("click", toggleTheme);
+  document.querySelectorAll("#mainNav [data-nav]").forEach((b) => b.addEventListener("click", () => showSection(b.getAttribute("data-nav"))));
+  el("dashFilter").addEventListener("change", renderAll);
+  el("btnExpense").addEventListener("click", () => setType("kharcha"));
+  el("btnIncome").addEventListener("click", () => setType("kamai"));
+  document.querySelectorAll("[data-amount]").forEach((b) => b.addEventListener("click", () => setAmount(Number(b.getAttribute("data-amount")))));
+  el("saveTxBtn").addEventListener("click", addTransaction);
+  el("txMonth").addEventListener("change", renderAll);
+  el("txSearch").addEventListener("input", renderAll);
+  el("fAll").addEventListener("click", () => setTxFilter("all"));
+  el("fKamai").addEventListener("click", () => setTxFilter("kamai"));
+  el("fKharcha").addEventListener("click", () => setTxFilter("kharcha"));
+  el("fImpulse").addEventListener("click", () => setTxFilter("impulse"));
+  el("addBankBtn").addEventListener("click", addBank);
+  el("transferBtn").addEventListener("click", doTransfer);
+  el("saveBudgetBtn").addEventListener("click", saveBudget);
+  el("moveSavingsBtn").addEventListener("click", moveToSavings);
+  el("udLiyeBtn").addEventListener("click", () => setUdKind("liye"));
+  el("udDiyeBtn").addEventListener("click", () => setUdKind("diye"));
+  el("udAddBtn").addEventListener("click", addUdharo);
+  el("pushBtn").addEventListener("click", pushAllToFirebase);
+  el("loadBtn").addEventListener("click", loadFromFirebase);
+  el("testBtn").addEventListener("click", testFirebase);
+  el("rulesBtn").addEventListener("click", copyRules);
+  el("csvBtn").addEventListener("click", exportCSV);
+  el("jsonBtn").addEventListener("click", exportJSON);
+  el("deleteAllBtn").addEventListener("click", deleteAllData);
+  el("payCancelBtn").addEventListener("click", closePayModal);
+  el("paySaveBtn").addEventListener("click", saveUdPayment);
+  el("importFile").addEventListener("change", async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const data = JSON.parse(await f.text());
+      if (Array.isArray(data.transactions)) saveTx(data.transactions);
+      if (Array.isArray(data.banks)) saveBanks(data.banks);
+      if (Array.isArray(data.udharo)) saveUd(data.udharo);
+      if (data.budgets && data.budgets.amount) localStorage.setItem(sk("budget"), data.budgets.amount);
+      if (data.habits) saveHabits(data.habits);
+      renderAll(); showOk("Backup import bhayo.");
+    } catch (err) { showErr("Import fail: " + err.message); }
+  });
+  document.addEventListener("click", (e) => {
+    const del = e.target.closest("[data-del-tx]");
+    if (del) { delTx(del.getAttribute("data-del-tx")); return; }
+    const delB = e.target.closest("[data-del-bank]");
+    if (delB) { delBank(delB.getAttribute("data-del-bank")); return; }
+    const pay = e.target.closest("[data-pay-ud]");
+    if (pay) { openPayModal(pay.getAttribute("data-pay-ud")); return; }
+    const delU = e.target.closest("[data-del-ud]");
+    if (delU) { delUd(delU.getAttribute("data-del-ud")); return; }
+  });
+  document.addEventListener("change", (e) => {
+    const h = e.target.closest("[data-habit]");
+    if (h) toggleHabit(Number(h.getAttribute("data-habit")), h.checked);
+  });
+}
+function toggleTheme() {
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem("mp_theme", next);
+  el("themeToggle").textContent = next === "dark" ? "Light Mode" : "Dark Mode";
+}
+function initTheme() {
+  const saved = localStorage.getItem("mp_theme") || "light";
+  document.documentElement.setAttribute("data-theme", saved);
+  el("themeToggle").textContent = saved === "dark" ? "Light Mode" : "Dark Mode";
+}
+function initDrawerNav() {
+  const slot = el("drawerNavSlot");
+  const nav = el("mainNav");
+  const clone = nav.cloneNode(true);
+  clone.querySelectorAll("[data-nav]").forEach((b) => b.addEventListener("click", () => showSection(b.getAttribute("data-nav"))));
+  slot.appendChild(clone);
+}
+function filterDash(arr) {
+  const f = el("dashFilter").value;
+  const now = new Date();
+  if (f === "this") return arr.filter((x) => { const d = new Date(x.date); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); });
+  if (f === "7") { const s = new Date(); s.setDate(now.getDate() - 7); return arr.filter((x) => new Date(x.date) >= s); }
+  return arr;
+}
+function renderHero(dashArr, inc, exp) {
+  const opening = getOpening(), closing = getClosing(), ut = getUdTotals();
+  el("openingBalance").textContent = rs(opening);
+  el("closingBalance").textContent = rs(closing);
+  el("totalIncome").textContent = rs(inc);
+  el("totalExpense").textContent = rs(exp);
+  el("incomeCount").textContent = dashArr.filter((x) => x.type === "kamai").length + " tx";
+  el("expenseCount").textContent = dashArr.filter((x) => x.type === "kharcha").length + " tx";
+  el("duePayTop").textContent = rs(ut.dueLiye);
+  el("liyeTop").textContent = "Liye: " + rs(ut.totalLiye) + " | Tiriyo: " + rs(ut.paidLiye);
+  el("dueReceiveTop").textContent = rs(ut.dueDiye);
+  el("diyeTop").textContent = "Diye: " + rs(ut.totalDiye) + " | Firtyo: " + rs(ut.receivedDiye);
+  return ut;
+}
+function renderCompare(inc, exp) {
+  const lm = new Date(); lm.setMonth(lm.getMonth() - 1);
+  const inMonth = (x, d, type) => { const dd = new Date(x.date); return dd.getMonth() === d.getMonth() && dd.getFullYear() === d.getFullYear() && x.type === type; };
+  const lmInc = sumBy(getTx().filter((x) => inMonth(x, lm, "kamai")), (x) => x.amount);
+  const lmExp = sumBy(getTx().filter((x) => inMonth(x, lm, "kharcha")), (x) => x.amount);
+  el("compareText").textContent = "Last Month: Income " + rs(lmInc) + " | Expense " + rs(lmExp);
+  el("compareSub").textContent = "Yo mahina: Income " + rs(inc) + " | Expense " + rs(exp);
+}
+function renderBudgetSavings(inc, exp) {
+  const saving = Math.max(0, inc - exp);
+  const pctSave = Math.min(100, Math.round(saving / 5000 * 100));
+  el("emergencyTop").textContent = rs(saving) + " / Rs. 5,000";
+  el("emergencyBar").style.width = pctSave + "%";
+  el("savingsBig").textContent = rs(saving);
+  el("savingsBar").style.width = pctSave + "%";
+  el("savingsMsg").textContent = saving >= 5000 ? "You hit the 5K saving habit this month. Protect it — that is your emergency fund growing." : "Try one No-Spend Day this week. Pack lunch, skip the extra stop, and bank the win.";
+  const budget = getBudget();
+  el("budgetInput").value = budget || "";
+  el("strictCheck").checked = localStorage.getItem(sk("strict")) === "1";
+  if (budget > 0) {
+    const pct = Math.min(100, Math.round(exp / budget * 100));
+    el("budgetBar").style.width = pct + "%"; el("budgetBarTop").style.width = pct + "%";
+    el("budgetText").textContent = "Budget ko " + pct + "% sakiyo - " + rs(exp) + " / " + rs(budget);
+    el("budgetTop").textContent = pct + "%";
+    el("budgetTopSub").textContent = rs(exp) + " / " + budget.toLocaleString();
+  } else {
+    el("budgetBar").style.width = "0%"; el("budgetBarTop").style.width = "0%";
+    el("budgetText").textContent = "Budget set garnuhos"; el("budgetTop").textContent = "-"; el("budgetTopSub").textContent = "Budget set garnuhos";
+  }
+  return saving;
+}
+function renderInsight(dashArr, exp, entries) {
+  const impulseCount = dashArr.filter((x) => x.impulse).length;
+  let insight = "No expenses yet. Log every buy and mark Need vs Impulse — that is how the leak becomes visible.";
+  if (entries.length) {
+    const top = entries[0];
+    const pct = exp ? Math.round(top[1] / exp * 100) : 0;
+    insight = "Sabai bhanda dherai " + top[0] + " ma - " + rs(top[1]) + " (" + pct + "%). " + (pct > 40 ? "Balanced Saver: No single category dominates. Keep watching the small leaks and your balance will grow." : "Pay yourself first: move savings out on payday, before spending starts.");
+    if (impulseCount > 0) insight += " Impulse: " + impulseCount + " ota. Impulse logged honestly. +10 XP — awareness is the first win.";
+  }
+  el("insightText").textContent = insight;
+}
+function renderBudgetCats(entries, exp) {
+  el("budgetCatList").innerHTML = entries.map(([k, v]) => {
+    const p = exp ? Math.round(v / exp * 100) : 0;
+    const row = document.createElement("div");
+    row.className = "budget-row";
+    const a = document.createElement("span"); a.textContent = k;
+    const b = document.createElement("span"); b.textContent = rs(v) + " - " + p + "%";
+    row.append(a, b);
+    const bar = document.createElement("div"); bar.className = "bar";
+    const fill = document.createElement("div"); fill.style.width = p + "%"; bar.appendChild(fill);
+    const wrap = document.createElement("div"); wrap.append(row, bar);
+    return wrap.outerHTML;
+  }).join("");
+}
+function renderBanks() {
+  const banks = getBanks();
+  let total = 0;
+  const frag = document.createDocumentFragment();
+  banks.forEach((b) => {
+    const cl = getBankClosing(b); total += cl;
+    const card = document.createElement("div"); card.className = "card bank-card";
+    const top = document.createElement("div"); top.className = "bank-top";
+    const left = document.createElement("div");
+    const title = document.createElement("div");
+    const name = document.createElement("b"); name.textContent = b.bankName;
+    const badge = document.createElement("span"); badge.className = "badge blue"; badge.textContent = b.accountType;
+    title.append(name, document.createTextNode(" "), badge);
+    const meta = document.createElement("small"); meta.textContent = (b.nickname || "") + " • " + (b.note || "");
+    const bal = document.createElement("small"); bal.textContent = "Opening: " + rs(b.openingBalance || 0) + " → Closing: " + rs(cl);
+    left.append(title, document.createElement("br"), meta, document.createElement("br"), bal);
+    const right = document.createElement("div"); right.className = "bank-right";
+    const amt = document.createElement("b"); amt.textContent = rs(cl);
+    const st = document.createElement("span"); st.className = cl < 1000 ? "badge red" : "badge green"; st.textContent = cl < 1000 ? "Low Balance Alert" : "OK";
+    const del = document.createElement("button"); del.className = "del mt-8"; del.textContent = "Delete"; del.setAttribute("data-del-bank", b.id);
+    right.append(amt, document.createElement("br"), st, document.createElement("br"), del);
+    top.append(left, right); card.appendChild(top); frag.appendChild(card);
+  });
+  const list = el("bankList"); list.innerHTML = ""; list.appendChild(frag);
+  el("bankTotalPill").textContent = "Total Closing: " + rs(total);
+  const lows = banks.filter((b) => getBankClosing(b) < 1000);
+  el("lowBalanceList").innerHTML = lows.length ? lows.map((b) => `<div class="mt-8">Low Balance Alert — ${esc(b.bankName)}: ${rs(getBankClosing(b))}</div>`).join("") : `<small>Sabai bank thik cha.</small>`;
+}
+function renderTxList() {
+  let arr = getTx();
+  const month = el("txMonth").value;
+  if (month) arr = arr.filter((x) => x.date.startsWith(month));
+  const q = (el("txSearch").value || "").toLowerCase();
+  if (q) arr = arr.filter((x) => (x.note + " " + x.category).toLowerCase().includes(q));
+  if (curTxFilter === "kamai") arr = arr.filter((x) => x.type === "kamai");
+  if (curTxFilter === "kharcha") arr = arr.filter((x) => x.type === "kharcha");
+  if (curTxFilter === "impulse") arr = arr.filter((x) => x.impulse);
+  el("txCountPill").textContent = arr.length + " transactions";
+  const list = el("txList"); list.innerHTML = "";
+  if (!arr.length) { list.innerHTML = `<p class="empty">No expenses yet.</p>`; return; }
+  arr.slice(0, 50).forEach((x) => {
+    const row = document.createElement("div"); row.className = "row";
+    const left = document.createElement("div"); left.className = "row-main";
+    const title = document.createElement("b"); title.textContent = x.category;
+    const badge = document.createElement("span"); badge.className = x.impulse ? "badge amber" : "badge green"; badge.textContent = x.impulse ? "Impulse" : "Need";
+    const meta = document.createElement("small"); meta.className = "row-meta";
+    meta.textContent = x.note + " • " + x.date + " • " + (x.bankLabel || "") + " • " + (x.payment || "") + (x.recurring ? " • Recurring" : "");
+    left.append(title, document.createTextNode(" "), badge);
+    if (x.transferDirection) { const tb = document.createElement("span"); tb.className = "badge blue"; tb.textContent = "Transfer"; left.append(document.createTextNode(" "), tb); }
+    left.append(document.createElement("br"), meta);
+    const right = document.createElement("div"); right.className = "row-right";
+    const amt = document.createElement("b"); amt.className = "row-amount " + (x.type === "kamai" ? "in" : "out"); amt.textContent = (x.type === "kamai" ? "+ " : "- ") + rs(x.amount);
+    const del = document.createElement("button"); del.className = "del"; del.textContent = "Delete"; del.setAttribute("data-del-tx", x.id);
+    right.append(amt, del); row.append(left, right); list.appendChild(row);
+  });
+}
+function udharoCard(u) {
+  const due = Number(u.amount) - Number(u.paid || 0);
+  const card = document.createElement("div"); card.className = "card ud-card";
+  const top = document.createElement("div"); top.className = "ud-top";
+  const left = document.createElement("div");
+  const name = document.createElement("b"); name.textContent = u.person;
+  const badge = document.createElement("span"); badge.className = due <= 0 ? "badge green" : "badge amber"; badge.textContent = due <= 0 ? "PAID / CLEAR" : "Baki: " + rs(due);
+  const meta = document.createElement("small"); meta.textContent = (u.note || "") + " • Date: " + u.date + " • Due: " + (u.dueDate || "-") + " • Status: " + (u.status || "pending");
+  left.append(name, document.createTextNode(" "), badge, document.createElement("br"), meta);
+  const right = document.createElement("div");
+  const amt = document.createElement("b"); amt.textContent = rs(u.amount);
+  const paid = document.createElement("small"); paid.textContent = "Pay: " + rs(u.paid || 0);
+  right.append(amt, document.createElement("br"), paid);
+  const actions = document.createElement("div"); actions.className = "ud-actions";
+  const pay = document.createElement("button"); pay.className = "pay"; pay.textContent = u.kind === "liye" ? "Pay Garne" : "Return Line"; pay.setAttribute("data-pay-ud", u.id);
+  const del = document.createElement("button"); del.className = "del"; del.textContent = "Delete"; del.setAttribute("data-del-ud", u.id);
+  actions.append(pay, del);
+  top.append(left, right); card.append(top, actions);
+  return card;
+}
+function renderUdharo(ut) {
+  el("udharoPill").textContent = "Total Due: " + rs(ut.dueLiye + ut.dueDiye);
+  el("liyeSummary").textContent = "Total Liye: " + rs(ut.totalLiye) + " | Tiriyo: " + rs(ut.paidLiye) + " | Baki: " + rs(ut.dueLiye);
+  el("diyeSummary").textContent = "Total Diye: " + rs(ut.totalDiye) + " | Firtyo: " + rs(ut.receivedDiye) + " | Baki: " + rs(ut.dueDiye);
+  const liye = getUd().filter((x) => x.kind === "liye");
+  const diye = getUd().filter((x) => x.kind === "diye");
+  const lEl = el("liyeList"); lEl.innerHTML = "";
+  if (!liye.length) lEl.innerHTML = `<p class="empty">Liye ko udharo chaina.</p>`; else liye.forEach((u) => lEl.appendChild(udharoCard(u)));
+  const dEl = el("diyeList"); dEl.innerHTML = "";
+  if (!diye.length) dEl.innerHTML = `<p class="empty">Diye ko udharo chaina.</p>`; else diye.forEach((u) => dEl.appendChild(udharoCard(u)));
+}
+function renderHabits(xp) {
+  const h = getHabits(); const today = h[todayStr()] || {}; let done = 0;
+  const list = el("habitList"); list.innerHTML = "";
+  HABITS.forEach((t, i) => {
+    if (today[i]) done++;
+    const row = document.createElement("div"); row.className = "habit";
+    const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!today[i]; cb.setAttribute("data-habit", i);
+    const div = document.createElement("div");
+    const b = document.createElement("b"); b.textContent = t;
+    const s = document.createElement("span"); s.className = "habit-xp"; s.textContent = "+20 XP";
+    div.append(b, document.createElement("br"), s); row.append(cb, div); list.appendChild(row);
+  });
+  el("habitScore").textContent = "Aaja ko Habit Score: " + done + " / 5";
+  el("habitPill").textContent = "Score: " + done + " / 5";
+  let streak = 0; let d = new Date();
+  for (let i = 0; i < 30; i++) {
+    const ds = d.toISOString().slice(0, 10);
+    const day = h[ds] || {};
+    const cnt = Object.values(day).filter(Boolean).length;
+    if (cnt >= 3) streak++; else if (i > 0) break;
+    d.setDate(d.getDate() - 1);
+  }
+  el("streakText").textContent = "Streak: " + streak + " din";
+  el("challengeList").innerHTML = `<div class="insight"><b>Rs. 100 Day</b> — Spend Rs. 100 or less in a day. Small days build big savings.<br><b>5K Saver</b> — Saved Rs. 5,000 or more this month<br><b>7-Day Streak</b> — Built Rs. 5,000+ toward your emergency fund<br>Current: XP ${xp} • Level ${esc(getLevel(xp))} • Streak ${streak} din</div>`;
+}
+function renderMonthChart() {
+  const all = getTx();
+  const chart = el("monthChart"); chart.innerHTML = "";
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(); d.setMonth(d.getMonth() - i);
+    const y = d.getFullYear(), m = d.getMonth();
+    const inM = (x, type) => { const dd = new Date(x.date); return dd.getFullYear() === y && dd.getMonth() === m && x.type === type; };
+    const mi = sumBy(all.filter((x) => inM(x, "kamai")), (x) => x.amount);
+    const me = sumBy(all.filter((x) => inM(x, "kharcha")), (x) => x.amount);
+    const mx = Math.max(mi, me, 1);
+    const col = document.createElement("div"); col.className = "col";
+    const bars = document.createElement("div"); bars.className = "bars";
+    const b1 = document.createElement("div"); b1.className = "b1"; b1.style.height = Math.max(4, Math.round(mi / mx * 76)) + "px";
+    const b2 = document.createElement("div"); b2.className = "b2"; b2.style.height = Math.max(4, Math.round(me / mx * 76)) + "px";
+    const lab = document.createElement("small"); lab.textContent = d.toLocaleString("en", { month: "short" });
+    bars.append(b1, b2); col.append(bars, lab); chart.appendChild(col);
+  }
+}
+function renderAll() {
+  refreshBankSelects();
+  const dashArr = filterDash(getTx());
+  const inc = sumBy(dashArr.filter((x) => x.type === "kamai"), (x) => x.amount);
+  const exp = sumBy(dashArr.filter((x) => x.type === "kharcha"), (x) => x.amount);
+  const ut = renderHero(dashArr, inc, exp);
+  const xp = getXP();
+  el("xpPill").textContent = "XP: " + xp + " • Level: " + getLevel(xp);
+  renderCompare(inc, exp);
+  renderBudgetSavings(inc, exp);
+  const cats = {};
+  dashArr.filter((x) => x.type === "kharcha").forEach((x) => { cats[x.category] = (cats[x.category] || 0) + Number(x.amount || 0); });
+  const entries = Object.entries(cats).sort((a, b) => b[1] - a[1]);
+  renderInsight(dashArr, exp, entries);
+  renderBudgetCats(entries, exp);
+  renderBanks();
+  renderTxList();
+  renderUdharo(ut);
+  renderHabits(xp);
+  renderMonthChart();
+  el("welcomeDate").textContent = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " — Full money picture in 10 seconds.";
+}
+bindEvents();
+initTheme();
+initDrawerNav();
+el("dateInput").value = todayStr(); el("trDate").value = todayStr(); el("udDate").value = todayStr();
+fillCats();
+renderAll();
 </script>
 </body>
 </html>
